@@ -38,4 +38,11 @@ transporter.sendMail(mailOptions, function(error, info){
 });
 }
 
+
+function open(response, postData)
+{
+response.write("HI")
+}
+
 exports.sendEmail = sendEmail
+exports.open = open

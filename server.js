@@ -18,7 +18,8 @@ function start(route, handle) {
 		request.addListener("end", function() {
 			route(handle, pathname, response, postData);
 		});
-	}http.createServer(onRequest).listen(8888);
+	}
+	http.createServer(onRequest).listen(8888);
 	console.log("Server has started.");
 }
 

@@ -30,7 +30,8 @@ var mailOptions = {
 };
 transporter.sendMail(mailOptions, function(error, info){
     if(error){
-      response.end(error);
+      response.err(error);
+      response.end("ERRORED");
         
     }else{
         response.end('Message sent: ' + info.response);

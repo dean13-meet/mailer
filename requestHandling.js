@@ -1,6 +1,6 @@
 var querystring = require("querystring");
 
-//var nodemailer = require('nodemailer');
+/*var nodemailer = require('nodemailer');
 
 // create reusable transporter object using SMTP transport
 var transporter = nodemailer.createTransport({
@@ -38,11 +38,11 @@ transporter.sendMail(mailOptions, function(error, info){
 });
 }
 
-
+*/
 function open(response, postData)
 {
 response.end("HI")
 }
 
-exports.sendEmail = sendEmail
+//exports.sendEmail = sendEmail
 exports.open = open

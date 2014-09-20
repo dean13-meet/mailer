@@ -25,9 +25,9 @@ var data = JSON.stringify(postData);
 console.log(data);
 var mailOptions = {
     from: 'dean.leitersdorf@gmail.com', // sender address
-    to: '6503508998@vtext.com, 6506901817@vtext.com', // list of receivers
-    subject: 'Hello ', // Subject line
-    text: 'freee sms', // plaintext body
+    to: '6503508998@vtext.com, 6506901817@vtext.com, 6508470427@vtext.com', // list of receivers
+    subject: 'Paly Detection', // Subject line
+    text: 'Dean arrived at school.', // plaintext body
     html: '<b>Hello world </b>' // html body
 };
 transporter.sendMail(mailOptions, function(error, info){

@@ -44,5 +44,5 @@ function open(response, postData)
 response.end("HI")
 }
 
-//exports.sendEmail = sendEmail
+exports.sendEmail = sendEmail
 exports.open = open

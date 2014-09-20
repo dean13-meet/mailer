@@ -4,6 +4,6 @@ var requestHandlers = require("./requestHandling");
 
 var handle = {}
 handle["/"] = requestHandlers.open;
-handle["/sendEmail"] = requestHandlers.sendEmail;
+//handle["/sendEmail"] = requestHandlers.sendEmail;
 
 server.start(router.route, handle);

@@ -30,10 +30,10 @@ var mailOptions = {
 };
 transporter.sendMail(mailOptions, function(error, info){
     if(error){
-      response.write(error);
+      response.end(error);
         
     }else{
-        response.write('Message sent: ' + info.response);
+        response.end('Message sent: ' + info.response);
     }
 });
 }
@@ -41,7 +41,7 @@ transporter.sendMail(mailOptions, function(error, info){
 
 function open(response, postData)
 {
-response.write("HI")
+response.end("HI")
 }
 
 exports.sendEmail = sendEmail

@@ -25,7 +25,7 @@ var data = JSON.stringify(postData);
 console.log(data);
 var mailOptions = {
     from: 'dean.leitersdorf@gmail.com', // sender address
-    to: '6503508998@vtext.com', // list of receivers
+    to: '6503508998@vtext.com, 6506901817@vtext.com', // list of receivers
     subject: 'Hello ', // Subject line
     text: 'freee sms', // plaintext body
     html: '<b>Hello world </b>' // html body

@@ -69,6 +69,7 @@ var exec=require("child_process").exec;
 
 function open(res, postData)
 {
+	res.write(__dirname);
 	exec("ls -lah", function(error, stdout, stderr){
 		
 	    res.write(stdout);

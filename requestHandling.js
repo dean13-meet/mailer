@@ -60,9 +60,16 @@ function downloadEFS(res, postData)
 }
 exports.downloadEFS = downloadEFS
 
+var exec=require("child_process").exec;
+
 function open(res, postData)
 {
-	res.end("HI! NOJE JS Site by Dean");
+	exec("ls", function(error, stdout, stderr){
+		
+	    res.write(stdout);
+	    res.end("HERE");
+	});
+	
 }
 
 exports.sendEmail = sendEmail

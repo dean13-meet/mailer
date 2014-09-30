@@ -41,10 +41,28 @@ transporter.sendMail(mailOptions, function(error, info){
 });
 }
 
+var path = require('path');
+var mime = require('mime');
+var fs = require('fs');
 
-function open(response, postData)
+function downloadEFS(res, postData)
 {
-response.end("HI")
+	var file = __dirname + '/DEAN_L_electricfieldsimulation.jar';
+	console.log(file);
+	var filename = path.basename(file);
+	  var mimetype = mime.lookup(file);
+
+	  res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+	  res.setHeader('Content-type', mimetype);
+
+	  var filestream = fs.createReadStream(file);
+	  filestream.pipe(res);	
+}
+exports.downloadEFS = downloadEFS
+
+function open(res, postData)
+{
+	res.end("HI! NOJE JS Site by Dean");
 }
 
 exports.sendEmail = sendEmail

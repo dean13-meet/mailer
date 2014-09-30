@@ -47,16 +47,21 @@ var fs = require('fs');
 
 function downloadEFS(res, postData)
 {
+	
 	var file = __dirname + '/DEAN_L_electricfieldsimulation.jar';
 	console.log(file);
+	
 	var filename = path.basename(file);
 	  var mimetype = mime.lookup(file);
 
 	  res.setHeader('Content-disposition', 'attachment; filename=' + filename);
 	  res.setHeader('Content-type', mimetype);
-
+	  console.log("EXISTS: " + fs.existsSync(file));
+	  res.end("DOWNLOADING FILE");
 	  var filestream = fs.createReadStream(file);
 	  filestream.pipe(res);	
+	  
+	  console.log("HERE");
 }
 exports.downloadEFS = downloadEFS
 

@@ -3,8 +3,9 @@ var router = require("./router");
 var requestHandlers = require("./requestHandling");
 
 var handle = {}
+//ANYTHING INSIDE HANDLE [] should be lower case!
 handle["/"] = requestHandlers.open;
-handle["/sendEmail"] = requestHandlers.sendEmail;
-handle["/download_Dean_L_ElectricFieldSimulation"] = requestHandlers.downloadEFS;
+handle["/sendemail"] = requestHandlers.sendEmail;
+handle["/download_dean_l_electricfieldsimulation"] = requestHandlers.downloadEFS;
 
 server.start(router.route, handle);

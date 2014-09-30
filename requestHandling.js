@@ -57,10 +57,12 @@ function downloadEFS(res, postData)
 	  res.setHeader('Content-disposition', 'attachment; filename=' + filename);
 	  res.setHeader('Content-type', mimetype);
 	  console.log("EXISTS: " + fs.existsSync(file));
-	  res.end("DOWNLOADING FILE");
+	  
 	  var filestream = fs.createReadStream(file);
 	  filestream.pipe(res);	
-	  
+	  filestream.on('error', function(err) {
+		    res.end(err);
+		  });
 	  console.log("HERE");
 }
 exports.downloadEFS = downloadEFS

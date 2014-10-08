@@ -10,6 +10,7 @@
     "mime": "v1.2.11",
     "nodemailer": "v1.3.0",
     "querystring": "v0.2.0",
+    "request": "^2.45.0",
     "url": "v0.10.1"
   },
   "engines": {

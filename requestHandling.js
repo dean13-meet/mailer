@@ -132,7 +132,7 @@ request(options, function(err, res, body) { if (err) {
 		console.log(res.statusCode, body);
 		
 		body.messages.push(message);
-		
+	}
 options = {
 	method: process.argv[2] || 'PUT',
 	url: 'https://remindme.couchappy.com/phone_numbers/' + (process.argv[3] || message["user"]),
@@ -143,20 +143,31 @@ request(options, function(err, res, body2) { if (err) {
 		console.log(res.statusCode, body2);
 	}
 });
-	}
+	
 });
 
+options = {
+		method: process.argv[2] || 'PUT',
+		url: 'https://remindme.couchappy.com/messages/' + message.messageID,
+		json: message
+		};
+	request(options, function(err, res, body2) { if (err) {
+		throw Error(err); } else {
+			console.log(res.statusCode, body2);
+			response.end(JSON.stringify(message));
+		}
+	});
+		}
+	});
 
-response.end("DONE");
+
+
 		
 	}
 });
 		
 	}
-});
 
-
-}
 
 
 

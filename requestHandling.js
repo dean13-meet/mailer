@@ -92,7 +92,7 @@ options = {
 request(options, function(err, res, body) { if (err) {
 	throw Error(err); } else {
 	
-		console.log(res.statusCode, body);
+		//console.log(res.statusCode, body);
 		
 		options = {
 	method: process.argv[2] || 'PUT',
@@ -101,8 +101,8 @@ request(options, function(err, res, body) { if (err) {
 	};
 request(options, function(err, res, body2) { if (err) {
 	throw Error(err); } else {
-		console.log(res.statusCode, body2);//the return from the PUT
-		console.log(body._rev);//the return from the previous GET
+		//console.log(res.statusCode, body2);//the return from the PUT
+		//console.log(body._rev);//the return from the previous GET
 		
 		messageid = body._rev;
 defaultMessage = "DEF MESSAGE";
@@ -130,7 +130,7 @@ options = {
 	};
 request(options, function(err, res, body) { if (err) {
 	throw Error(err); } else {
-		console.log(res.statusCode, body);
+		//console.log(res.statusCode, body);
 		
 		body.messages.push(message);
 	}
@@ -141,7 +141,7 @@ options = {
 	};
 request(options, function(err, res, body2) { if (err) {
 	throw Error(err); } else {
-		console.log(res.statusCode, body2);
+		//console.log(res.statusCode, body2);
 	}
 });
 	
@@ -154,7 +154,7 @@ options = {
 		};
 	request(options, function(err, res, body2) { if (err) {
 		throw Error(err); } else {
-			console.log(res.statusCode, body2);
+			//console.log(res.statusCode, body2);
 			response.end(JSON.stringify(message));
 		}
 	});

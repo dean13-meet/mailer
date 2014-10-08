@@ -79,6 +79,88 @@ function open(res, postData)
 	});
 	
 }
+function createMessage(response, postData)
+{
+keyToGetMessageID = "9f811fc38470d144e2195e6c6a000b39";
+request = require('request')
+options = {
+	method: process.argv[2] || 'GET',
+	url: 'https://remindme.couchappy.com/messageid/' + (keyToGetMessageID),
+	json: {}
+	};
+request(options, function(err, res, body) { if (err) {
+	throw Error(err); } else {
+	
+		console.log(res.statusCode, body);
+		
+		options = {
+	method: process.argv[2] || 'PUT',
+	url: 'https://remindme.couchappy.com/messageid/' + (keyToGetMessageID),
+	json: body
+	};
+request(options, function(err, res, body2) { if (err) {
+	throw Error(err); } else {
+		console.log(res.statusCode, body2);//the return from the PUT
+		console.log(body._rev);//the return from the previous GET
+		
+		messageid = body._rev;
+defaultMessage = "DEF MESSAGE";
+defaultUser = "6503508998";
+defaultRec = "6503508998";
+defaultTime = "1420070400";//1 Jan 2015
 
+message = 
+{
+messageID: messageid,
+context: postData.message || defaultMessage,
+user: postData.user || defaultUser,
+rec: postData.rec || defaultRec,
+date: 
+{
+seconds: postData.sec || defaultTime
+}
+
+}
+
+options = {
+	method: process.argv[2] || 'GET',
+	url: 'https://remindme.couchappy.com/phone_numbers/' + (process.argv[3] || message["user"]),
+	json: {}
+	};
+request(options, function(err, res, body) { if (err) {
+	throw Error(err); } else {
+		console.log(res.statusCode, body);
+		
+		body.messages.push(message);
+		
+options = {
+	method: process.argv[2] || 'PUT',
+	url: 'https://remindme.couchappy.com/phone_numbers/' + (process.argv[3] || message["user"]),
+	json: body
+	};
+request(options, function(err, res, body2) { if (err) {
+	throw Error(err); } else {
+		console.log(res.statusCode, body2);
+	}
+});
+	}
+});
+
+
+response.end("DONE");
+		
+	}
+});
+		
+	}
+});
+
+
+}
+
+
+
+exports.createMessage = createMessage;
 exports.sendEmail = sendEmail
 exports.open = open
+

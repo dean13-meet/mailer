@@ -1,7 +1,7 @@
 var querystring = require("querystring");
 
 var nodemailer = require('nodemailer');
-
+request = require('request')
 
 
 // create reusable transporter object using SMTP transport
@@ -21,21 +21,22 @@ var transporter = nodemailer.createTransport({
 
 function sendEmail(response, postData)
 {
-var data = JSON.stringify(postData);
-console.log(data);
+console.log("SENDING EMAIL: " + JSON.stringify(postData));
 var mailOptions = {
-    from: 'dean.leitersdorf@gmail.com', // sender address
-    to: '6503508998@vtext.com, 6506901817@vtext.com, 6508470427@vtext.com', // list of receivers
-    subject: 'Paly Detection', // Subject line
-    text: 'Dean arrived at school.', // plaintext body
-    html: '<b>Hello world </b>' // html body
+    from: postData.user || 'dean.leitersdorf@gmail.com', // sender address
+    to: postData.rec || '6503508998@vtext.com',//, 6506901817@vtext.com, 6508470427@vtext.com', // list of receivers
+    subject: postData.messageID ? ''  : 'Paly Detection', // Subject line
+    text: postData.context || 'Dean arrived at school.', // plaintext body
+    //html: '<b>Hello world </b>' // html body
 };
 transporter.sendMail(mailOptions, function(error, info){
     if(error){
     	console.log(error);
+    	if(response!=null)//do not delete this
       response.end("error");
         
     }else{
+    	if(response!=null)//do not delete this
         response.end('Message sent: ' + info.response);
     }
 });
@@ -83,7 +84,7 @@ function createMessage(response, postData)
 {
 	console.log("REQUEST: " + postData);
 keyToGetMessageID = "9f811fc38470d144e2195e6c6a000b39";
-request = require('request')
+
 options = {
 	method: process.argv[2] || 'GET',
 	url: 'https://remindme.couchappy.com/messageid/' + (keyToGetMessageID),
@@ -169,10 +170,79 @@ options = {
 		
 	}
 
+function editMessage(response, message)
+{
+	defaultMessage = "DEF MESSAGE";
+	defaultUser = "6503508998";
+	defaultRec = "6503508998";
+	defaultTime = "1420070400";
+	
+	options = {
+			method: process.argv[2] || 'PUT',
+			url: 'https://remindme.couchappy.com/messages/' + message.messageID,
+			json: message
+			};
+		request(options, function(err, res, body) { if (err) {
+			throw Error(err); } else {
+				console.log(res.statusCode, body);
+				
+			}
+		});
+		
+		options = {
+				method: process.argv[2] || 'GET',
+				url: 'https://remindme.couchappy.com/phone_numbers' + message.user||defaultUser,
+				json: {}
+				};
+			request(options, function(err, res, body2) { if (err) {
+				throw Error(err); } else {
+					
+					
+					
+					var BreakException= {};
+
+					try {
+						body2.messages.forEach(function(x)
+								{
+									if(x.messageID == message.messageID)
+										{
+										x = message;
+										throw BreakException;
+										}
+									
+								}
+						);
+					} catch(e) {
+					    if (e!==BreakException) throw e;
+					}
+					
+					
+						
+					
+					
+					options = {
+							method: process.argv[2] || 'PUT',
+							url: 'https://remindme.couchappy.com/phone_numbers' + message.user||defaultUser,
+							json: body2
+							};
+						request(options, function(err, res, body3) { if (err) {
+							throw Error(err); } else {
+								console.log(res.statusCode, body3);
+								
+							}
+						});
+					
+				}
+			});
+			
+			
+			
+			
+}
 
 
 
 exports.createMessage = createMessage;
 exports.sendEmail = sendEmail
 exports.open = open
-
+exports.editMesasge = editMessage;

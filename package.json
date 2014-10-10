@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "html": "v0.0.7",
+    "jquery": "^2.1.1",
     "mime": "v1.2.11",
     "nodemailer": "v1.3.0",
     "querystring": "v0.2.0",

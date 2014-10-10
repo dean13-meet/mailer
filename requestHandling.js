@@ -116,12 +116,12 @@ defaultTime = "1420070400";//1 Jan 2015
 message = 
 {
 messageID: messageid,
-context: postData.message || defaultMessage,
+context: postData.context || defaultMessage,
 user: postData.user || defaultUser,
 rec: postData.rec || defaultRec,
 date: 
 {
-seconds: postData.sec || defaultTime
+seconds: postData.date.sec || defaultTime
 }
 
 }

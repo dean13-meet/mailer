@@ -82,7 +82,9 @@ function open(res, postData)
 }
 function createMessage(response, postData)
 {
-	console.log("REQUEST: " + postData);
+	
+	
+	console.log("creating message using postData: " + JSON.stringify(postData));
 keyToGetMessageID = "9f811fc38470d144e2195e6c6a000b39";
 
 options = {

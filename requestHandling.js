@@ -124,6 +124,8 @@ seconds: postData.sec || defaultTime
 
 }
 
+
+console.log("created message: " + JSON.stringify(message))
 options = {
 	method: process.argv[2] || 'GET',
 	url: 'https://remindme.couchappy.com/phone_numbers/' + (process.argv[3] || message["user"]),

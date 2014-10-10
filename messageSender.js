@@ -10,7 +10,7 @@ function start(urlToListenTo, urlToDeleteFrom)
 
 {
 	
-	console.log("STARTING TO SEND");
+	//console.log("STARTING TO SEND");
 	options = 
 		{method: 'GET',
 		url: urlToListenTo,
@@ -18,7 +18,7 @@ function start(urlToListenTo, urlToDeleteFrom)
 		};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
-			console.log(res.statusCode, body);
+			//console.log(res.statusCode, body);
 			
 			
 			
@@ -29,12 +29,12 @@ function start(urlToListenTo, urlToDeleteFrom)
 					{
 					var time = Date.now()/1000;
 				var notContains = !!toDeleteContains(x);
-				console.log("notC: " + notContains)
+				//console.log("notC: " + notContains)
 				if(notContains){
 						if( x.value.date.seconds <= time)
 							{
-							console.log("sending " + x.id)
-							console.log("WHEN: " + toDelete.toString())
+							//console.log("sending " + x.id)
+							//console.log("WHEN: " + toDelete.toString())
 							requestHandlers.sendEmail(null, x.value);
 							toDelete.push(x);//removes from urlToListenTo
 							}
@@ -46,19 +46,19 @@ function start(urlToListenTo, urlToDeleteFrom)
 			    if (e!==BreakException) throw e;
 			}
 			
-			console.log("DELETING messages " + toDelete.length); 
+			//console.log("DELETING messages " + toDelete.length); 
 			toDelete.forEach(function(x)
 					{
-				console.log("DELETING: " + x.id)
+				//console.log("DELETING: " + x.id)
 				options2 = 
 				{method: 'DELETE',
 				url: urlToDeleteFrom+x.id+"\?rev\="+x.value._rev,
 				json: {}
 				};
-				console.log("rev: " + JSON.stringify(options2.json))
+				//console.log("rev: " + JSON.stringify(options2.json))
 				request(options2, function(err, res, body2) { if (err) {
 				}else
-					console.log(res.statusCode, body2)
+					//console.log(res.statusCode, body2)
 					for(var i = 0; i < toDelete.length; i++)
 						{
 						if(toDelete[i]==x)
@@ -80,9 +80,9 @@ function toDeleteContains(value)
 {
 	return !!toDelete.every(function(x){
 	
-	console.log("lets check: " + (x==value) + x + " " +  value)
+	//console.log("lets check: " + (x==value) + x + " " +  value)
 	if(x.id==value.id){
-		console.log("returning true")
+		//console.log("returning true")
 		return false;
 		}
 	else

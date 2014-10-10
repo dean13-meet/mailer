@@ -160,7 +160,7 @@ options = {
 	request(options, function(err, res, body2) { if (err) {
 		throw Error(err); } else {
 			//console.log(res.statusCode, body2);
-			response.end(JSON.stringify(message));
+			//response.end(JSON.stringify(message));
 		}
 	});
 		}
@@ -171,7 +171,7 @@ options = {
 		
 	}
 });
-		res.end("Created Message" + message);
+		response.end("Created Message" + message);
 	}
 
 function editMessage(response, message)

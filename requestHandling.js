@@ -136,7 +136,7 @@ options = {
 request(options, function(err, res, body) { if (err) {
 	throw Error(err); } else {
 		//console.log(res.statusCode, body);
-		
+		console.log("gonna push on: " + body.messages);
 		body.messages.push(message);
 	}
 options = {

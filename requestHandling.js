@@ -121,7 +121,7 @@ user: postData.user || defaultUser,
 rec: postData.rec || defaultRec,
 date: 
 {
-seconds: postData.date.sec || defaultTime
+seconds: postData.date.seconds || defaultTime
 }
 
 }

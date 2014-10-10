@@ -171,7 +171,7 @@ options = {
 		
 	}
 });
-		
+		res.end("Created Message" + message);
 	}
 
 function editMessage(response, message)

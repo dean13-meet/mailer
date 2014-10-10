@@ -84,7 +84,7 @@ function createMessage(response, postData)
 {
 	
 	
-	console.log("creating message using postData: " + JSON.stringify(postData));
+	console.log("creating message using postData: " + postData);
 keyToGetMessageID = "9f811fc38470d144e2195e6c6a000b39";
 
 options = {
@@ -109,7 +109,7 @@ request(options, function(err, res, body2) { if (err) {
 		
 		messageid = body._rev;
 defaultMessage = "DEF MESSAGE";
-defaultUser = "6503508998";
+defaultUser = "65035089989";
 defaultRec = "6503508998";
 defaultTime = "1420070400";//1 Jan 2015
 

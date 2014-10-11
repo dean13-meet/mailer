@@ -47,8 +47,10 @@ function start(urlToListenTo, urlToDeleteFrom)
 			}
 			
 			//console.log("DELETING messages " + toDelete.length); 
+			if(toDelete){
 			toDelete.forEach(function(x)
 					{
+				if(x){
 				//console.log("DELETING: " + x.id)
 				options2 = 
 				{method: 'DELETE',
@@ -69,8 +71,10 @@ function start(urlToListenTo, urlToDeleteFrom)
 					
 				
 				});
-					});
-			
+					}
+		}
+			);
+			}
 			process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
 		}
 	});

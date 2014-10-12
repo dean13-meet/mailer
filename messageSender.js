@@ -9,7 +9,7 @@ var toDelete = [];
 function start(urlToListenTo, urlToDeleteFrom)
 
 {
-	
+	try{
 	//console.log("STARTING TO SEND");
 	options = 
 		{method: 'GET',
@@ -25,6 +25,7 @@ function start(urlToListenTo, urlToDeleteFrom)
 			var BreakException= {};
 
 			try {
+				if(body)
 			body.rows.forEach(function(x)
 					{
 					var time = Date.now()/1000;
@@ -78,10 +79,19 @@ function start(urlToListenTo, urlToDeleteFrom)
 			process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
 		}
 	});
+}
+catch(e){
+	console.log("ERROR: " + e)
+	try{
+	process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
+	}catch (e2){console.log("ERROR: " + e2)}
+}
 
+}
 	
 function toDeleteContains(value)
 {
+	try{
 	return !!toDelete.every(function(x){
 	
 	//console.log("lets check: " + (x==value) + x + " " +  value)
@@ -92,13 +102,11 @@ function toDeleteContains(value)
 	else
 		return true;
 	})	
-		
+	}
+	catch(e){
+		console.log("ERROR: " + e)
+	}
 
-}
-
-	
-	
-	
 }
 
 exports.start = start;

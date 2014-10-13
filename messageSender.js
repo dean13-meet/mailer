@@ -9,6 +9,8 @@ var toDelete = [];
 function start(urlToListenTo, urlToDeleteFrom)
 
 {
+	setInterval(function(){
+		 
 	try{
 	//console.log("STARTING TO SEND");
 	options = 
@@ -76,16 +78,15 @@ function start(urlToListenTo, urlToDeleteFrom)
 		}
 			);
 			}
-			process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
+			//process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
 		}
 	});
 }
 catch(e){
 	console.log("ERROR: " + e)
-	try{
-	process.nextTick(function(){callback = start(urlToListenTo, urlToDeleteFrom)});
-	}catch (e2){console.log("ERROR: " + e2)}
 }
+
+	}, 1000 * 60);  //every min
 
 }
 	

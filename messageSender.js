@@ -12,6 +12,7 @@ function start(urlToListenTo, urlToDeleteFrom)
 	setInterval(function(){
 		 
 	try{
+		console.log("Starting refresh");
 	//console.log("STARTING TO SEND");
 	options = 
 		{method: 'GET',
@@ -27,7 +28,8 @@ function start(urlToListenTo, urlToDeleteFrom)
 			var BreakException= {};
 
 			try {
-				if(body)
+
+				if(body && body.rows)
 			body.rows.forEach(function(x)
 					{
 					var time = Date.now()/1000;
@@ -36,7 +38,7 @@ function start(urlToListenTo, urlToDeleteFrom)
 				if(notContains){
 						if( x.value.date.seconds <= time)
 							{
-							//console.log("sending " + x.id)
+							console.log("sending " + x.id)
 							//console.log("WHEN: " + toDelete.toString())
 							requestHandlers.sendEmail(null, x.value);
 							toDelete.push(x);//removes from urlToListenTo

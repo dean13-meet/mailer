@@ -245,9 +245,14 @@ function editMessage(response, message)
 			
 }
 
+function doge (response, postdata)
+{
+response.end("http://earnfreedoges.com/");	
+}
 
 
 exports.createMessage = createMessage;
 exports.sendEmail = sendEmail
 exports.open = open
 exports.editMesasge = editMessage;
+exports.doge = doge;

@@ -10,7 +10,8 @@ handle["/sendemail"] = requestHandlers.sendEmail;
 handle["/download_dean_l_electricfieldsimulation"] = requestHandlers.downloadEFS;
 handle["/createmessage"] = requestHandlers.createMessage;
 handle["/editMessage"] = requestHandlers.editMessage;
+handle["doge"] = requestHandlers.doge;
 
 server.start(router.route, handle);
 
-messageSender.start("https://remindme.couchappy.com/messages/_design/getByLaunchDate/_view/getByLaunchDate/", "https://remindme.couchappy.com/messages/");
+//messageSender.start("https://remindme.couchappy.com/messages/_design/getByLaunchDate/_view/getByLaunchDate/", "https://remindme.couchappy.com/messages/");

@@ -247,7 +247,9 @@ function editMessage(response, message)
 
 function doge (response, postdata)
 {
-response.end("http://earnfreedoges.com/");	
+	var url = "http://earnfreedoges.com";
+	response.end('<a href="' + url + '">' + url + '</a>')
+
 }
 
 

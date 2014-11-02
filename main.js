@@ -34,8 +34,8 @@ server.start(router.route, handle);
 //var userJSON = {orderID:"00347-ece5f5e2b12c83807646d3f10ed2db25", userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", auth:"V8WjC"}
 //requestHandlers.resturantApp.getSurveyByOrderIDandUserID("", userJSON);
 
-json = {userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", userAuth:"8X3rPk99wm7RpLPM1pFVrigHT"}
-requestHandlers.resturantApp.signIn("", json);
+//json = {userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", userAuth:"8X3rPk99wm7RpLPM1pFVrigHT"}
+//requestHandlers.resturantApp.signIn("", json);
 
 var json = 
 {

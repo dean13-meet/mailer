@@ -254,7 +254,8 @@ function doge (response, postdata)
 
 
 exports.createMessage = createMessage;
-exports.sendEmail = sendEmail
-exports.open = open
+exports.sendEmail = sendEmail;
+exports.open = open;
 exports.editMesasge = editMessage;
 exports.doge = doge;
+exports.resturantApp = require("./resturantHandlers");

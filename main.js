@@ -35,7 +35,7 @@ server.start(router.route, handle);
 //requestHandlers.resturantApp.getSurveyByOrderIDandUserID("", userJSON);
 
 json = {userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", userAuth:"8X3rPk99wm7RpLPM1pFVrigHT"}
-requestHandlers.resturantApp.getOrdersByUserID("", json);
+requestHandlers.resturantApp.signIn("", json);
 
 var json = 
 {

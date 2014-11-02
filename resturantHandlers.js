@@ -553,7 +553,7 @@ function signIn(response, postdata, retVal)
 			if(response)
 				response.end({error: "Error: Incorrect username or password."});
 			else
-				console.log("Error: Incorrect username or password.");
+				console.log({error: "Error: Incorrect username or password."});
 		}
 		
 	}

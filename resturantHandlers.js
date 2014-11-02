@@ -507,6 +507,8 @@ var userQueryURL = "https://resturantapp.couchappy.com/resturant_users/_design/q
 function signIn(response, postdata, retVal)
 {
 	console.log(JSON.stringify(postdata))
+	console.log("name: " + postdata.name)
+	console.log("pass: " + postdata.pass)
 /*
  * PostData:
  * var name

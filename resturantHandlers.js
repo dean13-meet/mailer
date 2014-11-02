@@ -326,7 +326,7 @@ function getOrdersByUserID(response, postdata, user)
 		else
 			{
 			if(response)
-				response.end("Error: Incorrect user auth.");
+				response.end({error: "Error: Incorrect user auth."});
 			else
 				console.log("Error: Incorrect user auth.");
 			
@@ -363,7 +363,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 		if(user.auth != postdata.userAuth)
 			{
 			if(response)
-				response.end("Error: Incorrect user auth.");
+				response.end({error: "Error: Incorrect user auth."});
 			else
 				console.log("Error: Incorrect user auth.");
 			

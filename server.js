@@ -21,7 +21,7 @@ function start(route, handle) {
 			if(postData.constructor===stringConstructor)
 			{
 				console.log("Parsing postdata");
-				postData = JSON.parse(postData);
+				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}
 			}
 			route(handle, pathname, response, postData);
 		});

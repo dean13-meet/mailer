@@ -506,7 +506,7 @@ exports.saveUserResponseToQuestionbyQuestionIDandUserID = saveUserResponseToQues
 var userQueryURL = "https://resturantapp.couchappy.com/resturant_users/_design/queryName/_view/queryName";
 function signIn(response, postdata, retVal)
 {
-	console.log(JSON.stringify(postdata))
+	console.log("postdata: " + JSON.stringify(postdata))
 	console.log("name: " + postdata.name)
 	console.log("pass: " + postdata.pass)
 /*

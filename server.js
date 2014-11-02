@@ -16,6 +16,7 @@ function start(route, handle) {
 				postDataChunk + "'.");
 		});
 		request.addListener("end", function() {
+			console.log("routing postdata: " + postData)
 			route(handle, pathname, response, postData);
 		});
 	}

@@ -22,6 +22,7 @@ handle["/resturant/createresturant"] = requestHandlers.resturantApp.createRestur
 handle["/resturant/getsurveybyorderidanduserid"] = requestHandlers.resturantApp.getSurveyByOrderIDandUserID;
 handle["/resturant/signin"] = requestHandlers.resturantApp.signIn;
 handle["/resturant/getordersbyuserid"] = requestHandlers.resturantApp.getOrdersByUserID;
+handle["/resturant/validateuserauth"] = requestHandlers.resturantApp.validateUserAuth;
 
 server.start(router.route, handle);
 

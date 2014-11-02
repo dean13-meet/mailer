@@ -460,7 +460,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 				orderID:orderID
 		}
 		if(response)
-			response.end(survey);
+			response.end(JSON.stringify(survey));
 		else
 			console.log("Sent: " + JSON.stringify(survey));
 
@@ -568,7 +568,39 @@ function signIn(response, postdata, retVal)
 }
 exports.signIn = signIn;
 
-
+function validateUserAuth(response, postdata, user)
+{
+/*
+ * PostData:
+ * var userID
+ * var auth
+ */	
+	if(!user)
+		{
+		getObject(postdata.userID, validateUserAuth, [response, postdata], false);
+		}
+	else
+		{
+		if(user.id===postdata.userID && user.auth === postdata.auth)
+			{
+			if(response)
+				response.end("true");
+			else
+				console.log("true");
+			}
+		else
+			{
+			if(response)
+				response.end("false");
+			else
+				console.log("false");
+			}
+		
+		}
+	
+	
+}
+exports.validateUserAuth = validateUserAuth;
 //helper methods:
 
 function typeOfID(id)

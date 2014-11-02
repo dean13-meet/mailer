@@ -9,14 +9,6 @@ function route(handle, pathname, response, postData) {
 	if (typeof handle[pathname] === 'function') {
 		handle[pathname](response, postData);
 	} 
-	else if (pathname.indexOf("doge")>-1)
-		{
-		console.log("doge!!");
-		handle["doge"](response, postData);
-		}
-	
-		
-	
 	
 	else {
 		console.log("No request handler found for " + pathname);

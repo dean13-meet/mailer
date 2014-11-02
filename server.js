@@ -20,6 +20,7 @@ function start(route, handle) {
 			var stringConstructor = "test".constructor;
 			if(postData.constructor===stringConstructor)
 			{
+				console.log("Parsing postdata");
 				postData = JSON.parse(postData);
 			}
 			route(handle, pathname, response, postData);

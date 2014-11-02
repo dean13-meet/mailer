@@ -4,7 +4,7 @@
 
 function route(handle, pathname, response, postData) {
 	pathname = pathname.toLowerCase();
-	console.log("About to route a request for " + pathname + " , with data: " + postData);
+	console.log("About to route a request for " + pathname);
 	
 	if (typeof handle[pathname] === 'function') {
 		handle[pathname](response, postData);

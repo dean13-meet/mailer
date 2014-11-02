@@ -13,10 +13,15 @@ function start(route, handle) {
 		request.addListener("data", function(postDataChunk) {
 			postData += postDataChunk;
 			console.log("Received POST data chunk '"+
-				postDataChunk + "'.");
+					postDataChunk + "'.");
 		});
 		request.addListener("end", function() {
-			console.log("routing postdata: " + postData)
+			//JSON parse:
+			var stringConstructor = "test".constructor;
+			if(postData.constructor===stringConstructor)
+			{
+				postData = JSON.parse(postData);
+			}
 			route(handle, pathname, response, postData);
 		});
 	}

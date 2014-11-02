@@ -551,7 +551,7 @@ function signIn(response, postdata, retVal)
 			console.log("6");
 			ret = {userID:user.id, auth:auth}
 			if(response){console.log("7");
-				response.end(ret);}
+				response.end(JSON.stringify(ret));}
 			console.log("8");
 			console.log("Fetched userID: " + JSON.stringify(ret));
 			}
@@ -727,5 +727,6 @@ function saveURL(url, json)
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
 			//DONE
+			console.log("Saved url: " + url);
 		}});
 }

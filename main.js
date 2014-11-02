@@ -19,9 +19,9 @@ handle["/resturant/createemployee"] = requestHandlers.resturantApp.createEmploye
 handle["/resturant/createquestion"] = requestHandlers.resturantApp.createQuestion;
 handle["/resturant/createuser"] = requestHandlers.resturantApp.createUser;
 handle["/resturant/createresturant"] = requestHandlers.resturantApp.createResturant;
-handle["/resturant/getSurveyByOrderIDandUserID"] = requestHandlers.resturantApp.getSurveyByOrderIDandUserID;
-handle["/resturant/signIn"] = requestHandlers.resturantApp.signIn;
-handle["/resturant/getOrdersByUserID"] = requestHandlers.resturantApp.getOrdersByUserID;
+handle["/resturant/getsurveybyorderidanduserid"] = requestHandlers.resturantApp.getSurveyByOrderIDandUserID;
+handle["/resturant/signin"] = requestHandlers.resturantApp.signIn;
+handle["/resturant/getordersbyuserid"] = requestHandlers.resturantApp.getOrdersByUserID;
 
 server.start(router.route, handle);
 

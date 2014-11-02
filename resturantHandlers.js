@@ -326,7 +326,7 @@ function getOrdersByUserID(response, postdata, user)
 		else
 			{
 			if(response)
-				response.end({error: "Error: Incorrect user auth."});
+				response.end(JSON.stringify({error: "Error: Incorrect user auth."}));
 			else
 				console.log("Error: Incorrect user auth.");
 			
@@ -363,7 +363,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 		if(user.auth != postdata.userAuth)
 			{
 			if(response)
-				response.end({error: "Error: Incorrect user auth."});
+				response.end(JSON.stringify({error: "Error: Incorrect user auth."}));
 			else
 				console.log("Error: Incorrect user auth.");
 			
@@ -484,7 +484,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	else
 	{
 		if(response)
-			response.end({error: "Error: Incorrect auth."});
+			response.end(JSON.stringify({error: "Error: Incorrect auth."}));
 		else
 			console.log("Error: Incorrect auth.");
 	}
@@ -551,9 +551,9 @@ function signIn(response, postdata, retVal)
 		else
 		{
 			if(response)
-				response.end({error: "Error: Incorrect username or password."});
+				response.end(JSON.stringify({error: "Error: Incorrect username or password."}));
 			else
-				console.log({error: "Error: Incorrect username or password."});
+				console.log("Error: Incorrect username or password.");
 		}
 		
 	}

@@ -484,9 +484,9 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	else
 	{
 		if(response)
-			response.end("Error: Incorrect auth!")
-			else
-				console.log("Error: Incorrect auth!")
+			response.end({error: "Error: Incorrect auth."});
+		else
+			console.log("Error: Incorrect auth.");
 	}
 
 
@@ -551,9 +551,9 @@ function signIn(response, postdata, retVal)
 		else
 		{
 			if(response)
-				response.end("Error: Incorrect username or password.");
-
-			console.log("Error: Incorrect username or password.");
+				response.end({error: "Error: Incorrect username or password."});
+			else
+				console.log("Error: Incorrect username or password.");
 		}
 		
 	}

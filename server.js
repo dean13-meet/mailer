@@ -18,7 +18,7 @@ function start(route, handle) {
 		request.addListener("end", function() {
 			//JSON parse:
 			var stringConstructor = "test".constructor;
-			if(postData.constructor===stringConstructor)
+			if(postData && postData.constructor===stringConstructor)
 			{
 				console.log("Parsing postdata");
 				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}

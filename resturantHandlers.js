@@ -523,36 +523,40 @@ function signIn(response, postdata, retVal)
 
 	if(!retVal)
 		{
+		console.log("1");
 		getURL(userQueryURL, signIn, [response, postdata], false);
 		}
 	else
-	{
+	{console.log("2");
 		var user;
 		for(var i = 0; i < retVal.rows.length; i++)
 		{
+			console.log("3");
 			row = retVal.rows[i];
 			if(row.key==postdata.name)
 				{
+				console.log("4");
 				user = row.value;
 				break;
 				}
 		}
 		if(user && user.pass==postdata.pass)
 			{
+			console.log("5");
 			//update auth
 			var auth = createAuth();
 			var url = getURLByIDType(typeOfID(user.id));
 			user.auth = auth;
 			saveURL(url+user.id, user);
-			
+			console.log("6");
 			ret = {userID:user.id, auth:auth}
-			if(response)
-				response.end(ret);
-
+			if(response){console.log("7");
+				response.end(ret);}
+			console.log("8");
 			console.log("Fetched userID: " + JSON.stringify(ret));
 			}
 		else
-		{
+		{console.log("9");
 			if(response)
 				response.end(JSON.stringify({error: "Error: Incorrect username or password."}));
 			else

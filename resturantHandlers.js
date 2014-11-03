@@ -71,6 +71,15 @@ function createOrder(response, postdata, id)
 	 * array extraQuestions
 	 */
 
+	if(!postdata.resturant || !postdata.items || !postdata.employeesServing || !postdata.extraQuestions)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	
 	if(!id){
 		createID("order", createOrder, [response, postdata]);
 	}else{
@@ -113,7 +122,14 @@ function createItem(response, postdata, id)
 	 * array questions
 	 */
 
-
+	if(!postdata.name || !postdata.questions)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!id){
 		createID("item", createItem, [response, postdata]);
 	}else{
@@ -152,7 +168,14 @@ function createEmployee(response, postdata, id)
 	 * array questions
 	 */
 
-
+	if(!postdata.name || !postdata.questions)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!id){
 		createID("employee", createEmployee, [response, postdata]);
 	}else{
@@ -192,7 +215,14 @@ function createQuestion(response, postdata, id)
 	 * var shouldAllowTextInput
 	 */
 
-
+	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!id){
 		createID("question", createQuestion, [response, postdata]);
 	}else{
@@ -232,15 +262,24 @@ function createUser(response, postdata, id)
 	 * var name
 	 */
 
-
+	if(!postdata.name)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!id){
 		createID("user", createUser, [response, postdata]);
 	}else{
 
+		auth = createAuth();
 		json = {
 				id:id,
 				name:postdata.name,
 				pass:postdata.pass,
+				auth:auth,
 				orders:[]
 		}
 		options = {
@@ -271,7 +310,14 @@ function createResturant(response, postdata, id)
 	 * var name
 	 */
 
-
+	if(!postdata.name)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!id){
 		createID("resturant", createResturant, [response, postdata]);
 	}else{
@@ -310,7 +356,14 @@ function getOrdersByUserID(response, postdata, user)
 	 * var userID
 	 * var userAuth
 	 */
-	
+	if(!postdata.userID || !postdata.userAuth)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!user)
 		{
 		getObject(postdata.userID, getOrdersByUserID, [response, postdata], false);
@@ -346,7 +399,14 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	 * var userAuth
 	 */
 	
-	
+	if(!postdata.orderID || !postdata.auth || !postdata.userID || !postdata.userAuth)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	Array.prototype.pushArray = function(arr) {
 		this.push.apply(this, arr);
 	};
@@ -514,7 +574,14 @@ function signIn(response, postdata, retVal)
  * var name
  * var pass
  */	
-	
+	if(!postdata.name || !postdata.pass)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 /*
  * Return: 
  * var userID
@@ -575,6 +642,14 @@ function validateUserAuth(response, postdata, user)
  * var userID
  * var auth
  */	
+	if(!postdata.userID || !postdata.auth)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	if(!user)
 		{
 		getObject(postdata.userID, validateUserAuth, [response, postdata], false);
@@ -711,6 +786,7 @@ function getObject(objID,callback, args, push, value)//use push if you need the 
 {
 	
 	var url = getURLByIDType(typeOfID(objID));
+	if(url==="error"){value = {"error": "Wrong objID. given objID: " + objID}}
 	if(!value)
 		{
 		getURL(url+objID, getObject, [objID, callback, args, push], false);

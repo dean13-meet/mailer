@@ -15,10 +15,12 @@
  * var id //will only be used for saving!
  * var name
  * array questions
+ * var image
  * 
  * Employee:
  * var id //will only be used for saving!
  * var name
+ * var image
  * array questions
  * 
  * Question:
@@ -26,6 +28,7 @@
  * var text
  * var shouldAllowStarRating
  * var shouldAllowTextInput
+ * var image
  * array userResponses
  * 
  * UserResponse:
@@ -44,7 +47,14 @@
  * Resturant:
  * var id
  * var name
+ * var images
  * TODO rest
+ * 
+ * Image:
+ * var id
+ * var resturantID
+ * var data
+ * var Content_Type
  * 
  * id allocation:
  * user - 001_...
@@ -53,11 +63,12 @@
  * item - 004_....
  * employee - 005_...
  * question - 006_...
+ * image - 007_...
  * 
  */
 
 
-
+var base64Machine = require("base64-url");
 
 
 //Create
@@ -120,6 +131,7 @@ function createItem(response, postdata, id)
 	 * PostData:
 	 * var name
 	 * array questions
+	 * var imageID
 	 */
 
 	if(!postdata.name || !postdata.questions)
@@ -137,6 +149,7 @@ function createItem(response, postdata, id)
 		json = {
 				id:id,
 				name:postdata.name,
+				imageID:postdata.imageID,
 				questions:postdata.questions 
 		}
 		options = {
@@ -166,6 +179,7 @@ function createEmployee(response, postdata, id)
 	 * PostData:
 	 * var name
 	 * array questions
+	 * var imageID
 	 */
 
 	if(!postdata.name || !postdata.questions)
@@ -183,6 +197,7 @@ function createEmployee(response, postdata, id)
 		json = {
 				id:id,
 				name:postdata.name,
+				imageID:postdata.imageID,
 				questions:postdata.questions 
 		}
 		options = {
@@ -213,6 +228,7 @@ function createQuestion(response, postdata, id)
 	 * var text
 	 * var shouldAllowStarRating
 	 * var shouldAllowTextInput
+	 * var imageID
 	 */
 
 	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput)
@@ -232,6 +248,7 @@ function createQuestion(response, postdata, id)
 				text:postdata.text,
 				shouldAllowStarRating:postdata.shouldAllowStarRating,
 				shouldAllowTextInput:postdata.shouldAllowTextInput,
+				imageID:postdata.imageID,
 				userResponses:[] 
 		}
 		options = {
@@ -324,7 +341,8 @@ function createResturant(response, postdata, id)
 
 		json = {
 				id:id,
-				name:postdata.name
+				name:postdata.name,
+				images:[]
 		}
 		options = {
 				method:'PUT',
@@ -346,8 +364,148 @@ function createResturant(response, postdata, id)
 }
 exports.createResturant = createResturant;
 
+function urlToImageData(url, callback, args, push)
+{
+	//from http://stackoverflow.com/questions/3709391/node-js-base64-encode-a-downloaded-image-for-use-in-data-uri
+
+	var URL = require('url');
+    sURL = url;
+    oURL = URL.parse(sURL);
+    http = require('http');
+    client = http.createClient(80, oURL.hostname);
+    requestImage = client.request('GET', oURL.pathname, {'host': oURL.hostname});
+requestImage.end();
+requestImage.on('response', function (response)
+{
+    var type = response.headers["content-type"],
+        prefix = type;
+        body = "";
+
+    response.setEncoding('binary');
+    response.on('end', function () {
+        var base64 = new Buffer(body, 'binary').toString('base64'),
+            
+        data = base64;
+        //data = base64Machine.escape(base64);
+        //data = JSON.stringify(data);
+        console.log(data);
+        json = {"data":data, "Content_Type":prefix};
+        if(!push){
+			args.push(json); }
+		else
+		{
+			lastArg = args[args.length-1];
+		lastArg.push(json);
+		}
+		//console.log("Callback: " + callback + " args: " + args)
+		callback.apply(this, args)
+    });
+    response.on('data', function (chunk) {
+        if (response.statusCode == 200) body += chunk;
+    });
+});
+}
+exports.urlToImageData = urlToImageData;
+
+function uploadImage(response, postdata, id, resturantObject)
+{
+
+	/*
+	 * PostData:
+	 * var resturantID
+	 * dic data {data, Content-Type}
+	 */
+	
+	
+	if(!postdata.resturantID || !postdata.data)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	if(!id){
+		createID("image", uploadImage, [response, postdata]);
+		return;
+	}
+	if(!resturantObject)
+		{
+		getObject(postdata.resturantID, uploadImage, [response, postdata, id], false);
+		return;
+		}
+	
+		
+	
+		json = {
+				"id":id,
+				"resturantID":postdata.resturantID,
+				"_attachments":
+					{
+					"image":
+						{
+						"content_type":postdata.data.Content_Type,
+					    "data": postdata.data.data
+					    	}
+					}
+		}
+		console.log("JSON " + JSON.stringify(json))
+		options = {
+				method:'PUT',
+				url: getURLByIDType("image") + id,
+				json: json
+		};
+		request(options, function(err, res, body) { if (err) {
+			throw Error(err); } else {
+				if(response)
+					response.end("Created image: " + body);
+
+				console.log("Created image: " + JSON.stringify(body));
+
+			}
+		});
+		
+		resturantObject.images.push(id);
+		saveURL(getURLForObject(resturantObject.id), resturantObject);
+
+
+	
+	
+}
+exports.uploadImage = uploadImage;
 
 //Get or update:
+
+function getImageByID(response, postdata, image)
+{
+/*
+ * PostData:
+ * var imageID
+ */	
+	if(!postdata.imageID)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	
+	if(!image)
+		{
+		url = getURLForObject(postdata.imageID) + "/image";
+		getURL(url, getImageByID, [response, postdata], false);
+		}
+	
+	
+	if(response)
+		response.end(image);
+
+	console.log("Fetched image: " + image);
+
+	
+}
+exports.getImageByID = getImageByID;
 
 function getOrdersByUserID(response, postdata, user)
 {
@@ -688,6 +846,7 @@ function typeOfID(id)
 	 * item - 004_....
 	 * employee - 005_...
 	 * question - 006_...
+	 * images - 007_...
 	 */
 	str = id.substring(0,3);
 	switch(str)
@@ -698,6 +857,7 @@ function typeOfID(id)
 	case "004":return "item"
 	case "005":return "employee"
 	case "006":return "question"
+	case "007":return "image"
 	default:return "error"
 	}
 
@@ -713,18 +873,26 @@ function getURLByIDType(idType)
 	case "item": return itemURL;
 	case "employee": return employeeURL;
 	case "question": return questionURL;
+	case "image" : return imagesURL;
 	default:return "error"
 	}
+}
 
+function getURLForObject(objectID)
+{
+	categoryURL = getURLByIDType(typeOfID(objectID));
+	return categoryURL==="error" ? categoryURL : categoryURL+objectID;
 }
 //urls:
-var idCreator = "https://resturantapp.couchappy.com/resturant_id_creator/getID";
-var ordersURL = "https://resturantapp.couchappy.com/resturant_orders/";
-var itemURL = "https://resturantapp.couchappy.com/resturant_items/";
-var employeeURL = "https://resturantapp.couchappy.com/resturant_employees/";
-var questionURL = "https://resturantapp.couchappy.com/resturant_questions/";
-var usersURL = "https://resturantapp.couchappy.com/resturant_users/";
-var resturantsURL = "https://resturantapp.couchappy.com/resturant_resturants/";
+var baseURL = "https://resturantapp.couchappy.com/";
+var idCreator = baseURL + "resturant_id_creator/getID";
+var ordersURL = baseURL + "resturant_orders/";
+var itemURL = baseURL + "resturant_items/";
+var employeeURL = baseURL + "resturant_employees/";
+var questionURL = baseURL + "resturant_questions/";
+var usersURL = baseURL + "resturant_users/";
+var resturantsURL = baseURL + "resturant_resturants/";
+var imagesURL = baseURL + "resturant_images/";
 
 
 function createID(typeOfObject, callback, args)
@@ -738,6 +906,7 @@ function createID(typeOfObject, callback, args)
 	case "item":{idPrefix = "004"; break;}
 	case "employee":{idPrefix = "005"; break;}
 	case "question":{idPrefix = "006"; break;}
+	case "image": {idPrefix = "007"; break;}
 	default:return idPrefix;
 	}
 	console.log("s1");
@@ -803,6 +972,7 @@ function getObject(objID,callback, args, push, value)//use push if you need the 
 			callback.apply(this, args)
 		}
 }
+
 
 function getURL(url, callback, args, push)
 {

@@ -23,16 +23,29 @@ handle["/resturant/getsurveybyorderidanduserid"] = requestHandlers.resturantApp.
 handle["/resturant/signin"] = requestHandlers.resturantApp.signIn;
 handle["/resturant/getordersbyuserid"] = requestHandlers.resturantApp.getOrdersByUserID;
 handle["/resturant/validateuserauth"] = requestHandlers.resturantApp.validateUserAuth;
+handle["/resturant/getimagebyid"] = requestHandlers.resturantApp.getImageByID;
+handle["/resturant/uploadimage"] = requestHandlers.resturantApp.uploadImage;
+handle["/resturant/urltoimagedata"] = requestHandlers.resturantApp.urlToImageData;
 
 server.start(router.route, handle);
 
 
 
 
+function test (data)
+{
+if(!data)
+{
+requestHandlers.resturantApp.urlToImageData("http://www.picresize.com/images/rsz_man-w-questions-320x320.jpg", test, [], false);
+}
+else
+requestHandlers.resturantApp.uploadImage("",{"data":data, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"});
+}
+test();
 
 //Testing:
 
-//var userJSON = {orderID:"00347-ece5f5e2b12c83807646d3f10ed2db25", userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", auth:"V8WjC"}
+//var userJSON = {orderID:"00347-ece5f5e2b12c83807646d3f10ed2db25", userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", auth:"V8WjC", userAuth:"de"}
 //requestHandlers.resturantApp.getSurveyByOrderIDandUserID("", userJSON);
 
 //json = {userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", userAuth:"8X3rPk99wm7RpLPM1pFVrigHT"}

@@ -879,6 +879,7 @@ function getURLByIDType(idType)
 function getURLForObject(objectID)
 {
 	categoryURL = getURLByIDType(typeOfID(objectID));
+	console.log("cat url: " + categoryURL + " for id: " + objectID);
 	return categoryURL==="error" ? categoryURL : categoryURL+objectID;
 }
 //urls:

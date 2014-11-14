@@ -68,8 +68,6 @@
  */
 
 
-var base64Machine = require("base64-url");
-
 
 //Create
 function createOrder(response, postdata, id)
@@ -146,6 +144,7 @@ function createItem(response, postdata, id)
 		createID("item", createItem, [response, postdata]);
 	}else{
 
+		if(!postdata.imageID)postdata.imageID = "defFood";
 		json = {
 				id:id,
 				name:postdata.name,
@@ -193,7 +192,7 @@ function createEmployee(response, postdata, id)
 	if(!id){
 		createID("employee", createEmployee, [response, postdata]);
 	}else{
-
+		if(!postdata.imageID)postdata.imageID = "defWaiter";
 		json = {
 				id:id,
 				name:postdata.name,
@@ -242,7 +241,7 @@ function createQuestion(response, postdata, id)
 	if(!id){
 		createID("question", createQuestion, [response, postdata]);
 	}else{
-
+		if(!postdata.imageID)postdata.imageID = "defGeneralQuestion";
 		json = {
 				id:id,
 				text:postdata.text,
@@ -386,8 +385,6 @@ requestImage.on('response', function (response)
         var base64 = new Buffer(body, 'binary').toString('base64'),
             
         data = base64;
-        //data = base64Machine.escape(base64);
-        //data = JSON.stringify(data);
         console.log(data);
         json = {"data":data, "Content_Type":prefix};
         if(!push){
@@ -501,7 +498,8 @@ function getImageByID(response, postdata, image)
 	if(response)
 		response.end(image);
 
-	console.log("Fetched image: " + image);
+	else
+		console.log("Fetched image: " + image);
 
 	
 }

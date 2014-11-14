@@ -490,7 +490,13 @@ function getImageByID(response, postdata, image)
 	
 	if(!image)
 		{
-		url = getURLForObject(postdata.imageID) + "/image";
+		var url;
+		if(postdata.imageID.substring(0,3)==="def")//def images have no IDs
+			url = getURLByIDType("image")+postdata.imageID;
+		else 
+			url = getURLForObject(postdata.imageID);
+		
+		url = url + "/image";
 		getURL(url, getImageByID, [response, postdata], false);
 		}
 	

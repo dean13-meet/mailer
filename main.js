@@ -41,7 +41,7 @@ requestHandlers.resturantApp.urlToImageData("http://www.picresize.com/images/rsz
 else
 requestHandlers.resturantApp.uploadImage("",{"data":data, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"});
 }
-test();
+//test();
 
 //Testing:
 

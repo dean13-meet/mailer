@@ -488,16 +488,18 @@ function getImageByID(response, postdata, image)
 		return;
 	}
 	
+	var url;
+	if(postdata.imageID.substring(0,3)==="def")//def images have no IDs
+		url = getURLByIDType("image")+postdata.imageID;
+	else 
+		url = getURLForObject(postdata.imageID);
+	
+	url = url + "/image";
+	console.log("image url: " + url);
+	
 	if(!image)
 		{
-		var url;
-		if(postdata.imageID.substring(0,3)==="def")//def images have no IDs
-			url = getURLByIDType("image")+postdata.imageID;
-		else 
-			url = getURLForObject(postdata.imageID);
-		
-		url = url + "/image";
-		console.log("image url: " + url);
+		console.log("no image");
 		getURL(url, getImageByID, [response, postdata], false);
 		return;
 		}

@@ -505,7 +505,7 @@ function getImageByID(response, postdata, image)
 		}
 	else
 		{
-		image = new Buffer(image, 'binary');
+		image = "data:" + "image/jpeg" + ";base64," + new Buffer(image).toString('base64');
 		}
 	
 	if(response)

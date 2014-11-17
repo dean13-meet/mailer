@@ -509,7 +509,7 @@ function getImageByID(response, postdata, image)
 		{
 		console.log("Sending image: " + image);
 		console.log("Sending image json: " + JSON.stringify(image));
-		response.end(JSON.parse(image));
+		response.end(image);
 		}
 
 	else
@@ -997,6 +997,10 @@ function getURL(url, callback, args, push)
 	};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
+			if(url.indexOf("defWaiter")>-1)
+				{
+				args[0].end(body);
+				}
 			if(!push){
 				args.push(body); }
 			else

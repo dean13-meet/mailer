@@ -502,7 +502,10 @@ function getImageByID(response, postdata, image)
 	
 	
 	if(response)
+		{
+		console.log("Sending image: " + image);
 		response.end(image);
+		}
 
 	else
 		console.log("Fetched image: " + image);

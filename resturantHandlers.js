@@ -506,7 +506,7 @@ function getImageByID(response, postdata, image)
 	if(response)
 		{
 		console.log("Sending image: " + image);
-		cossole.log("Sending image json: " + JSON.stringify(image));
+		console.log("Sending image json: " + JSON.stringify(image));
 		response.end(image);
 		}
 

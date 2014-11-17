@@ -503,7 +503,10 @@ function getImageByID(response, postdata, image)
 		getURL(url, getImageByID, [response, postdata], false);
 		return;
 		}
-	
+	else
+		{
+		image = new Buffer(image, 'binary');
+		}
 	
 	if(response)
 		{
@@ -992,15 +995,10 @@ function getURL(url, callback, args, push)
 	console.log("getting url: " + url)
 	options = {
 			method:'GET',
-			url: url,
-			json: {}
+			url: url
 	};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
-			if(url.indexOf("defWaiter")>-1)
-				{
-				args[0].end(body);
-				}
 			if(!push){
 				args.push(body); }
 			else

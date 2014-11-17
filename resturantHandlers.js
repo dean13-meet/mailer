@@ -497,13 +497,16 @@ function getImageByID(response, postdata, image)
 			url = getURLForObject(postdata.imageID);
 		
 		url = url + "/image";
+		console.log("image url: " + url);
 		getURL(url, getImageByID, [response, postdata], false);
+		return;
 		}
 	
 	
 	if(response)
 		{
 		console.log("Sending image: " + image);
+		cossole.log("Sending image json: " + JSON.stringify(image));
 		response.end(image);
 		}
 

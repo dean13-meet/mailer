@@ -505,7 +505,7 @@ function getImageByID(response, postdata, image)
 		}
 	else
 		{
-		image = "data:" + "image/jpeg" + ";base64," + new Buffer(image).toString('base64');
+		//image = "data:" + "image/jpeg" + ";base64," + new Buffer(image).toString('base64');
 		}
 	
 	if(response)
@@ -829,6 +829,7 @@ function validateUserAuth(response, postdata, user)
 		}
 	else
 		{
+		console.log("User: " + JSON.stringify(user));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
 			{
 			if(response)

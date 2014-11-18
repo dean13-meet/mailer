@@ -512,7 +512,7 @@ function getImageByID(response2, postdata, image)
 	{
 		
 	    var type = response.headers["content-type"],
-	        prefix = type;
+	    	prefix = "data:" + type + ";base64,",
 	        body = "";
 
 	    response.setEncoding('binary');
@@ -524,7 +524,7 @@ function getImageByID(response2, postdata, image)
 			
 	        var base64 = new Buffer(body, 'binary').toString('base64'),
 	            
-	        data = base64;
+	        data = prefix + base64;
 	        console.log(data);
 	        json = {"data":data, "Content_Type":prefix};
 	        if(!push){
@@ -553,8 +553,8 @@ function getImageByID(response2, postdata, image)
 		{
 		console.log("Sending image: " + image);
 		console.log("Sending image json: " + JSON.stringify(image));
-		response2.write('Content-Length:'+image.data.length+'\r\n');
-		response2.write('Content-Type:' + image.Content_Type + '\r\n');
+		//response2.write('Content-Length:'+image.data.length+'\r\n');
+		//response2.write('Content-Type:' + image.Content_Type + '\r\n');
 		response2.end(image.data);
 		}
 

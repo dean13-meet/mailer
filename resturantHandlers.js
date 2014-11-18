@@ -871,7 +871,6 @@ function validateUserAuth(response, postdata, user)
 		}
 	else
 		{
-		user = JSON.parse(user);
 		console.log("User: " + user);
 		console.log("UserPost: " + JSON.stringify(postdata));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
@@ -1044,6 +1043,12 @@ function getURL(url, callback, args, push)
 	};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
+			try{
+		        a=JSON.parse(body);
+		        body = a;//So that if error is called, we do not touch body yet.
+		    }catch(e){
+		      //Nothing
+		    }
 			if(!push){
 				args.push(body); }
 			else

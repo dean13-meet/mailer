@@ -524,7 +524,7 @@ function getImageByID(response2, postdata, image)
 			
 	        var base64 = new Buffer(body, 'binary').toString('base64'),
 	            
-	        data = body;
+	        data = base64;
 	        console.log(data);
 	        json = {"data":data, "Content_Type":prefix};
 	        if(!push){

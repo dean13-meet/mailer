@@ -830,18 +830,19 @@ function validateUserAuth(response, postdata, user)
 	else
 		{
 		console.log("User: " + JSON.stringify(user));
+		console.log("UserPost: " + JSON.stringify(postdata));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
 			{
 			if(response)
 				response.end("true");
-			else
+			//else
 				console.log("true");
 			}
 		else
 			{
 			if(response)
 				response.end("false");
-			else
+			//else
 				console.log("false");
 			}
 		

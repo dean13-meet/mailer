@@ -499,14 +499,54 @@ function getImageByID(response, postdata, image)
 	
 	if(!image)
 		{
+		
+		
+		var URL = require('url');
+	    sURL = url;
+	    oURL = URL.parse(sURL);
+	    http = require('http');
+	    client = http.createClient(80, oURL.hostname);
+	    requestImage = client.request('GET', oURL.pathname, {'host': oURL.hostname});
+	requestImage.end();
+	requestImage.on('response', function (response)
+	{
+		
+	    var type = response.headers["content-type"],
+	        prefix = type;
+	        body = "";
+
+	    response.setEncoding('binary');
+	    response.on('end', function () {
+	    	callback = getImageByID;
+			args = [response, postdata];
+			push = false;
+			
+			
+	        var base64 = new Buffer(body, 'binary').toString('base64'),
+	            
+	        data = base64;
+	        console.log(data);
+	        json = {"data":data, "Content_Type":prefix};
+	        if(!push){
+				args.push(json); }
+			else
+			{
+				lastArg = args[args.length-1];
+			lastArg.push(json);
+			}
+			//console.log("Callback: " + callback + " args: " + args)
+			callback.apply(this, args)
+	    });
+	    response.on('data', function (chunk) {
+	        if (response.statusCode == 200) body += chunk;
+	    });
+	});
+		/*
 		console.log("no image");
-		getURL(url, getImageByID, [response, postdata], false);
+		getURL(url, getImageByID, [response, postdata], false);*/
 		return;
 		}
-	else
-		{
-		//image = "data:" + "image/jpeg" + ";base64," + new Buffer(image).toString('base64');
-		}
+	
 	
 	if(response)
 		{
@@ -829,6 +869,7 @@ function validateUserAuth(response, postdata, user)
 		}
 	else
 		{
+		user = JSON.parse(user);
 		console.log("User: " + user);
 		console.log("UserPost: " + JSON.stringify(postdata));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
@@ -1001,7 +1042,6 @@ function getURL(url, callback, args, push)
 	};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
-			body = JSON.parse(body);
 			if(!push){
 				args.push(body); }
 			else

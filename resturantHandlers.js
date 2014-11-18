@@ -829,7 +829,7 @@ function validateUserAuth(response, postdata, user)
 		}
 	else
 		{
-		console.log("User: " + JSON.stringify(user));
+		console.log("User: " + user);
 		console.log("UserPost: " + JSON.stringify(postdata));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
 			{
@@ -1005,7 +1005,7 @@ function getURL(url, callback, args, push)
 				args.push(body); }
 			else
 			{
-				lastArg = args[args.length-1];
+			lastArg = args[args.length-1];
 			lastArg.push(body);
 			}
 			//console.log("Callback: " + callback + " args: " + args)

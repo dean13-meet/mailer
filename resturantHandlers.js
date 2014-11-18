@@ -515,7 +515,7 @@ function getImageByID(response2, postdata, image)
 	        prefix = type;
 	        body = "";
 
-	    //response.setEncoding('binary');
+	    response.setEncoding('binary');
 	    response.on('end', function () {
 	    	callback = getImageByID;
 			args = [response2, postdata];
@@ -553,6 +553,8 @@ function getImageByID(response2, postdata, image)
 		{
 		console.log("Sending image: " + image);
 		console.log("Sending image json: " + JSON.stringify(image));
+		response2.write('Content-Length:'+data.length+'\r\n');
+		response2.write('Content-Type:' + image.Content_Type + '\r\n');
 		response2.end(image.data);
 		}
 

@@ -481,8 +481,8 @@ function getImageByID(response2, postdata, image)
  */	
 	if(!postdata.imageID)
 	{
-		if(response)
-			response.end(JSON.stringify({"error": "Missing info"}));
+		if(response2)
+			response2.end(JSON.stringify({"error": "Missing info"}));
 		else
 			console.log(JSON.stringify({"error": "Missing info"}));
 		return;

@@ -618,7 +618,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info"}));
-		else
+		//else
 			console.log(JSON.stringify({"error": "Missing info"}));
 		return;
 	}
@@ -639,7 +639,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 			{
 			if(response)
 				response.end(JSON.stringify({error: "Error: Incorrect user auth."}));
-			else
+			//else
 				console.log("Error: Incorrect user auth.");
 			
 			return;
@@ -679,7 +679,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	for(i = 0; i < employees.length; i++)
 		{questionsEmployeesIDs.pushArray(employees[i].questions)}
 	
-	if(!questionsEmployees)questionsEmployees = [];
+	if(!questionsEmployees){questionsEmployees = [];}
 	if(questionsEmployees.length<questionsEmployeesIDs.length)
 	{
 		url = questionsEmployeesIDs[questionsEmployees.length];
@@ -687,7 +687,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 		return;
 	}
 	
-	if(!questionsOrder)questionsOrder = [];
+	if(!questionsOrder){questionsOrder = [];}
 	if(questionsOrder.length<order.extraQuestions.length)
 	{
 		url = order.extraQuestions[questionsOrder.length];
@@ -736,7 +736,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 		}
 		if(response)
 			response.end(JSON.stringify(survey));
-		else
+		//else
 			console.log("Sent: " + JSON.stringify(survey));
 
 		//Save order to user's orders:

@@ -531,10 +531,11 @@ function getImageByID(response, postdata, image)
 				args.push(json); }
 			else
 			{
-				lastArg = args[args.length-1];
+			lastArg = args[args.length-1];
 			lastArg.push(json);
 			}
 			//console.log("Callback: " + callback + " args: " + args)
+	        console.log("image args: " + args)
 			callback.apply(this, args)
 	    });
 	    response.on('data', function (chunk) {

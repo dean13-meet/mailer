@@ -553,7 +553,7 @@ function getImageByID(response, postdata, image)
 		{
 		console.log("Sending image: " + image);
 		console.log("Sending image json: " + JSON.stringify(image));
-		console.log("response is: " + JSON.stringify(response));
+		console.log("response is: " + response);
 		response.end(image);
 		}
 

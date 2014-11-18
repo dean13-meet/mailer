@@ -473,7 +473,7 @@ exports.uploadImage = uploadImage;
 
 //Get or update:
 
-function getImageByID(response, postdata, image)
+function getImageByID(response2, postdata, image)
 {
 /*
  * PostData:
@@ -518,7 +518,7 @@ function getImageByID(response, postdata, image)
 	    response.setEncoding('binary');
 	    response.on('end', function () {
 	    	callback = getImageByID;
-			args = [response, postdata];
+			args = [response2, postdata];
 			push = false;
 			
 			
@@ -549,12 +549,11 @@ function getImageByID(response, postdata, image)
 		}
 	
 	
-	if(response)
+	if(response2)
 		{
 		console.log("Sending image: " + image);
 		console.log("Sending image json: " + JSON.stringify(image));
-		console.log("response is: " + response);
-		response.end(image);
+		response2.end(image);
 		}
 
 	else

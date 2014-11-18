@@ -479,6 +479,7 @@ function getImageByID(response2, postdata, image)
  * PostData:
  * var imageID
  */	
+	console.log("Image post: " + JSON.stringify(postdata));
 	if(!postdata.imageID)
 	{
 		if(response2)

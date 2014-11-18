@@ -1001,6 +1001,7 @@ function getURL(url, callback, args, push)
 	};
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
+			body = JSON.parse(body);
 			if(!push){
 				args.push(body); }
 			else

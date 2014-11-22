@@ -895,6 +895,59 @@ function validateUserAuth(response, postdata, user)
 	
 }
 exports.validateUserAuth = validateUserAuth;
+
+function getResturantNameByResturantID(response, postdata, resturant)
+{
+	/*
+	 * PostData:
+	 * var resturantID
+	 */
+	if(!postdata.resturantID || typeOfID(postdata.resturantID)!=="resturant")
+		{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+		}
+	
+	if(!resturant)
+		{
+		getObject(postdata.resturantID, getResturantNameByResturantID, [response, postdata], false);
+		return;
+		}
+	if(response)
+		response.end(resturant.name);
+	//else
+		console.log("Returning resturant name: " + resturant.name);
+}
+exports.getResturantNameByResturantID = getResturantNameByResturantID;
+
+function getResturantNameByOrderID(response, postdata, order)
+{
+	/*
+	 * PostData:
+	 * var orderID
+	 */
+	if(!postdata.orderID || typeOfID(postdata.orderID)!=="order")
+		{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+		}
+	
+	if(!order)
+		{
+		getObject(postdata.orderID, getResturantNameByOrderID, [response, postdata], false);
+		return;
+		}
+	
+	getResturantNameByResturantID(response, {"resturantID":order.resturant});
+}
+exports.getResturantNameByOrderID = getResturantNameByOrderID;
+
 //helper methods:
 
 function typeOfID(id)

@@ -26,6 +26,8 @@ handle["/resturant/validateuserauth"] = requestHandlers.resturantApp.validateUse
 handle["/resturant/getimagebyid"] = requestHandlers.resturantApp.getImageByID;
 handle["/resturant/uploadimage"] = requestHandlers.resturantApp.uploadImage;
 handle["/resturant/urltoimagedata"] = requestHandlers.resturantApp.urlToImageData;
+handle["/resturant/getresturantnamebyorderid"] = requestHandlers.resturantApp.getResturantNameByOrderID;
+handle["/resturant/getresturantnamebyresturantid"] = requestHandlers.resturantApp.getResturantNameByResturantID;
 
 server.start(router.route, handle);
 

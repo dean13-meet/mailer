@@ -589,9 +589,9 @@ function getOrdersByUserID(response, postdata, user)
 		if(user.auth == postdata.userAuth)
 			{
 			if(response)
-				response.end(JSON.stringify(user.orders));
+				response.end(JSON.stringify({"orders":user.orders}));
 			else
-				console.log("User's orders: " + JSON.stringify(user.orders));
+				console.log("User's orders: " + JSON.stringify({"orders":user.orders}));
 			}
 		else
 			{

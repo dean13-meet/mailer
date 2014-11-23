@@ -611,12 +611,12 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	/*
 	 * PostData:
 	 * var orderID
-	 * var auth
+	 * var auth -- optional
 	 * var userID
 	 * var userAuth
 	 */
 	
-	if(!postdata.orderID || !postdata.auth || !postdata.userID || !postdata.userAuth)
+	if(!postdata.orderID || !postdata.userID || !postdata.userAuth)
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info"}));

@@ -32,7 +32,7 @@ function start(route, handle) {
 	
 
 	var io = require('socket.io').listen(server)
-	io.on('connection', function(socket){
+	io.sockets.on('connection', function(socket){
 		  console.log('a user connected1');
 		  socket.broadcast.emit('hi');
 		  socket.on('disconnect', function(){

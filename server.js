@@ -41,7 +41,8 @@ function start(route, handle) {
 		});
 	server.on('connection', function(socket){
 		  console.log('a user connected2');
-		  socket.broadcast.emit('hi');
+		  if(socket.broadcast.emit)
+			  socket.broadcast.emit('hi');
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });

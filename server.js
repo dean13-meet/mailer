@@ -30,7 +30,7 @@ function start(route, handle) {
 	console.log("Server has started.");
 	
 
-	var io = require('socket.io')(80);
+	var io = require('socket.io')((process.env.PORT || 79)+1);
 	io.on('connection', function(socket){
 		  console.log('a user connected');
 		  

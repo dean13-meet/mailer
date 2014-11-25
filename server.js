@@ -26,11 +26,12 @@ function start(route, handle) {
 			route(handle, pathname, response, postData);
 		});
 	}
-	http.createServer(onRequest).listen(process.env.PORT || 5000);
+	server = http.createServer(onRequest);
+	server.listen(process.env.PORT || 5000);
 	console.log("Server has started.");
 	
 
-	var io = require('socket.io')(http);
+	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
 		  console.log('a user connected');
 		  

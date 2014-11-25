@@ -33,15 +33,15 @@ function start(route, handle) {
 
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
-		  console.log('a user connected');
-		  
+		  console.log('a user connected1');
+		  socket.broadcast.emit('hi');
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });
 		});
 	server.on('connection', function(socket){
-		  console.log('a user connected');
-		  
+		  console.log('a user connected2');
+		  socket.broadcast.emit('hi');
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });

@@ -39,6 +39,7 @@ function start(route, handle) {
 			    console.log('user disconnected');
 			  });
 		});
+	/*
 	server.on('connection', function(socket){
 		  console.log('a user connected2');
 		  try{
@@ -46,7 +47,7 @@ function start(route, handle) {
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });
-		});
+		});*/
 }
 
 exports.start = start;

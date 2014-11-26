@@ -24,7 +24,7 @@ function start(route, handle) {
 				console.log("Parsing postdata");
 				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}
 			}
-			route(handle, pathname, response, postData);
+			route(handle, pathname, response, postData, trackers);
 		});
 	}
 	server = http.createServer(onRequest);

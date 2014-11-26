@@ -606,7 +606,7 @@ function getOrdersByUserID(response, postdata, user)
 }
 exports.getOrdersByUserID = getOrdersByUserID;
 
-function getSurveyByOrderIDandUserID(response, postdata, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)
+function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)
 {
 	/*
 	 * PostData:
@@ -630,11 +630,11 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	
 	
 	if(!order){
-		getObject(postdata.orderID, getSurveyByOrderIDandUserID, [response, postdata], false);
+		getObject(postdata.orderID, getSurveyByOrderIDandUserID, [response, postdata, trackers], false);
 		return;
 	}
 	if(!user){
-		getObject(postdata.userID, getSurveyByOrderIDandUserID, [response, postdata, order], false);
+		getObject(postdata.userID, getSurveyByOrderIDandUserID, [response, postdata, trackers, order], false);
 		return;
 	}else{
 		if(user.auth != postdata.userAuth)
@@ -653,7 +653,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	{
 		
 		url = order.itemsOrdered[items.length];
-		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, order, user, items], true);
+		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items], true);
 		return;
 	}
 	if(!employees)employees = [];
@@ -661,7 +661,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	{
 		
 		url = order.employeesServing[employees.length];
-		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, order, user, items, employees], true);
+		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees], true);
 		return;
 	}
 	var questionsItemsIDs = [];
@@ -674,7 +674,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	if(questionsItems.length<questionsItemsIDs.length)
 	{
 		url = questionsItemsIDs[questionsItems.length];
-		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, order, user, items, employees, questionsItems], true);
+		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems], true);
 		return;
 	}
 	var questionsEmployeesIDs = [];
@@ -685,7 +685,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	if(questionsEmployees.length<questionsEmployeesIDs.length)
 	{
 		url = questionsEmployeesIDs[questionsEmployees.length];
-		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, order, user, items, employees, questionsItems, questionsEmployees], true);
+		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees], true);
 		return;
 	}
 	
@@ -693,7 +693,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 	if(questionsOrder.length<order.extraQuestions.length)
 	{
 		url = order.extraQuestions[questionsOrder.length];
-		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, order, user, items, employees, questionsItems, questionsEmployees,questionsOrder], true);
+		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees,questionsOrder], true);
 		return;
 	}
 //	Auth:
@@ -741,7 +741,7 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 		//else
 			console.log("Sent: " + JSON.stringify(survey));
 
-		//Save order to user's orders:
+		//Save order to user's orders AND notify trackers that user's orders changed:
 		if(needsAuth){
 			user.orders.push(orderID)
 			options = {
@@ -753,7 +753,20 @@ function getSurveyByOrderIDandUserID(response, postdata, order, user, items, emp
 				throw Error(err); } else {
 
 					console.log("Updated user: " + JSON.stringify(body));
-
+					trackers2 = trackers["prevOrders"];
+					for(i = 0; i < trackers2.length; i++)
+						{//no need to check info - info will be checked when attempting to retreave orders directly - we dont send any info back, so no need to authinticate
+						trackerDic = trackers2[i];
+						client = trackerDic["client"];
+						if(client.connected)
+							{client.send(JSON.stringify({"type":"prevOrders"}))}
+						else
+							{
+							console.log("removing tracker because no longer connected");
+							trackers2.splice(i,i+1);//removes object at i
+							}
+						}
+					trackers["prevOrders"] = trackers2;//may have changed due to connection removal
 				}
 			});
 		}

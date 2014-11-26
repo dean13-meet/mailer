@@ -2,7 +2,7 @@
 
 
 
-function route(handle, pathname, response, postData) {
+function route(handle, pathname, response, postData, trackers) {
 	pathname = pathname.toLowerCase();
 	console.log("About to route a request for " + pathname);
 	

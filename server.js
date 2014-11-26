@@ -49,7 +49,7 @@ function start(route, handle) {
 					socket.send("error socketing: no type");
 					return;
 				}
-			  if(typeof!trackers[info.type]===typeof[])
+			  if(typeof trackers[info.type]!==typeof[])
 				  {
 				  trackers[info.type] = [];
 				  }

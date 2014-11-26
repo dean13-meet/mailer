@@ -16,7 +16,7 @@
     "nodemailer": "v1.3.0",
     "querystring": "v0.2.0",
     "request": "^2.45.0",
-    "socket.io": "^0.9.1",
+    "socket.io": "^1.2.1",
     "url": "v0.10.1",
     "websocket": "^1.0.11"
   },

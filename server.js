@@ -30,7 +30,32 @@ function start(route, handle) {
 	server.listen(process.env.PORT || 5000);
 	console.log("Server has started.");
 	
+	var WebSocketServer = require('websocket').server;
+	wsServer = new WebSocketServer({
+	    httpServer: server
+	});
 
+	// WebSocket server
+	wsServer.on('request', function(request) {
+		console.log('a user connected0');
+	    var connection = request.accept(null, request.origin);
+
+	    // This is the most important callback for us, we'll handle
+	    // all messages from users here.
+	    connection.on('message', function(message) {
+	        if (message.type === 'utf8') {
+	            // process WebSocket message
+	        }
+	    });
+
+	    connection.on('close', function(connection) {
+	        // close user connection
+	    });
+	});
+	
+	
+	
+	
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
 		  console.log('a user connected1');

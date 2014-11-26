@@ -34,6 +34,10 @@ function start(route, handle) {
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
 		  socket.emit('hi');
+		  socket.on('message', function(message))
+				  {
+			  console.log(message);
+				  })
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });

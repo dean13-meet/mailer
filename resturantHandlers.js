@@ -70,7 +70,7 @@
 
 
 //Create
-function createOrder(response, postdata, id)
+function createOrder(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -90,7 +90,7 @@ function createOrder(response, postdata, id)
 	}
 	
 	if(!id){
-		createID("order", createOrder, [response, postdata]);
+		createID("order", createOrder, [response, postdata, trackers]);
 	}else{
 		auth = createAuth();
 
@@ -123,7 +123,7 @@ function createOrder(response, postdata, id)
 exports.createOrder = createOrder;
 
 
-function createItem(response, postdata, id)
+function createItem(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -141,7 +141,7 @@ function createItem(response, postdata, id)
 		return;
 	}
 	if(!id){
-		createID("item", createItem, [response, postdata]);
+		createID("item", createItem, [response, postdata, trackers]);
 	}else{
 
 		if(!postdata.imageID)postdata.imageID = "defFood";
@@ -172,7 +172,7 @@ function createItem(response, postdata, id)
 exports.createItem = createItem;
 
 
-function createEmployee(response, postdata, id)
+function createEmployee(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -190,7 +190,7 @@ function createEmployee(response, postdata, id)
 		return;
 	}
 	if(!id){
-		createID("employee", createEmployee, [response, postdata]);
+		createID("employee", createEmployee, [response, postdata, trackers]);
 	}else{
 		if(!postdata.imageID)postdata.imageID = "defWaiter";
 		json = {
@@ -220,7 +220,7 @@ function createEmployee(response, postdata, id)
 exports.createEmployee = createEmployee;
 
 
-function createQuestion(response, postdata, id)
+function createQuestion(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -239,7 +239,7 @@ function createQuestion(response, postdata, id)
 		return;
 	}
 	if(!id){
-		createID("question", createQuestion, [response, postdata]);
+		createID("question", createQuestion, [response, postdata, trackers]);
 	}else{
 		if(!postdata.imageID)postdata.imageID = "defGeneralQuestion";
 		json = {
@@ -271,7 +271,7 @@ function createQuestion(response, postdata, id)
 exports.createQuestion = createQuestion;
 
 
-function createUser(response, postdata, id)
+function createUser(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -287,7 +287,7 @@ function createUser(response, postdata, id)
 		return;
 	}
 	if(!id){
-		createID("user", createUser, [response, postdata]);
+		createID("user", createUser, [response, postdata, trackers]);
 	}else{
 
 		auth = createAuth();
@@ -319,7 +319,7 @@ function createUser(response, postdata, id)
 exports.createUser = createUser;
 
 
-function createResturant(response, postdata, id)
+function createResturant(response, postdata, trackers, id)
 {
 	/*
 	 * PostData:
@@ -335,7 +335,7 @@ function createResturant(response, postdata, id)
 		return;
 	}
 	if(!id){
-		createID("resturant", createResturant, [response, postdata]);
+		createID("resturant", createResturant, [response, postdata, trackers]);
 	}else{
 
 		json = {
@@ -404,7 +404,7 @@ requestImage.on('response', function (response)
 }
 exports.urlToImageData = urlToImageData;
 
-function uploadImage(response, postdata, id, resturantObject)
+function uploadImage(response, postdata, trackers, id, resturantObject)
 {
 
 	/*
@@ -423,12 +423,12 @@ function uploadImage(response, postdata, id, resturantObject)
 		return;
 	}
 	if(!id){
-		createID("image", uploadImage, [response, postdata]);
+		createID("image", uploadImage, [response, postdata, trackers]);
 		return;
 	}
 	if(!resturantObject)
 		{
-		getObject(postdata.resturantID, uploadImage, [response, postdata, id], false);
+		getObject(postdata.resturantID, uploadImage, [response, postdata, trackers, id], false);
 		return;
 		}
 	
@@ -473,7 +473,7 @@ exports.uploadImage = uploadImage;
 
 //Get or update:
 
-function getImageByID(response2, postdata, image)
+function getImageByID(response2, postdata, trackers, image)
 {
 /*
  * PostData:
@@ -519,7 +519,7 @@ function getImageByID(response2, postdata, image)
 	    response.setEncoding('binary');
 	    response.on('end', function () {
 	    	callback = getImageByID;
-			args = [response2, postdata];
+			args = [response2, postdata, trackers];
 			push = false;
 			
 			
@@ -545,7 +545,7 @@ function getImageByID(response2, postdata, image)
 	});
 		/*
 		console.log("no image");
-		getURL(url, getImageByID, [response, postdata], false);*/
+		getURL(url, getImageByID, [response, postdata, trackers], false);*/
 		return;
 		}
 	
@@ -566,7 +566,7 @@ function getImageByID(response2, postdata, image)
 }
 exports.getImageByID = getImageByID;
 
-function getOrdersByUserID(response, postdata, user)
+function getOrdersByUserID(response, postdata, trackers, user)
 {
 	/*
 	 * PostData:
@@ -583,7 +583,7 @@ function getOrdersByUserID(response, postdata, user)
 	}
 	if(!user)
 		{
-		getObject(postdata.userID, getOrdersByUserID, [response, postdata], false);
+		getObject(postdata.userID, getOrdersByUserID, [response, postdata, trackers], false);
 		}
 	else{
 		if(user.auth == postdata.userAuth)
@@ -794,7 +794,7 @@ exports.saveUserResponseToQuestionbyQuestionIDandUserID = saveUserResponseToQues
 
 
 var userQueryURL = "https://resturantapp.couchappy.com/resturant_users/_design/queryName/_view/queryName";
-function signIn(response, postdata, retVal)
+function signIn(response, postdata, trackers, retVal)
 {
 	console.log("postdata: " + JSON.stringify(postdata))
 	console.log("name: " + postdata.name)
@@ -821,7 +821,7 @@ function signIn(response, postdata, retVal)
 	if(!retVal)
 		{
 		console.log("1");
-		getURL(userQueryURL, signIn, [response, postdata], false);
+		getURL(userQueryURL, signIn, [response, postdata, trackers], false);
 		}
 	else
 	{console.log("2");
@@ -865,7 +865,7 @@ function signIn(response, postdata, retVal)
 }
 exports.signIn = signIn;
 
-function validateUserAuth(response, postdata, user)
+function validateUserAuth(response, postdata, trackers, user)
 {
 /*
  * PostData:
@@ -882,7 +882,7 @@ function validateUserAuth(response, postdata, user)
 	}
 	if(!user)
 		{
-		getObject(postdata.userID, validateUserAuth, [response, postdata], false);
+		getObject(postdata.userID, validateUserAuth, [response, postdata, trackers], false);
 		}
 	else
 		{
@@ -909,7 +909,7 @@ function validateUserAuth(response, postdata, user)
 }
 exports.validateUserAuth = validateUserAuth;
 
-function getResturantNameByResturantID(response, postdata, resturant)
+function getResturantNameByResturantID(response, postdata, trackers, resturant)
 {
 	/*
 	 * PostData:
@@ -926,7 +926,7 @@ function getResturantNameByResturantID(response, postdata, resturant)
 	
 	if(!resturant)
 		{
-		getObject(postdata.resturantID, getResturantNameByResturantID, [response, postdata], false);
+		getObject(postdata.resturantID, getResturantNameByResturantID, [response, postdata, trackers], false);
 		return;
 		}
 	if(response)
@@ -936,7 +936,7 @@ function getResturantNameByResturantID(response, postdata, resturant)
 }
 exports.getResturantNameByResturantID = getResturantNameByResturantID;
 
-function getResturantNameByOrderID(response, postdata, order)
+function getResturantNameByOrderID(response, postdata, trackers, order)
 {
 	/*
 	 * PostData:
@@ -953,7 +953,7 @@ function getResturantNameByOrderID(response, postdata, order)
 	
 	if(!order)
 		{
-		getObject(postdata.orderID, getResturantNameByOrderID, [response, postdata], false);
+		getObject(postdata.orderID, getResturantNameByOrderID, [response, postdata, trackers], false);
 		return;
 		}
 	

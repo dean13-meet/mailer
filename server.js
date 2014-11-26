@@ -36,7 +36,7 @@ function start(route, handle) {
 	});
 
 	// WebSocket server
-	wsServer.on('request', function(request) {
+	wsServer.on('connection', function(request) {
 		console.log('a user connected0');
 	    var connection = request.accept(null, request.origin);
 

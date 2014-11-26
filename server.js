@@ -34,6 +34,7 @@ function start(route, handle) {
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
+		  socket.isOn = true;
 		  socket.on('message', function(message)
 				  {
 			  console.log(message);
@@ -59,6 +60,7 @@ function start(route, handle) {
 		  });
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
+			    socket.isOn = false;
 			  });
 		});
 	/*

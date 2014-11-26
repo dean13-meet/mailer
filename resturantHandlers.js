@@ -760,7 +760,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 						client = trackerDic["client"];
 						client.send("hey broooooooo");
 						//console.log("client: " + JSON.stringify(client))
-						if(client.connected)
+						if(client.isOn)
 							{client.send(JSON.stringify({"type":"prevOrders"}))}
 						else
 							{

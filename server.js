@@ -26,41 +26,9 @@ function start(route, handle) {
 			route(handle, pathname, response, postData);
 		});
 	}
-	server = http.createServer(onRequest).listen(process.env.PORT || 5000);
+	server = http.createServer(onRequest);
+	server.listen(process.env.PORT || 5000);
 	console.log("Server has started.");
-	
-	var engine = require('engine.io');
-	var sockServer = engine.attach(server);
-	sockServer.on('connection', function (socket) {
-		console.log("-1 user");
-		  socket.on('message', function(data){ });
-		  socket.on('close', function(){ });
-		});
-	var WebSocketServer = require('websocket').server;
-	wsServer = new WebSocketServer({
-	    httpServer: server
-	});
-
-	// WebSocket server
-	wsServer.on('connection', function(request) {
-		console.log('a user connected0');
-	    var connection = request.accept(null, request.origin);
-
-	    // This is the most important callback for us, we'll handle
-	    // all messages from users here.
-	    connection.on('message', function(message) {
-	        if (message.type === 'utf8') {
-	            // process WebSocket message
-	        }
-	    });
-
-	    connection.on('close', function(connection) {
-	        // close user connection
-	    });
-	});
-	
-	
-	
 	
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){

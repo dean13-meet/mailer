@@ -34,7 +34,7 @@ function start(route, handle) {
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
 		  socket.emit('hi');
-		  socket.on('message', function(message))
+		  socket.on('message', function(message)
 				  {
 			  console.log(message);
 				  })

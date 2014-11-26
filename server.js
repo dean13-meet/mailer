@@ -26,10 +26,16 @@ function start(route, handle) {
 			route(handle, pathname, response, postData);
 		});
 	}
-	server = http.createServer(onRequest);
-	server.listen(process.env.PORT || 5000);
+	server = http.createServer(onRequest).listen(process.env.PORT || 5000);
 	console.log("Server has started.");
 	
+	var engine = require('engine.io');
+	var sockServer = engine.attach(server);
+	sockServer.on('connection', function (socket) {
+		console.log("-1 user");
+		  socket.on('message', function(data){ });
+		  socket.on('close', function(){ });
+		});
 	var WebSocketServer = require('websocket').server;
 	wsServer = new WebSocketServer({
 	    httpServer: server

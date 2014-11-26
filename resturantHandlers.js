@@ -758,6 +758,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 						{//no need to check info - info will be checked when attempting to retreave orders directly - we dont send any info back, so no need to authinticate
 						trackerDic = trackers2[i];
 						client = trackerDic["client"];
+						console.log("client: " + client)
 						if(client.connected)
 							{client.send(JSON.stringify({"type":"prevOrders"}))}
 						else

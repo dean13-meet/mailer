@@ -3,6 +3,7 @@
  */
 var http = require("http");
 var url = require("url");
+var trackers = {};
 
 function start(route, handle) {
 	function onRequest(request, response) {
@@ -33,11 +34,29 @@ function start(route, handle) {
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
-		  socket.emit('hi');
 		  socket.on('message', function(message)
 				  {
 			  console.log(message);
-				  })
+				  });
+		  socket.on("registerForNotifications", function(info)
+		  {
+			  /*
+			   * info:
+			   * must have "type"!!!
+			   */
+			  if(!info.type)
+				{
+					socket.send("error socketing: no type");
+					return;
+				}
+			  if(typeof!trackers[info.type]===typeof[])
+				  {
+				  trackers[info.type] = [];
+				  }
+			  trackers[info.type].push({"client":socket, "info":info});
+			  socket.send("accepted track");
+			  console.log("accepted track of: " + info);
+		  });
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			  });
@@ -55,3 +74,9 @@ function start(route, handle) {
 
 exports.start = start;
 
+
+/*
+ * Types of notifications available through socket:
+ * "prevOrders" - getOrdersByUserID
+ * 
+*/

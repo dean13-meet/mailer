@@ -1124,7 +1124,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 				tracker = trackerUpdates[i];
 				clients = trackers[tracker];
 				if(clients)
-					{
+					{tempClients = clients; //used for splicing from array
 					for(j = 0; j < clients.length; j++)
 						{
 						client = clients[j];
@@ -1133,10 +1133,10 @@ function saveURL(url, json, trackerUpdates, trackers)
 							client.send("Updated: " + tracker);
 							console.log("Updated: " + tracker)}
 						else
-							clients.splice(j, j+1);
+							tempClients.splice(j, j+1);
 						}
 					}
-				trackers[tracker] = clients; //--some clients may have been removed due to not being on
+				trackers[tracker] = tempClients; //--some clients may have been removed due to not being on
 				}
 		}});
 }

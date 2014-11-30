@@ -29,6 +29,10 @@ handle["/resturant/urltoimagedata"] = requestHandlers.resturantApp.urlToImageDat
 handle["/resturant/getresturantnamebyorderid"] = requestHandlers.resturantApp.getResturantNameByOrderID;
 handle["/resturant/getresturantnamebyresturantid"] = requestHandlers.resturantApp.getResturantNameByResturantID;
 
+//testing server:
+handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;
+
+
 server.start(router.route, handle);
 
 

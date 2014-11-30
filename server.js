@@ -43,20 +43,27 @@ function start(route, handle) {
 		  {
 			  /*
 			   * info:
-			   * must have "type"!!!
+			   * id
+			   * field
 			   */
-			  if(!info.type)
+			  if(!info.id || !info.field)
 				{
-					socket.send("error socketing: no type");
+					socket.send("error socketing: no obj/field to track");
 					return;
 				}
-			  if(typeof trackers[info.type]!==typeof[])
+			  str = stringFromIDAndField(info.id, info.field);
+			  if(str === "error")
 				  {
-				  trackers[info.type] = [];
+				  socket.send("error socketing: obj/field is/are not string/s");
+					return;
 				  }
-			  trackers[info.type].push({"client":socket, "info":info});
-			  socket.send("accepted track");
-			  console.log("accepted track of: " + info);
+			  if(typeof trackers[str]!==typeof[])
+				  {
+				  trackers[str] = [];
+				  }
+			  trackers[str].push(socket);
+			  socket.send("accepted track of: " + str);
+			  console.log("accepted track of: " + str);
 		  });
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
@@ -73,12 +80,9 @@ function start(route, handle) {
 			  });
 		});*/
 }
-
 exports.start = start;
 
-
-/*
- * Types of notifications available through socket:
- * "prevOrders" - getOrdersByUserID
- * 
-*/
+function stringFromIDAndField(id, field)
+{
+return (typeof id === 'string' && typeof field === 'string') ? id + "/" + field	: "error";
+}

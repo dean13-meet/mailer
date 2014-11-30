@@ -1152,7 +1152,13 @@ function printTrackers(response, postdata, trackers)
 	//explanation for trackers.hasOwnProperty... : http://stackoverflow.com/questions/558981/iterating-through-list-of-keys-for-associative-array-in-json
 	for (var key in trackers) {
 		  if (trackers.hasOwnProperty(key)) {
-		    response.write(key + ":" + trackers[key].id + ":" + trackers[key].isOn);
+		    response.write(key + ":");
+		    for(i = 0; i < trackers[key].length; i++)
+		    	{
+		    	client = trackers[key][i];
+		    	response.write(client.id + ":" + client.isOn);
+		    	}
+		    response.write("");//blank line
 		  }
 		}
 	response.end();

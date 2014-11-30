@@ -1129,6 +1129,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 						{
 						client = clients[j];
 						if(client.isOn){
+							console.log("randomized key");
 							client.send("Updated: " + tracker);
 							console.log("Updated: " + tracker)}
 						else

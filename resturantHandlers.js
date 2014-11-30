@@ -1133,7 +1133,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 							client.send("Updated: " + tracker);
 							console.log("Updated: " + tracker)}
 						else
-							tempClients.splice(j, j+1);
+							tempClients.splice(j - (clients.length-tempClients.length), 1);
 						}
 					}
 				trackers[tracker] = tempClients; //--some clients may have been removed due to not being on

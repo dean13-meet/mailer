@@ -747,9 +747,6 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 			url = usersURL + user.id;
 			json = user;
 			saveURL(url, json, [stringFromIDAndField(user.id, "orders")], trackers);
-			
-				
-			});
 		}
 	}
 	else

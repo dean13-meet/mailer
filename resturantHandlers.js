@@ -744,32 +744,11 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		//Save order to user's orders AND notify trackers that user's orders changed:
 		if(needsAuth){
 			user.orders.push(orderID)
-			options = {
-				method:'PUT',
-				url: usersURL + user.id,
-				json: user
-			};
-			request(options, function(err, res, body) { if (err) {
-				throw Error(err); } else {
-
-					console.log("Updated user: " + JSON.stringify(body));
-					trackers2 = trackers["prevOrders"];
-					for(i = 0; i < trackers2.length; i++)
-						{//no need to check info - info will be checked when attempting to retreave orders directly - we dont send any info back, so no need to authinticate
-						trackerDic = trackers2[i];
-						client = trackerDic["client"];
-						client.send("hey broooooooo");
-						//console.log("client: " + JSON.stringify(client))
-						if(client.isOn)
-							{client.send(JSON.stringify({"type":"prevOrders"}))}
-						else
-							{
-							console.log("removing tracker because no longer connected");
-							trackers2.splice(i,i+1);//removes object at i
-							}
-						}
-					trackers["prevOrders"] = trackers2;//may have changed due to connection removal
-				}
+			url = usersURL + user.id;
+			json = user;
+			saveURL(url, json, [stringFromIDAndField(user.id, "orders")], trackers);
+			
+				
 			});
 		}
 	}
@@ -1130,7 +1109,9 @@ function getURL(url, callback, args, push)
 			callback.apply(this, args)
 		}});
 }
-function saveURL(url, json)
+
+
+function saveURL(url, json, trackerUpdates, trackers)
 {
 	options = {
 			method:'PUT',
@@ -1141,9 +1122,31 @@ function saveURL(url, json)
 		throw Error(err); } else {
 			//DONE
 			console.log("Saved url: " + url);
+			for(i = 0; i < trackerUpdates.length; i++)
+				{
+				tracker = trackerUpdates[i];
+				clients = trackers[tracker];
+				if(clients)
+					{
+					for(j = 0; j < clients.length; j++)
+						{
+						client = clients[j];
+						if(client.isOn){
+							client.send("Updated: " + tracker);
+							console.log("Updated: " + tracker)}
+						else
+							clients.remove(j);
+						}
+					}
+				trackers[tracker] = clients; //--some clients may have been removed due to not being on
+				}
 		}});
 }
 
+function stringFromIDAndField(id, field)
+{
+return (typeof id === 'string' && typeof field === 'string') ? id + "/" + field	: "error";
+}
 
 //methods for checking on server:
 

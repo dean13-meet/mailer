@@ -1124,7 +1124,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 				tracker = trackerUpdates[i];
 				clients = trackers[tracker];
 				if(clients)
-					{tempClients = clients; //used for splicing from array
+					{tempClients = clients.slice(0); //used for splicing from array -- slice(0) clones an array
 					for(j = 0; j < clients.length; j++)
 						{
 						client = clients[j];

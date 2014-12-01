@@ -93,33 +93,45 @@ function start(route, handle) {
 				  }
 		  socket.on("resignNotifications", resignInfo);
 		  socket.on("registerAllTrackers", function(info){
-			  if(typeof info !== typeof {})
+			  if(typeof info !== typeof [])
 				  {
-				  socket.send("error socketing: info for register all is NOT in dictionary form");
+				  socket.send("error socketing: info for register all is NOT in array form");
 					return;
 				  }
-			  for(var key in info)
-				  {
-				  if(info.hasOwnProperty(key))
+			  for(i = 0; i < info.length; i++)
+			  {
+			  
+				  trackInfo = info[i];//string form
+				  array = trackInfo.split("/");
+				  if(array.length!=2)
 					  {
-					  trackInfo = info[key];
-					  registerInfo(trackInfo);
+					  socket.send("error socketing: string not appropriate in register all at index: " + i);
+						break;
 					  }
-				  }
+				  dictionary = {"id":array[0], "field":array[1]}
+				  registerInfo(dictionary);
+				  
+			  }
 		  });
 		  socket.on("resignAllTrackers", function(info){
-			  if(typeof info !== typeof {})
+			  if(typeof info !== typeof [])
 			  {
-			  socket.send("error socketing: info for resign all is NOT in dictionary form");
+			  socket.send("error socketing: info for resign all is NOT in array form");
 				return;
 			  }
-		  for(var key in info)
+		  for(i = 0; i < info.length; i++)
 			  {
-			  if(info.hasOwnProperty(key))
-				  {
-				  trackInfo = info[key];
-				  resignInfo(trackInfo);
-				  }
+			  
+				  trackInfo = info[i];//string form
+				  array = trackInfo.split("/");
+				  if(array.length!=2)
+					  {
+					  socket.send("error socketing: string not appropriate in resign all at index: " + i);
+						break;
+					  }
+				  dictionary = {"id":array[0], "field":array[1]}
+				  resignInfo(dictionary);
+				  
 			  }
 		  });
 		  

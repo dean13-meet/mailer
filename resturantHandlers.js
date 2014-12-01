@@ -1124,19 +1124,22 @@ function saveURL(url, json, trackerUpdates, trackers)
 				tracker = trackerUpdates[i];
 				clients = trackers[tracker];
 				if(clients)
-					{tempClients = clients.slice(0); //used for splicing from array -- slice(0) clones an array
-					for(j = 0; j < clients.length; j++)
-						{
-						client = clients[j];
-						if(client.isOn){
-							console.log("randomized key");
-							client.send("Updated: " + tracker);
-							console.log("Updated: " + tracker)}
-						else
-							tempClients.splice(j - (clients.length-tempClients.length), 1);
+					{
+					for (var key in clients) {
+						  if (clients.hasOwnProperty(key)) 
+						  {
+							  client = clients[key];
+							  if(client.isOn){
+									console.log("randomized key");
+									client.send("Updated: " + tracker);
+									console.log("Updated: " + tracker)}
+							  else
+								  delete clients[key];
+						  }
 						}
+					
 					}
-				trackers[tracker] = tempClients; //--some clients may have been removed due to not being on
+				trackers[tracker] = clients; //--some clients may have been removed due to not being on
 				}
 		}});
 }
@@ -1154,11 +1157,16 @@ function printTrackers(response, postdata, trackers)
 	for (var key in trackers) {
 		  if (trackers.hasOwnProperty(key)) {
 		    response.write(key + ":" + "\n");
-		    for(i = 0; i < trackers[key].length; i++)
+		    tracker = trackers[key];
+		    for(var key2 in tracker)
 		    	{
-		    	client = trackers[key][i];
-		    	response.write(client.id + ":" + client.isOn + "\n");
+		    	if(tracker.hasOwnProperty(key2))
+		    		{
+		    		client = tracker[key2];
+		    		response.write(client.id + ":" + client.isOn + "\n");
+		    		}
 		    	}
+		    
 		    response.write("\n");//blank line
 		  }
 		}

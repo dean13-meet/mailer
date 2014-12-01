@@ -59,12 +59,36 @@ function start(route, handle) {
 				  }
 			  if(typeof trackers[str]!==typeof[])
 				  {
-				  trackers[str] = [];
+				  trackers[str] = {};
 				  }
-			  trackers[str].push(socket);
+			  trackers[str][socket.id] = socket;
 			  socket.send("accepted track of: " + str);
 			  console.log("accepted track of: " + str);
 		  });
+		  socket.on("resignNotifications", function(info)
+				  {
+			  /*
+			   * info:
+			   * id
+			   * field
+			   */
+			  if(!info.id || !info.field)
+				{
+					socket.send("error socketing: no obj/field to resign track");
+					return;
+				}
+			  str = stringFromIDAndField(info.id, info.field);
+			  if(str === "error")
+			  {
+			  socket.send("error socketing: obj/field is/are not string/s");
+				return;
+			  }
+			  if(trackers[str])
+				  {
+				  delete trackers[str][socket.id];
+				  }
+			  
+				  });
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			    socket.isOn = false;

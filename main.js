@@ -57,13 +57,6 @@ requestHandlers.resturantApp.uploadImage("",{"data":data, "resturantID":"00237-e
 //json = {userID:"00138-adf774bf0a710ddb027bd39eb7f011b5", userAuth:"8X3rPk99wm7RpLPM1pFVrigHT"}
 //requestHandlers.resturantApp.signIn("", json);
 
-var json = 
-{
-resturant:"dean's pizza",
-items:["lazagna", "pizza"],
-employeesServing:["sir 1", "madam 2"],
-extraQuestions:["1 q..."]
-}
-//requestHandlers.resturantApp.createOrder("", json); 
+
 
 //messageSender.start("https://remindme.couchappy.com/messages/_design/getByLaunchDate/_view/getByLaunchDate/", "https://remindme.couchappy.com/messages/");

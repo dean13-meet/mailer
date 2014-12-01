@@ -85,10 +85,13 @@ function start(route, handle) {
 			  }
 			  if(trackers[str])
 				  {
+				  console.log("deleting: " + trackers[str][socket.id]);
 				  delete trackers[str][socket.id];
 				  }
 			  
 				  });
+		  
+		  
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			    socket.isOn = false;

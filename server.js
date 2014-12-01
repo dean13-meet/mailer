@@ -39,7 +39,7 @@ function start(route, handle) {
 				  {
 			  console.log(message);
 				  });
-		  socket.on("registerForNotifications", function(info)
+		  function registerInfo(info)
 		  {
 			  /*
 			   * info:
@@ -57,15 +57,16 @@ function start(route, handle) {
 				  socket.send("error socketing: obj/field is/are not string/s");
 					return;
 				  }
-			  if(typeof trackers[str]!==typeof[])
+			  if(typeof trackers[str]!==typeof{})
 				  {
 				  trackers[str] = {};
 				  }
 			  trackers[str][socket.id] = socket;
 			  socket.send("accepted track of: " + str);
 			  console.log("accepted track of: " + str);
-		  });
-		  socket.on("resignNotifications", function(info)
+		  }
+		  socket.on("registerForNotifications", registerInfo);
+		  function resignInfo(info)
 				  {
 			  /*
 			   * info:
@@ -89,8 +90,38 @@ function start(route, handle) {
 				  delete trackers[str][socket.id];
 				  }
 			  
-				  });
-		  
+				  }
+		  socket.on("resignNotifications", resignInfo);
+		  socket.on("registerAllTrackers", function(info){
+			  if(typeof info !== typeof {})
+				  {
+				  socket.send("error socketing: info for register all is NOT in dictionary form");
+					return;
+				  }
+			  for(var key in info)
+				  {
+				  if(info.hasOwnProperty(key))
+					  {
+					  trackInfo = info[key];
+					  registerInfo(trackInfo);
+					  }
+				  }
+		  });
+		  socket.on("resignAllTrackers", function(info){
+			  if(typeof info !== typeof {})
+			  {
+			  socket.send("error socketing: info for resign all is NOT in dictionary form");
+				return;
+			  }
+		  for(var key in info)
+			  {
+			  if(info.hasOwnProperty(key))
+				  {
+				  trackInfo = info[key];
+				  resignInfo(trackInfo);
+				  }
+			  }
+		  });
 		  
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');

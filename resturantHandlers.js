@@ -63,6 +63,7 @@
  * var id
  * array participants
  * array messages
+ * var timestamp --lastest update to chat
  * 
  * message: 
  * (NOTE: messages are NOT objects and do not have IDs - they belong to chatObjects)
@@ -519,10 +520,13 @@ function createChat(response, postdata, trackers, id, participants)
 		getObject(objectID, createChat, [response, postdata, trackers, id, participants], true);
 		return;
 		}
+	var d = new Date();
+	var n = d.getTime();
 	json = {
 			id:id,
 			participants:postdata.participants,
-			messages:[]
+			messages:[],
+			timestamp:n
 	}
 	
 	saveObject(id, json, [], trackers);
@@ -716,6 +720,64 @@ function getChatsByUserID(response, postdata, trackers, user)
 	
 }
 exports.getChatsByUserID = getChatsByUserID;
+
+function getDescriptionOfChatByID(response, postdata, trackers, chatObject, participants)
+{
+	/*
+	 * PostData
+	 * var chatID
+	 * var userID
+	 */
+	
+	if(!postdata.chatID || typeOfID(postdata.chatID)!=="chatObject" || !postdata.userID || typeOfID(postdata.userID)!=="user")
+		{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+		}
+	
+	if(!chatObject)
+		{
+		getObject(postdata.chatID, getDescriptionOfChatByID, [response, postdata, trackers], false);
+		return;
+		}
+	if(!participants){
+	participantIDs = chatObject.participants;
+	for(i = 0; i < participantIDs.length; i++)
+		{
+		id = participantIDs[i];
+		if(id===postdata.userID)
+			{
+			participantIDs.splice(i, 1);
+			break;
+			}
+		}
+	postdata.participantIDs = participantIDs;//just storing in postdata for convinience
+	
+	participants = [];
+	}
+	
+	if(participants.length<postdata.participantIDs.length)
+	{
+	objectID = postdata.participantIDs[participants.length];
+	console.log("getting participant: " + objectID);
+	getObject(objectID, getDescriptionOfChatByID, [response, postdata, trackers, chatObject, participants], true);
+	return;
+	}
+	participantNames = [];
+	for(i = 0; i < participants.length; i++)
+		{
+		participantNames[i] = participants[i].name;
+		}
+	jsonResponse = {"participantNames" : participantNames, "timestamp" : chatObject.timestamp}
+	if(response)
+		response.end(jsonResponse);
+	else
+		console.log("Returning chat desc: " + jsonResponse);	
+}
+exports.getDescriptionOfChatByID = getDescriptionOfChatByID;
 
 function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)
 {

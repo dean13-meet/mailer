@@ -30,6 +30,7 @@ handle["/resturant/getresturantnamebyorderid"] = requestHandlers.resturantApp.ge
 handle["/resturant/getresturantnamebyresturantid"] = requestHandlers.resturantApp.getResturantNameByResturantID;
 handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
 handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
+handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;

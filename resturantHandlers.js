@@ -773,7 +773,7 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 		}
 	jsonResponse = {"participantNames" : participantNames, "timestamp" : chatObject.timestamp}
 	if(response)
-		response.end(jsonResponse);
+		response.end(JSON.stringify(jsonResponse));
 	else
 		console.log("Returning chat desc: " + jsonResponse);	
 }

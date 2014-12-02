@@ -28,6 +28,8 @@ handle["/resturant/uploadimage"] = requestHandlers.resturantApp.uploadImage;
 handle["/resturant/urltoimagedata"] = requestHandlers.resturantApp.urlToImageData;
 handle["/resturant/getresturantnamebyorderid"] = requestHandlers.resturantApp.getResturantNameByOrderID;
 handle["/resturant/getresturantnamebyresturantid"] = requestHandlers.resturantApp.getResturantNameByResturantID;
+handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
+handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;
@@ -37,6 +39,9 @@ server.start(router.route, handle);
 
 
 
+
+//json = {"participants":["00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "00138-adf774bf0a710ddb027bd39eb7f011b5"]}
+//requestHandlers.resturantApp.createChat("", json, "");
 
 function test (data)
 {

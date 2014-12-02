@@ -43,11 +43,14 @@
  * var pass
  * var auth
  * array orders
+ * array chats
  * TODO rest
+ * 
  * Resturant:
  * var id
  * var name
  * var images
+ * array chats
  * TODO rest
  * 
  * Image:
@@ -55,6 +58,18 @@
  * var resturantID
  * var data
  * var Content_Type
+ * 
+ * chatObject:
+ * var id
+ * array participants
+ * array messages
+ * 
+ * message: 
+ * (NOTE: messages are NOT objects and do not have IDs - they belong to chatObjects)
+ * (NOTE: messages are dictionaries)
+ * var objectReference (e.g. order reference)
+ * var text
+ * var timestamp
  * 
  * id allocation:
  * user - 001_...
@@ -64,6 +79,7 @@
  * employee - 005_...
  * question - 006_...
  * image - 007_...
+ * chatObject - 008_...
  * 
  */
 
@@ -296,7 +312,8 @@ function createUser(response, postdata, trackers, id)
 				name:postdata.name,
 				pass:postdata.pass,
 				auth:auth,
-				orders:[]
+				orders:[],
+				chats: []
 		}
 		options = {
 				method:'PUT',
@@ -341,7 +358,8 @@ function createResturant(response, postdata, trackers, id)
 		json = {
 				id:id,
 				name:postdata.name,
-				images:[]
+				images:[],
+				chats: []
 		}
 		options = {
 				method:'PUT',
@@ -470,6 +488,59 @@ function uploadImage(response, postdata, trackers, id, resturantObject)
 	
 }
 exports.uploadImage = uploadImage;
+
+function createChat(response, postdata, trackers, id, participants)
+{
+	/*
+	 * PostData:
+	 * array participants
+	 */
+	
+	
+	if(!postdata.participants || (typeof postdata.participants != typeof[]))
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	
+	if(!id)
+		{
+		createID("chatObject", createChat, [response, postdata, trackers]);
+		return;
+		}
+	if(!participants)participants=[];
+	if(participants.length<postdata.participants.length)
+		{
+		objectID = postdata.participants[participants.length];
+		console.log("updating participant: " + objectID);
+		getObject(objectID, createChat, [response, postdata, trackers, id, participants], true);
+		return;
+		}
+	json = {
+			id:id,
+			participants:postdata.participants,
+			messages:[]
+	}
+	
+	saveObject(id, json, [], trackers);
+	for(i = 0; i < participants.length; i++)
+		{
+		participant = participants[i];
+		if(typeof participant.chats != typeof[])participant.chats =[];
+		participant.chats.push(id);
+		console.log(JSON.stringify(participant))
+		saveObject(participant.id, participant, [], trackers);
+		}
+	if(response)
+		{
+		response.end(id);
+		}
+	
+}
+exports.createChat = createChat;
 
 //Get or update:
 
@@ -605,6 +676,46 @@ function getOrdersByUserID(response, postdata, trackers, user)
 	
 }
 exports.getOrdersByUserID = getOrdersByUserID;
+
+function getChatsByUserID(response, postdata, trackers, user)
+{
+	/*
+	 * PostData:
+	 * var userID
+	 * var userAuth
+	 */
+	if(!postdata.userID || !postdata.userAuth)
+	{
+		if(response)
+			response.end(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	if(!user)
+		{
+		getObject(postdata.userID, getChatsByUserID, [response, postdata, trackers], false);
+		}
+	else{
+		if(user.auth === postdata.userAuth)
+			{
+			if(response)
+				response.end(JSON.stringify({"chats":user.chats}));
+			else
+				console.log("User's chats: " + JSON.stringify({"chats":user.chats}));
+			}
+		else
+			{
+			if(response)
+				response.end(JSON.stringify({error: "Error: Incorrect user auth."}));
+			else
+				console.log("Error: Incorrect user auth.");
+			
+			}
+	}
+	
+}
+exports.getChatsByUserID = getChatsByUserID;
 
 function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)
 {
@@ -963,6 +1074,7 @@ function typeOfID(id)
 	case "005":return "employee"
 	case "006":return "question"
 	case "007":return "image"
+	case "008":return "chatObject"
 	default:return "error"
 	}
 
@@ -979,6 +1091,7 @@ function getURLByIDType(idType)
 	case "employee": return employeeURL;
 	case "question": return questionURL;
 	case "image" : return imagesURL;
+	case "chatObject" : return chatsURL;
 	default:return "error"
 	}
 }
@@ -999,6 +1112,7 @@ var questionURL = baseURL + "resturant_questions/";
 var usersURL = baseURL + "resturant_users/";
 var resturantsURL = baseURL + "resturant_resturants/";
 var imagesURL = baseURL + "resturant_images/";
+var chatsURL = baseURL + "resturant_chats/";
 
 
 function createID(typeOfObject, callback, args)
@@ -1013,6 +1127,7 @@ function createID(typeOfObject, callback, args)
 	case "employee":{idPrefix = "005"; break;}
 	case "question":{idPrefix = "006"; break;}
 	case "image": {idPrefix = "007"; break;}
+	case "chatObject": {idPrefix = "008"; break;}
 	default:return idPrefix;
 	}
 	console.log("s1");
@@ -1107,6 +1222,14 @@ function getURL(url, callback, args, push)
 		}});
 }
 
+function saveObject(objectID, json, trackerUpdates, trackers)
+{
+	url = getURLForObject(objectID);
+	if(url !=="error")
+		{
+		saveURL(url, json, trackerUpdates, trackers);
+		}
+}
 
 function saveURL(url, json, trackerUpdates, trackers)
 {
@@ -1119,6 +1242,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 		throw Error(err); } else {
 			//DONE
 			console.log("Saved url: " + url);
+			if(trackerUpdates){
 			for(i = 0; i < trackerUpdates.length; i++)
 				{
 				tracker = trackerUpdates[i];
@@ -1141,6 +1265,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 					}
 				trackers[tracker] = clients; //--some clients may have been removed due to not being on
 				}
+		}
 		}});
 }
 

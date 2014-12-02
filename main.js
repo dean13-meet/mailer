@@ -34,6 +34,7 @@ handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.get
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;
+handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 
 
 server.start(router.route, handle);
@@ -41,8 +42,8 @@ server.start(router.route, handle);
 
 
 
-//json = {"participants":["00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "00138-adf774bf0a710ddb027bd39eb7f011b5"]}
-//requestHandlers.resturantApp.createChat("", json, "");
+json = {"participants":["00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "00138-adf774bf0a710ddb027bd39eb7f011b5"]}
+requestHandlers.resturantApp.createChat("", json, "");
 
 function test (data)
 {

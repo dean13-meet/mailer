@@ -536,7 +536,7 @@ function createChat(response, postdata, trackers, id, participants)
 		if(typeof participant.chats != typeof[])participant.chats =[];
 		participant.chats.push(id);
 		console.log(JSON.stringify(participant))
-		saveObject(participant.id, participant, [], trackers);
+		saveObject(participant.id, participant, [participant.id+"/"+"chats"], trackers);
 		}
 	if(response)
 		{
@@ -1360,3 +1360,10 @@ function printTrackers(response, postdata, trackers)
 	response.end();
 }
 exports.printTrackers = printTrackers;
+
+function addMessage(response, postdata, trackers)
+{
+	json = {"participants":["00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "00138-adf774bf0a710ddb027bd39eb7f011b5"]}
+	createChat(response, json, trackers);
+}
+exports.addMessage = addMessage;

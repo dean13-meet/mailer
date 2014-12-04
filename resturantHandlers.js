@@ -84,7 +84,17 @@
  * 
  */
 
-
+Dictionary.prototype.keys = function(){
+		keys = [];
+		for(var key2 in this)
+    	{
+    	if(this.hasOwnProperty(key2))
+    		{
+    		keys.push(key2);
+    		}
+    	}
+		return keys;
+	}
 
 //Create
 function createOrder(response, postdata, trackers, id)
@@ -514,17 +524,7 @@ function createChat(response, postdata, trackers, id, participants)
 		return;
 		}
 	
-	Dictionary.prototype.keys = function(){
-		keys = [];
-		for(var key2 in this)
-    	{
-    	if(this.hasOwnProperty(key2))
-    		{
-    		keys.push(key2);
-    		}
-    	}
-		return keys;
-	}
+	
 	
 	if(!participants)participants=[];
 	if(participants.length<postdata.participants.length)

@@ -1431,7 +1431,7 @@ function saveURL(url, json, trackerUpdates, trackers)
 		throw Error(err); } else {
 			//DONE
 			console.log("Saved url: " + url);
-			if(trackerUpdates){
+			if(trackerUpdates && trackers){
 			for(i = 0; i < trackerUpdates.length; i++)
 				{
 				tracker = trackerUpdates[i];

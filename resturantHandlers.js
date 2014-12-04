@@ -61,14 +61,14 @@
  * 
  * chatObject:
  * var id
- * array participants
+ * dic participants = {user/resturantID, lastChatMessageIndex}
  * array messages
  * var timestamp --lastest update to chat
  * 
  * message: 
  * (NOTE: messages are NOT objects and do not have IDs - they belong to chatObjects)
  * (NOTE: messages are dictionaries)
- * var objectReference (e.g. order reference)
+ * var objectReference (e.g. order reference, image reference)
  * var text
  * var timestamp
  * 
@@ -494,7 +494,7 @@ function createChat(response, postdata, trackers, id, participants)
 {
 	/*
 	 * PostData:
-	 * array participants
+	 * array participants -- at this stage it can be an array, as they all start with 0 message index
 	 */
 	
 	
@@ -507,11 +507,25 @@ function createChat(response, postdata, trackers, id, participants)
 		return;
 	}
 	
+	
 	if(!id)
 		{
 		createID("chatObject", createChat, [response, postdata, trackers]);
 		return;
 		}
+	
+	Dictionary.prototype.keys = function(){
+		keys = [];
+		for(var key2 in this)
+    	{
+    	if(this.hasOwnProperty(key2))
+    		{
+    		keys.push(key2);
+    		}
+    	}
+		return keys;
+	}
+	
 	if(!participants)participants=[];
 	if(participants.length<postdata.participants.length)
 		{
@@ -522,9 +536,14 @@ function createChat(response, postdata, trackers, id, participants)
 		}
 	var d = new Date();
 	var n = d.getTime();
+	participantsDic = {};
+	for(i = 0; i < postdata.participants.length; i++)
+	{
+	participantsDic[postdata.participants[i]] = 0;//set all message indexies to 0
+	}
 	json = {
 			id:id,
-			participants:postdata.participants,
+			participants:participantsDic,
 			messages:[],
 			timestamp:n
 	}
@@ -545,6 +564,64 @@ function createChat(response, postdata, trackers, id, participants)
 	
 }
 exports.createChat = createChat;
+
+function postMessage(socket, postdata, trackers, user, chatObject)
+{
+	/*
+	 * PostData:
+	 * userID
+	 * userAuth
+	 * chatObjectID
+	 * objectReference (e.g. image/order)
+	 * text
+	 * timestamp
+	 */
+	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.objectReference || !postdata.text || !postdata.timestamp)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
+	
+	if(!user)
+	{
+	getObject(postdata.userID, postMessage, [socket, postdata, trackers], false);
+	return;
+	}
+	if(user.auth!==postdata.userAuth)
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Incorrect user auth"}));
+		else
+			console.log(JSON.stringify({"error": "Incorrect user auth"}));
+		return;
+		}
+	if(!chatObject)
+		{
+		getObject(postdata.chatObjectID, postMessage, [socket, postdata, trackers, user], false);
+		return;
+		}
+	if(!chatObject.participants[user.id])
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error": "User not allowed to post in this chat"}));
+		else
+			console.log(JSON.stringify({"error": "User not allowed to post in this chat"}));
+		return;
+		}
+	message = 
+		{
+			objectReference: postdata.objectReference,
+			text: postdata.text,
+			timestamp: postdata.timestamp
+		}
+	if( typeof chatObject.messages != typeof [])chatObject.messages = [];
+	chatObject.messages.push(message);
+	saveObject(chatObject.id, chatObject, [chatObject.id+"/"+"messages"]);
+}
+exports.postMessage = postMessage;
 
 //Get or update:
 

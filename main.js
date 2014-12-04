@@ -32,6 +32,9 @@ handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
 handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
 handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
 
+handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; -- accepts only from sockets
+
+
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;
 handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;

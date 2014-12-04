@@ -64,6 +64,7 @@ function start(route, handle) {
 			  trackers[str][socket.id] = socket;
 			  socket.send("accepted track of: " + str);
 			  console.log("accepted track of: " + str);
+			  client.send("Updated: " + str);
 		  }
 		  socket.on("registerForNotifications", registerInfo);
 		  function resignInfo(info)
@@ -134,6 +135,11 @@ function start(route, handle) {
 				  
 			  }
 		  });
+		  
+		  socket.on('postMessage', function(info)
+				  {
+			  route(handle, "/resturant/postmessage", socket, info, trackers);
+				  })
 		  
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');

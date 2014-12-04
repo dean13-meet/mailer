@@ -84,17 +84,6 @@
  * 
  */
 
-Dictionary.prototype.keys = function(){
-		keys = [];
-		for(var key2 in this)
-    	{
-    	if(this.hasOwnProperty(key2))
-    		{
-    		keys.push(key2);
-    		}
-    	}
-		return keys;
-	}
 
 //Create
 function createOrder(response, postdata, trackers, id)
@@ -622,6 +611,12 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	saveObject(chatObject.id, chatObject, [chatObject.id+"/"+"messages"]);
 }
 exports.postMessage = postMessage;
+
+
+function getMessagesFromChatObject(socket, postdata, trackers)
+{
+	
+}
 
 //Get or update:
 

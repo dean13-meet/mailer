@@ -64,7 +64,7 @@ function start(route, handle) {
 			  trackers[str][socket.id] = socket;
 			  socket.send("accepted track of: " + str);
 			  console.log("accepted track of: " + str);
-			  client.send("Updated: " + str);
+			  socket.send("Updated: " + str);
 		  }
 		  socket.on("registerForNotifications", registerInfo);
 		  function resignInfo(info)

@@ -613,9 +613,50 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 exports.postMessage = postMessage;
 
 
-function getMessagesFromChatObject(socket, postdata, trackers)
+function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 {
+	/*
+	 * PostData:
+	 * userID
+	 * userAuth
+	 * chatObjectID
+	 * messageIndex
+	 */
+	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.messageIndex)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info"}));
+		else
+			console.log(JSON.stringify({"error": "Missing info"}));
+		return;
+	}
 	
+	if(!user)
+	{
+	getObject(postdata.userID, postMessage, [socket, postdata, trackers], false);
+	return;
+	}
+	if(user.auth!==postdata.userAuth)
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Incorrect user auth"}));
+		else
+			console.log(JSON.stringify({"error": "Incorrect user auth"}));
+		return;
+		}
+	if(!chatObject)
+		{
+		getObject(postdata.chatObjectID, postMessage, [socket, postdata, trackers, user], false);
+		return;
+		}
+	if(!chatObject.participants[user.id])
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error": "User not allowed to post in this chat"}));
+		else
+			console.log(JSON.stringify({"error": "User not allowed to post in this chat"}));
+		return;
+		}
 }
 
 //Get or update:
@@ -816,7 +857,7 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 		return;
 		}
 	if(!participants){
-	participantIDs = chatObject.participants;
+	participantIDs = chatObject.participants.keys;
 	for(i = 0; i < participantIDs.length; i++)
 		{
 		id = participantIDs[i];

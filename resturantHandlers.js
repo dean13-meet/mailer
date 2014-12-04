@@ -592,7 +592,7 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 		getObject(postdata.chatObjectID, postMessage, [socket, postdata, trackers, user], false);
 		return;
 		}
-	if(chatObject.participants.hasOwnProperty(user.id))
+	if(!(user.id in chatObject.participants))
 		{
 		if(socket)
 			socket.send(JSON.stringify({"error": "User not allowed to post in this chat"}));
@@ -894,7 +894,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 		getObject(postdata.chatObjectID, postMessage, [socket, postdata, trackers, user], false);
 		return;
 		}
-	if(!chatObject.participants[user.id])
+	if(!(user.id in chatObject.participants))
 		{
 		if(socket)
 			socket.send(JSON.stringify({"error": "User not allowed to get from this chat"}));
@@ -902,6 +902,8 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 			console.log(JSON.stringify({"error": "User not allowed to get from this chat"}));
 		return;
 		}
+	
+	
 }
 
 function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)

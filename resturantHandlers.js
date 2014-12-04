@@ -810,20 +810,9 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 		getObject(postdata.chatID, getDescriptionOfChatByID, [response, postdata, trackers], false);
 		return;
 		}
-	Object.prototype.keys = function(){
-		
-		keys = [];
-		for(var key in this)
-			{
-			if(this.hasOwnProperty(key))
-				{
-				keys.push(key);
-				}
-			}
-		return keys;
-	}
+	
 	if(!participants){
-	participantIDs = chatObject.participants.keys;
+	participantIDs = Object.keys(chatObject.participants);
 	for(i = 0; i < participantIDs.length; i++)
 		{
 		id = participantIDs[i];

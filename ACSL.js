@@ -1,8 +1,10 @@
 /**
  * New node file
  */
-fs = require('fs');
-//Given:
+fs = require('fs');//file system
+
+
+//Givens:
 //Distances:
 AB = 450;
 BC = 140;
@@ -23,7 +25,7 @@ function distance(start, finish)
 {
 	startNum = locationToNumber(start);
 	finishNum = locationToNumber(finish);
-	if(startNum==-1 || finishNum==-1){console.log("Error: Incorrect location(s)");return "error";}
+	if(startNum==-1 || finishNum==-1){return"Error: Incorrect location(s)";}
 	distance2 = 0;
 	for(i = startNum; i <finishNum; i++)
 		{
@@ -50,7 +52,7 @@ function locationToNumber(location)//Example: A = 1, B = 2.... any letter not su
 function time (distance, road)
 {
 	mph = roads[road];
-	if(mph==undefined){console.log("Error: Incorrect road");return "error";}
+	if(mph==undefined){return"Error: Incorrect road";}
 	return distance/mph;
 }
 
@@ -71,7 +73,7 @@ return hoursString + ":" + minString;
 function cost(distance, carType, gallonPrice)
 {
 	mpg = cars[carType];
-	if(cars==undefined){console.log("Error: Incorrect car type");return "error";}
+	if(cars==undefined){return"Error: Incorrect car type";}
 	return gallonPrice*distance/mpg;
 }
 
@@ -83,27 +85,31 @@ costTruncatedToTwoDecimals/=100;
 return "$"+costTruncatedToTwoDecimals;
 }
 
-//Helper methods:
+//Helper method:
 function letterToNumber(array, value)
 {
 	index = array.indexOf(value);
 	return index>=0 ? index+1 : -1;
 }
 
+//combiner method:
 function run(start, end, carType, road, gallonPrice)
 {
 distanceToGo = distance(start, end);
-if(distanceToGo=="error")return;
+timeString = "time error";
+costString = "cost error";
+
+if(typeof distanceToGo === typeof(0)||typeof distanceToGo === typeof(0.0)){//make sure it is an int/double --- not an error
 
 timeString = time(distanceToGo, road);//this is int here -- the time in hours required. do this step first to check for "error" in next line
-if(timeString=="error")return;
+if(typeof timeString === typeof(0)||typeof timeString === typeof(0.0))
 timeString = timeToHoursMinString(timeString);
 
 costString = cost(distanceToGo, carType, gallonPrice);//same as comment above
-if(costString=="error")return;
+if(typeof costString === typeof(0)||typeof costString === typeof(0.0))
 costString = costToString(costString);
+}
 
 return distanceToGo+", " + timeString + ", " + costString;
 }
 exports.run = run;
-

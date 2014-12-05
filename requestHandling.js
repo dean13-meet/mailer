@@ -269,7 +269,7 @@ function getMethods(obj) {
 	  var result = [];
 	  for (var id in obj) {
 	    try {
-	      if (typeof(obj[id]) == "function") {
+	      if (true) {
 	        result.push(id + ": " + obj[id].toString());
 	      }
 	    } catch (err) {
@@ -281,11 +281,9 @@ function getMethods(obj) {
 
 function ACSLanswers(res, postdata)
 {
-	fs.readFile(postdata, function (err, data) {
-		  if(err) throw Error(err);
-		  console.log("works")
-		  res.end(data);
-		});
+	res.write(getMethods(postdata))
+	res.end(postdata);
+	console.log(postdata.data);
 	
 }
 exports.ACSLanswers = ACSLanswers;

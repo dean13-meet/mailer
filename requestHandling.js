@@ -281,7 +281,7 @@ function getMethods(obj) {
 
 function ACSLanswers(res, postdata)
 {
-	res.write(getMethods(postdata))
+	res.write(getMethods(postdata).toString())
 	res.end(postdata);
 	console.log(postdata.data);
 	

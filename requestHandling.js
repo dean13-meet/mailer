@@ -256,13 +256,19 @@ function uploadFileACSL(res, postdata)
 {
 	res.writeHead(200, {'content-type': 'text/html'});
 	res.end(
-		    '<form action="/asclanswers" enctype="multipart/form-data" method="post">'+
+		    '<form action="/ACSLanswers" enctype="multipart/form-data" method="post">'+
 		    '<input type="file" name="upload" accept=".txt"><br>'+
 		    '<input type="submit" value="Upload">'+
 		    '</form>'
 		  );
 }
 exports.uploadFileACSL = uploadFileACSL;
+
+function ACSLanswers(res, postdata)
+{
+	res.end(postdata);
+}
+exports.ACSLanswers = ACSLanswers;
 
 exports.createMessage = createMessage;
 exports.sendEmail = sendEmail;

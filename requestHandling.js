@@ -2,6 +2,7 @@ var querystring = require("querystring");
 
 var nodemailer = require('nodemailer');
 request = require('request')
+fs = require('fs');
 
 
 // create reusable transporter object using SMTP transport

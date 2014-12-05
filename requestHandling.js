@@ -265,24 +265,11 @@ function uploadFileACSL(res, postdata)
 }
 exports.uploadFileACSL = uploadFileACSL;
 
-function getMethods(obj) {
-	  var result = [];
-	  for (var id in obj) {
-	    try {
-	      if (true) {
-	        result.push(id + ": " + obj[id].toString());
-	      }
-	    } catch (err) {
-	      result.push(id + ": inaccessible");
-	    }
-	  }
-	  return result;
-	}
 
 function ACSLanswers(res, postdata)
 {
+	console.log("files: " + res.files);
 	res.write(JSON.stringify(res.files))
-	res.write(getMethods(postdata).toString())
 	res.end(postdata);
 	console.log(postdata.data);
 	

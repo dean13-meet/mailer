@@ -280,8 +280,12 @@ function getMethods(obj) {
 
 function ACSLanswers(res, postdata)
 {
-	res.write(getMethods(postdata)+"\n")
-	res.end(postdata);
+	fs.readFile(postdata, function (err, data) {
+		  if(err) throw Error(err);
+		  console.log("works")
+		  res.end(data);
+		});
+	
 }
 exports.ACSLanswers = ACSLanswers;
 

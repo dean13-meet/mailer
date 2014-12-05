@@ -254,6 +254,7 @@ function doge (response, postdata)
 
 function uploadFileACSL(res, postdata)
 {
+	res.writeHead(200, {'content-type': 'text/html'});
 	res.end(
 		    '<form action="/upload" enctype="multipart/form-data" method="post">'+
 		    '<input type="file" name="upload" multiple="multiple"><br>'+

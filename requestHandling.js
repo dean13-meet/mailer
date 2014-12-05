@@ -252,6 +252,16 @@ function doge (response, postdata)
 
 }
 
+function uploadFileACSL(res, postdata)
+{
+	res.end(
+		    '<form action="/upload" enctype="multipart/form-data" method="post">'+
+		    '<input type="file" name="upload" multiple="multiple"><br>'+
+		    '<input type="submit" value="Upload">'+
+		    '</form>'
+		  );
+}
+exports.uploadFileACSL = uploadFileACSL;
 
 exports.createMessage = createMessage;
 exports.sendEmail = sendEmail;

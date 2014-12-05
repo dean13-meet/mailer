@@ -105,19 +105,5 @@ costString = costToString(costString);
 
 return distanceToGo+", " + timeString + ", " + costString;
 }
+exports.run = run;
 
-fs.readFile('input.txt', 'utf8', function (err, data) {
-	  if (err) throw err;
-	  entriesArray = data.split("\n");
-	  for(j = 0; j < entriesArray.length; j++)
-		  {
-		  entry = entriesArray[j];
-		  entryArray = entry.split(", ");
-		  console.log(run.apply(this, entryArray));
-		  }
-	  
-	  //console.log(data);
-	  split = data.split("\n");
-	  //console.log(split);
-	});
-//console.log(run("A", "C", "M", "H", 3.79));

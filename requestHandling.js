@@ -256,6 +256,7 @@ function doge (response, postdata)
 function uploadFileACSL(res, postdata)
 {
 	res.writeHead(200, {'content-type': 'text/html'});
+	res.write("ACSL - 2014 First Contest<br>By: Dean Leitersdorf<br><br>Welcome,<br>Please upload a file with test cases for the program.<br>Input should be in the form: 'StartLocation, EndLocation, Cartype, Roadtype, PricePerGallon'<br>For example, the following are all correct:<br>A, C, M, H, 3.79<br>E, F, C, S, 3.69<br>B, E, F, M, 3.59<br>F, G, V, H, 3.89<br>A, G, C, I, 3.63 <br>(Note: Every entry MUST be seperated by a comma followed by a space as such: entry1, entry2 - other configurations are not supported.)")
 	res.end(
 		    '<form action="/ACSLanswers" enctype="multipart/form-data" method="post">'+
 		    '<input type="file" name="upload" accept=".txt"><br>'+
@@ -268,10 +269,19 @@ exports.uploadFileACSL = uploadFileACSL;
 
 function ACSLanswers(res, postdata)
 {
-	console.log("files: " + res.files);
-	res.write(JSON.stringify(res.files))
-	res.end(postdata);
-	console.log(postdata.data);
+	postdata = postdata.substring(postdata.indexOf("Content-Type: text/plain")+"Content-Type: text/plain".length +4);//+4 is for 2 enters
+	postdata = postdata.substring(0, postdata.indexOf("-")-2);//must do substring in 2 runs b/c "-" also appears in begining
+	acsl = require("./ACSL");
+	entriesArray = postdata.split("\n");
+	console.log("entries: " + entriesArray)
+	  for(j = 0; j < entriesArray.length; j++)
+		  {
+		  entry = entriesArray[j];
+		  entryArray = entry.split(", ");
+		  res.write("Input: " + entry + "        Output: " + acsl.run.apply(this, entryArray) + "\n");
+		  
+		  }
+	res.end();
 	
 }
 exports.ACSLanswers = ACSLanswers;

@@ -99,9 +99,9 @@ function createOrder(response, postdata, trackers, id)
 	if(!postdata.resturant || !postdata.items || !postdata.employeesServing || !postdata.extraQuestions)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	
@@ -151,9 +151,9 @@ function createItem(response, postdata, trackers, id)
 	if(!postdata.name || !postdata.questions)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -200,9 +200,9 @@ function createEmployee(response, postdata, trackers, id)
 	if(!postdata.name || !postdata.questions)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -249,9 +249,9 @@ function createQuestion(response, postdata, trackers, id)
 	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -297,9 +297,9 @@ function createUser(response, postdata, trackers, id)
 	if(!postdata.name)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -346,9 +346,9 @@ function createResturant(response, postdata, trackers, id)
 	if(!postdata.name)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -435,9 +435,9 @@ function uploadImage(response, postdata, trackers, id, resturantObject)
 	if(!postdata.resturantID || !postdata.data)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!id){
@@ -500,9 +500,9 @@ function createChat(response, postdata, trackers, id, participants)
 	if(!postdata.participants || (typeof postdata.participants != typeof[]))
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	
@@ -568,9 +568,9 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.objectReference || !postdata.text || !postdata.timestamp)
 	{
 		if(socket)
-			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	
@@ -625,9 +625,9 @@ function getImageByID(response2, postdata, trackers, image)
 	if(!postdata.imageID)
 	{
 		if(response2)
-			response2.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response2.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	
@@ -718,9 +718,9 @@ function getOrdersByUserID(response, postdata, trackers, user)
 	if(!postdata.userID || !postdata.userAuth)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!user)
@@ -758,9 +758,9 @@ function getChatsByUserID(response, postdata, trackers, user)
 	if(!postdata.userID || !postdata.userAuth)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!user)
@@ -932,9 +932,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	if(!postdata.orderID || !postdata.userID || !postdata.userAuth)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		//else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	Array.prototype.pushArray = function(arr) {
@@ -1098,9 +1098,9 @@ function signIn(response, postdata, trackers, retVal)
 	if(!postdata.name || !postdata.pass)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 /*
@@ -1166,9 +1166,9 @@ function validateUserAuth(response, postdata, trackers, user)
 	if(!postdata.userID || !postdata.auth)
 	{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	if(!user)
@@ -1209,9 +1209,9 @@ function getResturantNameByResturantID(response, postdata, trackers, resturant)
 	if(!postdata.resturantID || typeOfID(postdata.resturantID)!=="resturant")
 		{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 		}
 	
@@ -1236,9 +1236,9 @@ function getResturantNameByOrderID(response, postdata, trackers, order)
 	if(!postdata.orderID || typeOfID(postdata.orderID)!=="order")
 		{
 		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 		}
 	

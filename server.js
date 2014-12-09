@@ -160,7 +160,7 @@ function start(route, handle) {
 			  handler = handlers[event];
 			  if(handler)
 				  {
-				  route(handle, handler, socket, info, trackers);
+				  route(handle, handler, socket, data, trackers);
 				  }
 			  else
 				  {

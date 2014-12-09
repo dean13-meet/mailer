@@ -910,7 +910,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	messagesToReturn = messagesToReturn.slice(indexToReturn, messagesToReturn.length);
 	
 	if(socket)
-		socket.send(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
+		socket.send(JSON.stringify({"answerForGetMessagesFromChatObject":chatObject.id,"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
 	else
 		console.log(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
 	console.log("sent messages");

@@ -35,6 +35,7 @@ handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByU
 handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
 
 handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; //-- accepts only from sockets
+handle["/resturant/getmessagesfromchatobject"] = requestHandlers.resturantApp.getMessagesFromChatObject; //-- accepts only from sockets
 
 
 //testing server:

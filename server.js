@@ -136,15 +136,39 @@ function start(route, handle) {
 			  }
 		  });
 		  
-		  socket.on('postMessage', function(info)
-				  {
-			  route(handle, "/resturant/postmessage", socket, info, trackers);
-				  })
 		  
 		  socket.on('disconnect', function(){
 			    console.log('user disconnected');
 			    socket.isOn = false;
 			  });
+		  
+		  //else: -- look at: http://stackoverflow.com/questions/10405070/socket-io-client-respond-to-all-events-with-one-handler
+		  var original_$emit = socket.$emit;
+		  socket.$emit = function() {
+		      var args = Array.prototype.slice.call(arguments);
+		      original_$emit.apply(socket, ['*'].concat(args));
+		      if(!original_$emit.apply(socket, arguments)) {
+		          original_$emit.apply(socket, ['default'].concat(args));
+		      }
+		  }
+
+		  handlers = {};
+	      handlers["postMessages"] = "/resturant/postmessage";
+	      handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
+		  socket.on('default',function(event, data) {
+			  
+			  handler = handlers[event];
+			  if(handler)
+				  {
+				  route(handle, handler, socket, info, trackers);
+				  }
+			  else
+				  {
+				  console.log("No destination for: " + event);
+				  }
+		  });
+		  
+		  
 		});
 	/*
 	server.on('connection', function(socket){

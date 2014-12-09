@@ -915,6 +915,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 		console.log(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
 	console.log("sent messages");
 }
+exports.getMessagesFromChatObject = getMessagesFromChatObject;
 
 function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)
 {

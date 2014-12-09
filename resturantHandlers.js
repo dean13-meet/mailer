@@ -875,7 +875,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	
 	if(!user)
 	{
-	getObject(postdata.userID, postMessage, [socket, postdata, trackers], false);
+	getObject(postdata.userID, getMessagesFromChatObject, [socket, postdata, trackers], false);
 	return;
 	}
 	if(user.auth!==postdata.userAuth)
@@ -888,7 +888,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 		}
 	if(!chatObject)
 		{
-		getObject(postdata.chatObjectID, postMessage, [socket, postdata, trackers, user], false);
+		getObject(postdata.chatObjectID, getMessagesFromChatObject, [socket, postdata, trackers, user], false);
 		return;
 		}
 	if(!(user.id in chatObject.participants))

@@ -863,7 +863,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	 * Returns:
 	 * {messages:["many messages"], shouldTimeSkip:(bool - whether to force skip)}
 	 */
-	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.messageIndex)
+	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || (typeof postdata.messageIndex)==="undefined")//do undefined check, b/c messageIndex CAN be 0
 	{
 		if(socket)
 			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata}));

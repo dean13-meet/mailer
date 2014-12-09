@@ -902,7 +902,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	
 	console.log("while sending messages");
 	messagesToReturn = chatObject.messages;
-	console.log(messagesToReturn);
+	console.log("messages returning " + messagesToReturn);
 	shouldTimeSkip = false;
 	indexToReturn = postdata.messageIndex;
 	if(postdata.loadPrev)//this is a back load - return all messages from 20 messages past (where 20 = defaultMessageLoad)

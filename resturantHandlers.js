@@ -866,9 +866,9 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.messageIndex)
 	{
 		if(socket)
-			socket.send(JSON.stringify({"error": "Missing info"}));
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		else
-			console.log(JSON.stringify({"error": "Missing info"}));
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata}));
 		return;
 	}
 	

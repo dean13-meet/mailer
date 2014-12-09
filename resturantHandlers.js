@@ -847,6 +847,7 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 }
 exports.getDescriptionOfChatByID = getDescriptionOfChatByID;
 
+var defaultMessageLoad = 20;//20 messages loaded
 function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 {
 	/*
@@ -855,6 +856,12 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	 * userAuth
 	 * chatObjectID
 	 * messageIndex
+	 * loadPrev (this is basically when we are loading old messages, not just new ones)
+	 */
+	
+	/*
+	 * Returns:
+	 * {messages:["many messages"], shouldTimeSkip:(bool - whether to force skip)}
 	 */
 	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.messageIndex)
 	{
@@ -892,7 +899,21 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 		return;
 		}
 	
+	messagesToReturn = chatObject.messages;
+	shouldTimeSkip = false;
+	indexToReturn = postdata.messageIndex;
+	if(postdata.loadPrev)//this is a back load - return all messages from 20 messages past (where 20 = defaultMessageLoad)
+		indexToReturn -= defaultMessageLoad;
+	else if(messageToReturn.length>defaultMessageLoad+indexToReturn)//this is a forward load -- return most recent messages, ignoring old ones and forcing a time skip
+		{indexToReturn = messagesToReturn.length-defaultMessageLoad; shouldTimeSkip = true;}
 	
+	messagesToReturn = messagesToReturn.slice(indexToReturn, messagesToReturn.length);
+	
+	if(socket)
+		socket.send(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
+	else
+		console.log(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
+	console.log("sent messages");
 }
 
 function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees, questionsOrder)

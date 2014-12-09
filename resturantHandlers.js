@@ -900,6 +900,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 		return;
 		}
 	
+	console.log("while sending messages");
 	messagesToReturn = chatObject.messages;
 	shouldTimeSkip = false;
 	indexToReturn = postdata.messageIndex;

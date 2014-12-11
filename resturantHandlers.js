@@ -907,7 +907,7 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	indexToReturn = postdata.messageIndex;
 	if(postdata.loadPrev)//this is a back load - return all messages from 20 messages past (where 20 = defaultMessageLoad)
 		indexToReturn -= defaultMessageLoad;
-	else if(messageToReturn.length>defaultMessageLoad+indexToReturn)//this is a forward load -- return most recent messages, ignoring old ones and forcing a time skip
+	else if(messagesToReturn.length>defaultMessageLoad+indexToReturn)//this is a forward load -- return most recent messages, ignoring old ones and forcing a time skip
 		{indexToReturn = messagesToReturn.length-defaultMessageLoad; shouldTimeSkip = true;}
 	
 	messagesToReturn = messagesToReturn.slice(indexToReturn, messagesToReturn.length);

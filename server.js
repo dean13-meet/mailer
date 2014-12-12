@@ -153,7 +153,7 @@ function start(route, handle) {
 		  }
 
 		  handlers = {};
-	      handlers["postMessages"] = "/resturant/postmessage";
+	      handlers["postMessage"] = "/resturant/postmessage";
 	      handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
 		  socket.on('default',function(event, data) {
 			  

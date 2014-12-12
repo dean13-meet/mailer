@@ -600,11 +600,13 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 			console.log(JSON.stringify({"error": "User not allowed to post in this chat"}));
 		return;
 		}
+	sender = user.id.substring(3, user.id.indexOf("-"));//just the unique ID part - no need to store all
 	message = 
 		{
 			objectReference: postdata.objectReference,
 			text: postdata.text,
-			timestamp: postdata.timestamp
+			timestamp: postdata.timestamp,
+			sender: sender
 		}
 	if( typeof chatObject.messages != typeof [])chatObject.messages = [];
 	chatObject.messages.push(message);

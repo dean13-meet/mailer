@@ -922,9 +922,9 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	console.log("sent messages");
 	
 	userLastReadIndex = chatObject.participants[user.id];
-	if(userLastReadIndex<indexToReturn)
+	if(userLastReadIndex<chatObject.messages.length)
 		{
-		userLastReadIndex = indexToReturn;
+		userLastReadIndex = chatObject.messages.length;
 		chatObject.participants[user.id] = userLastReadIndex;
 		saveObject(chatObject.id, chatObject);//no need to send out updates, this is just for database records (so far) -- may be used in future if want to add "read" messages;
 		}

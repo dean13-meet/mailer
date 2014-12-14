@@ -1451,7 +1451,9 @@ function saveURL(url, json, trackerUpdates, trackers)
 			if(trackerUpdates && trackers){
 			for(i = 0; i < trackerUpdates.length; i++)
 				{
+				
 				tracker = trackerUpdates[i];
+				console.log("Tracker updated: " + tracker);
 				clients = trackers[tracker];
 				if(clients)
 					{

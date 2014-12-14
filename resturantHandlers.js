@@ -61,7 +61,7 @@
  * 
  * chatObject:
  * var id
- * dic participants = {user/resturantID, lastChatMessageIndex}
+ * dic participants = {user/resturantID, lastChatMessageIndex (--user read up to this index; this is for "read" messages)}
  * array messages
  * var timestamp --lastest update to chat
  * 
@@ -920,6 +920,14 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	else
 		console.log(JSON.stringify({"messages": messagesToReturn, "shouldTimeSkip":shouldTimeSkip}));
 	console.log("sent messages");
+	
+	userLastReadIndex = chatObject.participants[user.id];
+	if(userLastReadIndex<indexToReturn)
+		{
+		userLastReadIndex = indexToReturn;
+		chatObject.participants[user.id] = userLastReadIndex;
+		saveObject(chatObject.id, chatObject);//no need to send out updates, this is just for database records (so far) -- may be used in future if want to add "read" messages;
+		}
 }
 exports.getMessagesFromChatObject = getMessagesFromChatObject;
 

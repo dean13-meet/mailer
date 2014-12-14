@@ -565,7 +565,7 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	 * text
 	 * timestamp
 	 */
-	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || !postdata.objectReference || !postdata.text || !postdata.timestamp)
+	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || /*!postdata.objectReference ||*/ !postdata.text || !postdata.timestamp)
 	{
 		if(socket)
 			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));

@@ -1200,16 +1200,16 @@ function validateUserAuth(response, postdata, trackers, user)
 			{
 			type = typeOfID(user.id.substring(0,3));
 			if(response)
-				response.end({"validation":"true", "type":type});
+				response.end(JSON.stringify({"validation":"true", "type":type}));
 			//else
-				console.log({"validation":"true", "type":type});
+				console.log(JSON.stringify({"validation":"true", "type":type}));
 			}
 		else
 			{
 			if(response)
-				response.end({"validation":"false", "type":"error"});
+				response.end(JSON.stringify({"validation":"false", "type":"error"}));
 			//else
-				console.log({"validation":"false", "type":"error"});
+				console.log(JSON.stringify({"validation":"false", "type":"error"}));
 			}
 		
 		}

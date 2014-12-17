@@ -1140,6 +1140,7 @@ function signIn(response, postdata, trackers, retVal, user)
 		{
 		id = retVal.id;
 		getObject(id, signIn, [response, postdata, trackers, retVal], false);
+		return;
 		}
 
 	

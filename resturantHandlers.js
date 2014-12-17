@@ -1198,17 +1198,18 @@ function validateUserAuth(response, postdata, trackers, user)
 		console.log("UserPost: " + JSON.stringify(postdata));
 		if(user.id===postdata.userID && user.auth === postdata.auth)
 			{
+			type = typeOfID(user.id.substring(0,3));
 			if(response)
-				response.end("true");
+				response.end({"validation":"true", "type":type});
 			//else
-				console.log("true");
+				console.log({"validation":"true", "type":type});
 			}
 		else
 			{
 			if(response)
-				response.end("false");
+				response.end({"validation":"false", "type":"error"});
 			//else
-				console.log("false");
+				console.log({"validation":"false", "type":"error"});
 			}
 		
 		}

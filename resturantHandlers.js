@@ -49,6 +49,8 @@
  * Resturant:
  * var id
  * var name
+ * var pass
+ * var auth
  * var images
  * array chats
  * TODO rest
@@ -292,9 +294,10 @@ function createUser(response, postdata, trackers, id)
 	/*
 	 * PostData:
 	 * var name
+	 * var pass
 	 */
 
-	if(!postdata.name)
+	if(!postdata.name || !postdata.pass)
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -326,10 +329,13 @@ function createUser(response, postdata, trackers, id)
 					response.end("Created user: " + body);
 
 				console.log("Created user: " + body);
+				
+				//save only if successul in creating user:
+				saveURL(names_to_ids+postdata.name, {"id":id});
 
 			}
 		});
-
+		
 
 	}
 }
@@ -341,9 +347,10 @@ function createResturant(response, postdata, trackers, id)
 	/*
 	 * PostData:
 	 * var name
+	 * var pass
 	 */
 
-	if(!postdata.name)
+	if(!postdata.name || !postdata.pass)
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -355,9 +362,12 @@ function createResturant(response, postdata, trackers, id)
 		createID("resturant", createResturant, [response, postdata, trackers]);
 	}else{
 
+		auth = createAuth();
 		json = {
 				id:id,
 				name:postdata.name,
+				pass:postdata.pass,
+				auth:auth,
 				images:[],
 				chats: []
 		}
@@ -373,6 +383,8 @@ function createResturant(response, postdata, trackers, id)
 
 				console.log("Created resturant: " + body);
 
+				//save only if successul in creating user:
+				saveURL(names_to_ids+postdata.name, {"id":id});
 			}
 		});
 
@@ -1097,11 +1109,8 @@ exports.saveUserResponseToQuestionbyQuestionIDandUserID = saveUserResponseToQues
 
 
 var userQueryURL = "https://resturantapp.couchappy.com/resturant_users/_design/queryName/_view/queryName";
-function signIn(response, postdata, trackers, retVal)
+function signIn(response, postdata, trackers, retVal, user)
 {
-	console.log("postdata: " + JSON.stringify(postdata))
-	console.log("name: " + postdata.name)
-	console.log("pass: " + postdata.pass)
 /*
  * PostData:
  * var name
@@ -1117,29 +1126,25 @@ function signIn(response, postdata, trackers, retVal)
 	}
 /*
  * Return: 
- * var userID
+ * var userID/resturantID
  * var auth
  */
 
 	if(!retVal)
 		{
 		console.log("1");
-		getURL(userQueryURL, signIn, [response, postdata, trackers], false);
+		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
+		return;
 		}
-	else
-	{console.log("2");
-		var user;
-		for(var i = 0; i < retVal.rows.length; i++)
+	if(!user)
 		{
-			console.log("3");
-			row = retVal.rows[i];
-			if(row.key==postdata.name)
-				{
-				console.log("4");
-				user = row.value;
-				break;
-				}
+		id = retVal.id;
+		getObject(id, signIn, [response, postdata, trackers, retVal], false);
 		}
+
+	
+	console.log("2");
+		
 		if(user && user.pass==postdata.pass)
 			{
 			console.log("5");
@@ -1163,7 +1168,6 @@ function signIn(response, postdata, trackers, retVal)
 				console.log("Error: Incorrect username or password.");
 		}
 		
-	}
 	
 }
 exports.signIn = signIn;
@@ -1327,6 +1331,8 @@ var usersURL = baseURL + "resturant_users/";
 var resturantsURL = baseURL + "resturant_resturants/";
 var imagesURL = baseURL + "resturant_images/";
 var chatsURL = baseURL + "resturant_chats/";
+
+var names_to_ids = baseURL + "resturant_names_to_ids/";
 
 
 function createID(typeOfObject, callback, args)

@@ -46,6 +46,11 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 server.start(router.route, handle);
 
 
+//json = {"name":"Deanster", "pass":"admin"};
+//requestHandlers.resturantApp.createUser("", json);
+
+//json2 = {"name":"Deanster's Resturant", "pass":"admin"};
+//requestHandlers.resturantApp.createResturant("", json2);
 
 
 //json = {"participants":["00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "00138-adf774bf0a710ddb027bd39eb7f011b5"]}

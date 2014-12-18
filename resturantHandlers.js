@@ -830,7 +830,9 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 	participantIDs = Object.keys(chatObject.participants);
 	for(i = 0; i < participantIDs.length; i++)
 		{
+		
 		id = participantIDs[i];
+		console.log("Participant: " + id);
 		if(id===postdata.userID)
 			{
 			participantIDs.splice(i, 1);

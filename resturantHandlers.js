@@ -625,7 +625,7 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	chatObject.timestamp = message.timestamp;
 	trackerUpdates = Object.keys(chatObject.participants);
 	console.log("traking dfds: " + trackerUpdates);
-	trackerUpdates.push(chatObject.id+"/"+"messages")
+	trackerUpdates.push((chatObject.id+"/"+"messages"));
 	saveObject(chatObject.id, chatObject, trackerUpdates, trackers);
 }
 exports.postMessage = postMessage;

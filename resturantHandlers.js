@@ -811,7 +811,7 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 	 * var userID
 	 */
 	
-	if(!postdata.chatID || typeOfID(postdata.chatID)!=="chatObject" || !postdata.userID || typeOfID(postdata.userID)!=="user")
+	if(!postdata.chatID || typeOfID(postdata.chatID)!=="chatObject" || !postdata.userID || !(typeOfID(postdata.userID)==="user"  || typeOfID(postdata.userID)==="resturant"))
 		{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));

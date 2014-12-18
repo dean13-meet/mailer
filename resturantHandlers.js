@@ -623,7 +623,9 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	if( typeof chatObject.messages != typeof [])chatObject.messages = [];
 	chatObject.messages.push(message);
 	chatObject.timestamp = message.timestamp;
-	saveObject(chatObject.id, chatObject, [chatObject.id+"/"+"messages"], trackers);
+	trackerUpdates = Object.keys(chatObject.participants);
+	trackerUpdates.push(chatObject.id+"/"+"messages")
+	saveObject(chatObject.id, chatObject, trackerUpdates, trackers);
 }
 exports.postMessage = postMessage;
 

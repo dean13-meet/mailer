@@ -53,6 +53,9 @@
  * var auth
  * var images
  * array chats
+ * array items
+ * array employees
+ * array otherQuestions
  * TODO rest
  * 
  * Image:
@@ -141,16 +144,17 @@ function createOrder(response, postdata, trackers, id)
 exports.createOrder = createOrder;
 
 
-function createItem(response, postdata, trackers, id)
+function createItem(response, postdata, trackers, id, resturant)
 {
 	/*
 	 * PostData:
 	 * var name
 	 * array questions
 	 * var imageID
+	 * var resturantID
 	 */
 
-	if(!postdata.name || !postdata.questions)
+	if(!postdata.name || !postdata.questions || !postdata.resturantID || typeOfID(postdata.resturantID)!=="resturant")
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -160,8 +164,13 @@ function createItem(response, postdata, trackers, id)
 	}
 	if(!id){
 		createID("item", createItem, [response, postdata, trackers]);
-	}else{
-
+		return;
+	}
+	if(!resturant)
+	{
+	getObject(postdata.resturantID, createItem,[response, postdata, trackers, id], false);
+	return;
+	}
 		if(!postdata.imageID)postdata.imageID = "defFood";
 		json = {
 				id:id,
@@ -185,21 +194,24 @@ function createItem(response, postdata, trackers, id)
 		});
 
 
-	}
+		
+	resturant.items.push(id);
+	saveObject(resturant.id, resturant);
 }
 exports.createItem = createItem;
 
 
-function createEmployee(response, postdata, trackers, id)
+function createEmployee(response, postdata, trackers, id, resturant)
 {
 	/*
 	 * PostData:
 	 * var name
 	 * array questions
 	 * var imageID
+	 * var resturantID
 	 */
 
-	if(!postdata.name || !postdata.questions)
+	if(!postdata.name || !postdata.questions || postdata.resturantID || typeOfID(postdata.resturantID)!=="resturant")
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -209,7 +221,13 @@ function createEmployee(response, postdata, trackers, id)
 	}
 	if(!id){
 		createID("employee", createEmployee, [response, postdata, trackers]);
-	}else{
+		return;
+	}
+	if(!resturant)
+	{
+	getObject(postdata.resturantID, createEmployee,[response, postdata, trackers, id], false);
+	return;
+	}
 		if(!postdata.imageID)postdata.imageID = "defWaiter";
 		json = {
 				id:id,
@@ -231,14 +249,14 @@ function createEmployee(response, postdata, trackers, id)
 
 			}
 		});
-
-
-	}
+	resturant.employees.push(id);
+	saveObject(resturant.id, resturant);
+	
 }
 exports.createEmployee = createEmployee;
 
 
-function createQuestion(response, postdata, trackers, id)
+function createQuestion(response, postdata, trackers, id, resturant)
 {
 	/*
 	 * PostData:
@@ -246,6 +264,7 @@ function createQuestion(response, postdata, trackers, id)
 	 * var shouldAllowStarRating
 	 * var shouldAllowTextInput
 	 * var imageID
+	 * var resturantID //use ONLY ONLY ONLY IF creating a question IN GENERAL for the resturant!
 	 */
 
 	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput)
@@ -256,9 +275,11 @@ function createQuestion(response, postdata, trackers, id)
 			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
 		return;
 	}
+	if(!resturant){//means we are in the process of saving to a resturant - question was ALREADY created, no need to recreate
 	if(!id){
 		createID("question", createQuestion, [response, postdata, trackers]);
-	}else{
+		return;
+	}
 		if(!postdata.imageID)postdata.imageID = "defGeneralQuestion";
 		json = {
 				id:id,
@@ -282,9 +303,19 @@ function createQuestion(response, postdata, trackers, id)
 
 			}
 		});
-
-
 	}
+		if(resturant || (postdata.resturantID && typeOfID(postdata.resturantID)==="resturant"))//meaning: this is a question in GENERAL for a resturant
+			{
+			if(!resturant)
+				{
+				getObject(postdata.resturantID, createQuestion, [response, postdata, trackers, id], false);
+				return;
+				}
+			resturant.otherQuestions.push(id);
+			saveObject(resturant.id, resturant);
+			}
+
+	
 }
 exports.createQuestion = createQuestion;
 
@@ -369,7 +400,10 @@ function createResturant(response, postdata, trackers, id)
 				pass:postdata.pass,
 				auth:auth,
 				images:[],
-				chats: []
+				chats: [],
+				items: [],
+				employees: [],
+				otherQuestions: []
 		}
 		options = {
 				method:'PUT',
@@ -1279,6 +1313,58 @@ function getResturantNameByOrderID(response, postdata, trackers, order)
 }
 exports.getResturantNameByOrderID = getResturantNameByOrderID;
 
+
+function getAllResturantMenu(socket, postdata, trackers, resturant)
+{
+	/*
+	 * postdata:
+	 * var resturantID
+	 * var auth
+	 */
+	
+	if(!postdata.resturantID || !postdata.auth)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!resturant)
+	{
+	getObject(postdata.resturantID, getAllResturantMenu, [socket, postdata, trackers], false);
+	return;
+	}
+	if(resturant.auth == postdata.auth)
+		{
+		response = {
+				items:resturant.items,
+				employees:resturant.employees,
+				otherQuestions:resturant.otherQuestions
+		}
+		if(socket)
+			socket.send(JSON.stringify({"eventRecieved":"getAllResturantMenu", "data":response}));
+		else
+			console.log(JSON.stringify({"eventRecieved":"getAllResturantMenu", "data":response}));
+		}
+	else
+		{
+		if(socket)
+			socket.send(JSON.stringify({error: "Error: Incorrect resturant auth."}));
+		else
+			console.log("Error: Incorrect resturant auth.");
+		
+		}
+
+}
+exports.getAllResturantMenu = getAllResturantMenu;
+
+
+
+
+
+
 //helper methods:
 
 function typeOfID(id)
@@ -1539,3 +1625,6 @@ function addMessage(response, postdata, trackers)
 	createChat(response, json, trackers);
 }
 exports.addMessage = addMessage;
+
+
+

@@ -34,10 +34,7 @@ handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
 handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
 handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
 
-
-handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; //-- accepts only from sockets
-handle["/resturant/getmessagesfromchatobject"] = requestHandlers.resturantApp.getMessagesFromChatObject; //-- accepts only from sockets
-handle["/resturant/getallresturantmenu"] = requestHandlers.resturantApp.getAllResturantMenu; //-- accepts only from sockets
+//NOTE: Socket-only accepting functions are handled in server file
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;

@@ -1321,7 +1321,7 @@ function getAllResturantMenu(socket, postdata, trackers, resturant)
 	 * var resturantID
 	 * var auth
 	 */
-	
+	console.log("GOT TO ALL");
 	if(!postdata.resturantID || !postdata.auth)
 	{
 		if(socket)

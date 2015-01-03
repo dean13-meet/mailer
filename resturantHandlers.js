@@ -1156,7 +1156,7 @@ function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, track
 	 */
 	
 	
-	if(!postdata.questionID || typeOfID(postdata.question)!=="question"  || !postdata.userID)
+	if(!postdata.questionID || typeOfID(postdata.questionID)!=="question"  || !postdata.userID)
 	{
 		if(socket)
 			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));

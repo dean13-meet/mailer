@@ -29,10 +29,9 @@
  * var shouldAllowStarRating
  * var shouldAllowTextInput
  * var image
- * array userResponses
+ * dic userResponses (userID to userResponse)
  * 
- * UserResponse:
- * var userID
+ * UserResponse: (is Entry in dic)
  * var starRating //-1 for not answered
  * var textResponse
  * 
@@ -287,7 +286,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 				shouldAllowStarRating:postdata.shouldAllowStarRating,
 				shouldAllowTextInput:postdata.shouldAllowTextInput,
 				imageID:postdata.imageID,
-				userResponses:[] 
+				userResponses:{}
 		}
 		options = {
 				method:'PUT',
@@ -1101,12 +1100,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		for(i = 0; i < questions.length; i++)
 			{
 			question = questions[i];
-			userResponses = question.userResponses;
-			for(j = 0; j < userResponses.length; j++)
-				{
-				if(userResponses[j].userID!==user.id)userResponses.splice(j,1);//remove all responses not belonging to this user
-				}
-			question.userResponses = userResponses;
+			userRep = question.userResponses[postdata.userID];
+			question.userResponses = userRep===undefined ? {"userStarRating":-1, "userTextResponse":""}: userRep;//changes from (dic of dic) to (dic)
 			questions[i] = question;
 			}
 			
@@ -1170,11 +1165,10 @@ function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, track
 		return;
 		}
 	response = {
-			userID:postdata.userID,
 			textResponse:postdata.textResponse?postdata.textResponse:"",
 			starRating:postdata.starRating?postdata.starRating:-1
 	}
-	question.userResponses.push(response);
+	question.userResponses[postdata.userID] = response;
 	saveObject(question.id, question, [question.id+"/userResponses"], trackers);
 	
 }

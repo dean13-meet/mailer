@@ -1428,7 +1428,7 @@ function getDescOfID (socket, postdata, trackers, desc)
 	if(socket)
 		socket.send(JSON.stringify({"eventRecieved":"getDesc:"+postdata.id, "desc":desc}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
 	else
-		console.log(JSON.stringify({"eventRecieved":"getDesc:"+postdata.id,, "desc":desc}));
+		console.log(JSON.stringify({"eventRecieved":"getDesc:"+postdata.id, "desc":desc}));
 }
 exports.getDescOfID = getDescOfID;
 

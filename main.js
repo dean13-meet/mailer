@@ -21,7 +21,6 @@ handle["/resturant/createemployee"] = requestHandlers.resturantApp.createEmploye
 handle["/resturant/createquestion"] = requestHandlers.resturantApp.createQuestion;
 handle["/resturant/createuser"] = requestHandlers.resturantApp.createUser;
 handle["/resturant/createresturant"] = requestHandlers.resturantApp.createResturant;
-handle["/resturant/getsurveybyorderidanduserid"] = requestHandlers.resturantApp.getSurveyByOrderIDandUserID;
 handle["/resturant/signin"] = requestHandlers.resturantApp.signIn;
 handle["/resturant/getordersbyuserid"] = requestHandlers.resturantApp.getOrdersByUserID;
 handle["/resturant/validateuserauth"] = requestHandlers.resturantApp.validateUserAuth;
@@ -38,6 +37,8 @@ handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.get
 handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; //-- accepts only from sockets
 handle["/resturant/getmessagesfromchatobject"] = requestHandlers.resturantApp.getMessagesFromChatObject; //-- accepts only from sockets
 handle["/resturant/getallresturantmenu"] = requestHandlers.resturantApp.getAllResturantMenu; //-- accepts only from sockets
+handle["/resturant/getsurveybyorderidanduserid"] = requestHandlers.resturantApp.getSurveyByOrderIDandUserID;//-- accepts only from sockets
+handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;//-- accepts only from sockets
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;

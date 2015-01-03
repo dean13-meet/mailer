@@ -33,7 +33,7 @@
  * 
  * UserResponse:
  * var userID
- * var starRating
+ * var starRating //-1 for not answered
  * var textResponse
  * 
  * 
@@ -196,7 +196,7 @@ function createItem(response, postdata, trackers, id, resturant)
 
 		
 	resturant.items.push(id);
-	saveObject(resturant.id, resturant);
+	saveObject(resturant.id, resturant, [resturant.id+"/"+"items"], trackers);
 }
 exports.createItem = createItem;
 
@@ -250,7 +250,7 @@ function createEmployee(response, postdata, trackers, id, resturant)
 			}
 		});
 	resturant.employees.push(id);
-	saveObject(resturant.id, resturant);
+	saveObject(resturant.id, resturant, [resturant.id+"/"+"employees"], trackers);
 	
 }
 exports.createEmployee = createEmployee;
@@ -312,7 +312,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 				return;
 				}
 			resturant.otherQuestions.push(id);
-			saveObject(resturant.id, resturant);
+			saveObject(resturant.id, resturant, [resturant.id+"/"+"otherQuestions"], trackers);
 			}
 
 	
@@ -1143,9 +1143,40 @@ exports.getSurveyByOrderIDandUserID = getSurveyByOrderIDandUserID;
 
 
 
-function saveUserResponseToQuestionbyQuestionIDandUserID(response, postdata)
+function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, trackers, question)
 {
+	//TODO imporve efficiency of avg calc -- store avg in question everytime it gets a new response, much easier. Put this improvement in save user response
 
+	/*
+	 * postdata:
+	 * questionID
+	 * userID
+	 * textResponse
+	 * starRating
+	 */
+	
+	
+	if(!postdata.questionID || typeOfID(postdata.question)!=="question"  || !postdata.userID)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	if(!question)
+		{
+		getObject(postdata.questionID, saveUserResponseToQuestionbyQuestionIDandUserID, [socket, postdata, trackers], false);
+		return;
+		}
+	response = {
+			userID:postdata.userID,
+			textResponse:postdata.textResponse?postdata.textResponse:"",
+			starRating:postdata.starRating?postdata.starRating:-1
+	}
+	question.userResponses.push(response);
+	saveObject(question.id, question, [question.id+"/userResponses"], trackers);
+	
 }
 exports.saveUserResponseToQuestionbyQuestionIDandUserID = saveUserResponseToQuestionbyQuestionIDandUserID;
 
@@ -1361,9 +1392,157 @@ function getAllResturantMenu(socket, postdata, trackers, resturant)
 exports.getAllResturantMenu = getAllResturantMenu;
 
 
+function getDescOfID (socket, postdata, trackers, desc)
+{
+	/*
+	 * postdata
+	 * 
+	 * var id
+	 */
+	if(!postdata.id)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	if(!desc){
+	id = postdata.id;
+	switch(typeOfID(id))
+	{
+	case "item":{
+		getItemDesc(id, getDescOfID, [socket, postdata, trackers], false);
+		return;}
+	case "employee":{
+		getItemDesc(id, getDescOfID, [socket, postdata, trackers], false);//emplyee and item are same for this
+		return;}
+	case "question":{
+		getQuestionDesc(id, getDescOfID, [socket, postdata, trackers],false);
+		return;}
+	default:{
+		desc = {"desc":"NO DESC"};
+		return;}
+	}
+	}
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"getDesc", "desc":desc}));
+	else
+		console.log(JSON.stringify({"eventRecieved":"getDesc", "desc":desc}));
+}
+exports.getDescOfID = getDescOfID;
 
-
-
+function getItemDesc(itemID,callback, args, push, item, possibleQ, question)
+{
+	if(!item)
+		{
+		getObject(itemID, getItemDesc, [itemID, callback, args, push], false);
+		return;
+		}
+	if(!question)
+		{
+	if(!possibleQ) possibleQ = item.questions;
+	
+	if(possibleQ.length==0)
+		{
+		name = item.name;
+		desc = {"name": name, stars:-1}
+		if(!push){
+			args.push(desc); }
+		else
+		{
+			lastArg = args[args.length-1];
+		lastArg.push(desc);
+		}
+		//console.log("Callback: " + callback + " args: " + args)
+		callback.apply(this, args)
+		
+		return;
+		}
+	qID = possibleQ[0];
+	getObject(qID, getItemDesc, [itemID, callback args, push, item, possibleQ], false);
+	return;
+		}
+	else
+		{
+		if(!question.shouldAllowStarRating)
+			{
+			//ignore question and recall self
+			getItemDesc(itemID, callback, args, push, item, possibleQ);
+			return;
+			}
+		userResponses = question.userResponses;
+		totStars = 0;
+		totUsersToCount = 0;
+		//TODO imporve efficiency of avg calc -- store avg in question everytime it gets a new response, much easier. Put this improvement in save user response 
+		for(i = 0; i < userResponses.lenght; i++)
+			{
+			rep = userResponses[i];
+			if(rep.starRating>=0){//means user gave rating
+				totStars+=rep.starRating;
+				totUsersToCount++;
+			}
+			}
+		
+		avg = totStars/totUsersToCount;
+		
+		name = item.name;
+		desc = {"name": name, stars:avg}
+		if(!push){
+			args.push(desc); }
+		else
+		{
+			lastArg = args[args.length-1];
+		lastArg.push(desc);
+		}
+		//console.log("Callback: " + callback + " args: " + args)
+		callback.apply(this, args)
+		
+		return;
+		
+		
+			}
+		}
+	
+function getQuestionDesc(qID, callback, args, push, question)
+{
+	if(!question)
+		{
+		getObject(qID, getQuestionDesc, [qID, callback, args, push], false);
+		return;
+		}
+	text = question.text;
+	avg = -1;
+	if(question.shouldAllowStarRating){
+	userResponses = question.userResponses;
+	totStars = 0;
+	totUsersToCount = 0;
+	//TODO imporve efficiency of avg calc -- store avg in question everytime it gets a new response, much easier. Put this improvement in save user response
+	for(i = 0; i < userResponses.lenght; i++)
+		{
+		rep = userResponses[i];
+		if(rep.starRating>=0){//means user gave rating
+			totStars+=rep.starRating;
+			totUsersToCount++;
+		}
+		}
+	
+	avg = totStars/totUsersToCount;
+	}
+	
+	desc = {"name": text, stars:avg}
+	if(!push){
+		args.push(desc); }
+	else
+	{
+		lastArg = args[args.length-1];
+	lastArg.push(desc);
+	}
+	//console.log("Callback: " + callback + " args: " + args)
+	callback.apply(this, args)
+	return;
+	
+}
 
 //helper methods:
 
@@ -1548,6 +1727,8 @@ function saveObject(objectID, json, trackerUpdates, trackers)
 		}
 }
 
+
+//NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
 function saveURL(url, json, trackerUpdates, trackers)
 {
 	options = {
@@ -1561,9 +1742,17 @@ function saveURL(url, json, trackerUpdates, trackers)
 			console.log("Saved url: " + url);
 			console.log("trackers: " + trackerUpdates);
 			if(trackerUpdates && trackers){
+				idsSent = [];
+				Array.prototype.contains = function(arr)
+				{
+					console.log(arr);
+					console.log(this.indexOf(arr));
+					return this.indexOf(arr) !== -1;
+
+				}
 			for(i = 0; i < trackerUpdates.length; i++)
 				{
-				
+				//NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
 				tracker = trackerUpdates[i];
 				console.log("Tracker updated: " + tracker);
 				clients = trackers[tracker];
@@ -1584,6 +1773,31 @@ function saveURL(url, json, trackerUpdates, trackers)
 					
 					}
 				trackers[tracker] = clients; //--some clients may have been removed due to not being on
+				
+				id = tracker.substring(0, tracker.indexOf("/"));
+				if(!idsSent.contains(id))
+				{
+				idsSent.push(id);
+				trackerID = id +"/TRACK_ANY_FIELD";
+				clients = trackers[trackerID];
+				if(clients)
+				{
+				for (var key in clients) {
+					  if (clients.hasOwnProperty(key)) 
+					  {
+						  client = clients[key];
+						  if(client.isOn){
+								console.log("randomized key");
+								client.send("Updated: " + tracker);
+								console.log("Updated: " + tracker)}
+						  else
+							  delete clients[key];
+					  }
+					}
+				
+				}
+			trackers[trackerID] = clients; //--some clients may have been removed due to not being on
+				}
 				}
 		}
 		}});
@@ -1625,6 +1839,3 @@ function addMessage(response, postdata, trackers)
 	createChat(response, json, trackers);
 }
 exports.addMessage = addMessage;
-
-
-

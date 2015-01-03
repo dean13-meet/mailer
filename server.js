@@ -156,6 +156,9 @@ function start(route, handle) {
 	      handlers["postMessage"] = "/resturant/postmessage";
 	      handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
 	      handlers["getAllResturantMenu"] = "/resturant/getallresturantmenu";
+	      handlers["saveResponse"] = "/resturant/getSurveyByOrderIDAndUserID";
+	      handlers["getDesc"] = "/resturant/getDescOfID"
+	    	  
 		  socket.on('default',function(event, data) {
 			  
 			  handler = handlers[event];

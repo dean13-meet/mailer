@@ -1483,8 +1483,8 @@ function getItemDesc(itemID,callback, args, push, item, possibleQ, question)
 				totUsersToCount++;
 			}
 			}
-		
-		avg = totStars/totUsersToCount;
+		console.log("calcing avg: " + totStars + " " + totUsersToCount);
+		avg = totUsersToCount>0? totStars/totUsersToCount : -1;
 		
 		name = item.name;
 		desc = {"name": name, stars:avg}

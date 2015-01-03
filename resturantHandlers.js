@@ -1460,7 +1460,7 @@ function getItemDesc(itemID,callback, args, push, item, possibleQ, question)
 		return;
 		}
 	qID = possibleQ[0];
-	getObject(qID, getItemDesc, [itemID, callback args, push, item, possibleQ], false);
+	getObject(qID, getItemDesc, [itemID, callback, args, push, item, possibleQ], false);
 	return;
 		}
 	else

@@ -32,6 +32,7 @@
  * dic userResponses (userID to userResponse)
  * 
  * UserResponse: (is Entry in dic)
+ * var userID
  * var starRating //-1 for not answered
  * var textResponse
  * 
@@ -1165,6 +1166,7 @@ function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, track
 		return;
 		}
 	response = {
+			userID:postdata.userID,
 			textResponse:postdata.textResponse?postdata.textResponse:"",
 			starRating:postdata.starRating?postdata.starRating:-1
 	}

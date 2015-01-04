@@ -34,12 +34,15 @@ handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
 handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
 handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
 
-//Note: must keep below --router uses them
-handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; //-- accepts only from sockets
-handle["/resturant/getmessagesfromchatobject"] = requestHandlers.resturantApp.getMessagesFromChatObject; //-- accepts only from sockets
-handle["/resturant/getallresturantmenu"] = requestHandlers.resturantApp.getAllResturantMenu; //-- accepts only from sockets
-handle["/resturant/saveuserresponsetoquestionbyquestionidanduserid"] = requestHandlers.resturantApp.saveUserResponseToQuestionbyQuestionIDandUserID;//-- accepts only from sockets
-handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;//-- accepts only from sockets
+//Note: must keep below --router uses them    //-- accepts only from sockets
+handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; 
+handle["/resturant/getmessagesfromchatobject"] = requestHandlers.resturantApp.getMessagesFromChatObject; 
+handle["/resturant/getallresturantmenu"] = requestHandlers.resturantApp.getAllResturantMenu; 
+handle["/resturant/saveuserresponsetoquestionbyquestionidanduserid"] = requestHandlers.resturantApp.saveUserResponseToQuestionbyQuestionIDandUserID;
+handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;
+handle["/resturant/getquestionidsforentity"] = requestHandlers.resturantApp.getQuestionIDSforEntity;
+handle["resturant/getquestion"] = requestHandlers.resturantApp.getQuestion;
+
 
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;

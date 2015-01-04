@@ -30,6 +30,7 @@
  * var shouldAllowTextInput
  * var image
  * dic userResponses (userID to userResponse)
+ * var resturantID
  * 
  * UserResponse: (is Entry in dic)
  * var userID
@@ -264,10 +265,10 @@ function createQuestion(response, postdata, trackers, id, resturant)
 	 * var shouldAllowStarRating
 	 * var shouldAllowTextInput
 	 * var imageID
-	 * var resturantID //use ONLY ONLY ONLY IF creating a question IN GENERAL for the resturant!
+	 * var resturantID
 	 */
 
-	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput)
+	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput || !postdata.resturantID)
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -287,7 +288,8 @@ function createQuestion(response, postdata, trackers, id, resturant)
 				shouldAllowStarRating:postdata.shouldAllowStarRating,
 				shouldAllowTextInput:postdata.shouldAllowTextInput,
 				imageID:postdata.imageID,
-				userResponses:{}
+				userResponses:{},
+				resturantID:postdata.resturantID
 		}
 		options = {
 				method:'PUT',
@@ -304,7 +306,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 			}
 		});
 	}
-		if(resturant || (postdata.resturantID && typeOfID(postdata.resturantID)==="resturant"))//meaning: this is a question in GENERAL for a resturant
+		if(resturant || (postdata.resturantID && typeOfID(postdata.resturantID)==="resturant"))
 			{
 			if(!resturant)
 				{
@@ -1103,6 +1105,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 			question = questions[i];
 			userRep = question.userResponses[postdata.userID];
 			question.userResponses = userRep===undefined ? {"userStarRating":-1, "userTextResponse":""}: userRep;//changes from (dic of dic) to (dic)
+			
+			//question.id = "";//remove id - don't want users accessing questionID, b/c that is the only security for retriving answers of ALL users to the question
+			
 			questions[i] = question;
 			}
 			
@@ -1545,8 +1550,82 @@ function getQuestionDesc(qID, callback, args, push, question)
 	//console.log("Callback: " + callback + " args: " + args)
 	callback.apply(this, args)
 	return;
+}
+
+function getQuestionIDSforEntity (socket, postdata, trackers, entity)
+{
+	/*
+	 * postdata:
+	 * 
+	 * var entityID (item/employee)
+	 * 
+	 */
+	if(!postdata.entityID || (typeOfID(postdata.entityID)!=="item" && typeOfID(postdata.entityID)!=="employee"))
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!entity)
+		{
+		getObject(postdata.entityID, getQuestionIDSforEntity, [socket, postdata, trackers], false);
+		return;
+		}
+	
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"qIDSforEntity:"+postdata.entityID, "qIDS":entity.questions}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+	else
+		console.log(JSON.stringify({"eventRecieved":"qIDSforEntity:"+postdata.entityID, "qIDS":entity.questions}));
 	
 }
+exports.getQuestionIDSforEntity = getQuestionIDSforEntity;
+
+function getQuestion (socket, postdata, trackers, questionObj)
+{
+/*
+ * postdata:
+ * 
+ * var qID
+ * var entityID //used for identifying who to send question to on reciever's end
+ * 
+ * var resturantID
+ * 
+ */	
+	
+	if(!postdata.qID || typeOfID(postdata.qID)!=="question" || postdata.resturantID || !postdata.entityID/*don't check entityID type, it can be ANYTHING - just used for recognition on recievers end. not used here at all, except for as part of data being sent back*/)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!questionObj)
+		{
+		getObject(postdata.qID, getQuestion, [socket, postdata, trackers], false);
+		return;
+		}
+	if(questionObj.resturantID==postdata.resturantID){
+		if(socket)
+			socket.send(JSON.stringify({"eventRecieved":"getQuestion:"+postdata.entityID, "question":questionObj}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+		else
+			console.log(JSON.stringify({"eventRecieved":"getQuestion:"+postdata.entityID, "question":questionObj}));
+	}
+	else
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error":"not authorized to get question"}));
+		else
+			console.log(JSON.stringify({"error":"not authorized to get question"}));
+	
+		}
+}
+exports.getQuestion = getQuestion;
+
 
 //helper methods:
 

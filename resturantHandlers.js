@@ -1469,14 +1469,19 @@ function getItemDesc(itemID,callback, args, push, item, possibleQ, question)
 		totStars = 0;
 		totUsersToCount = 0;
 		//TODO imporve efficiency of avg calc -- store avg in question everytime it gets a new response, much easier. Put this improvement in save user response 
-		for(i = 0; i < userResponses.lenght; i++)
+		
+		for(var key in userResponses)
 			{
-			rep = userResponses[i];
-			if(rep.starRating>=0){//means user gave rating
-				totStars+=rep.starRating;
-				totUsersToCount++;
+			if(userResponses.hasOwnProperty(key))
+				{
+				rep = userResponses[key];
+				if(rep.starRating>=0){//means user gave rating
+					totStars+=rep.starRating;
+					totUsersToCount++;
+				}
+				}
 			}
-			}
+	
 		console.log("calcing avg: " + totStars + " " + totUsersToCount);
 		avg = totUsersToCount>0? totStars/totUsersToCount : -1;
 		
@@ -1512,14 +1517,17 @@ function getQuestionDesc(qID, callback, args, push, question)
 	totStars = 0;
 	totUsersToCount = 0;
 	//TODO imporve efficiency of avg calc -- store avg in question everytime it gets a new response, much easier. Put this improvement in save user response
-	for(i = 0; i < userResponses.lenght; i++)
+	for(var key in userResponses)
+	{
+	if(userResponses.hasOwnProperty(key))
 		{
-		rep = userResponses[i];
+		rep = userResponses[key];
 		if(rep.starRating>=0){//means user gave rating
 			totStars+=rep.starRating;
 			totUsersToCount++;
 		}
 		}
+	}
 	
 	avg = totStars/totUsersToCount;
 	}

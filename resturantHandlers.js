@@ -1595,7 +1595,7 @@ function getQuestion (socket, postdata, trackers, questionObj)
  * 
  */	
 	
-	if(!postdata.qID || typeOfID(postdata.qID)!=="question" || postdata.resturantID || !postdata.entityID/*don't check entityID type, it can be ANYTHING - just used for recognition on recievers end. not used here at all, except for as part of data being sent back*/)
+	if(!postdata.qID || typeOfID(postdata.qID)!=="question" || !postdata.resturantID || !postdata.entityID/*don't check entityID type, it can be ANYTHING - just used for recognition on recievers end. not used here at all, except for as part of data being sent back*/)
 	{
 		if(socket)
 			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));

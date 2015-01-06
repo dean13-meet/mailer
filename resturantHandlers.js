@@ -1518,9 +1518,9 @@ function getDescOfID (socket, postdata, trackers, desc)
 		response.end = function end(jsonDataAsString)
 		{
 			if(this.socket)
-				this.socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":jsonDataAsString}));
+				this.socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":JSON.parse(jsonDataAsString)}));
 			else
-				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":jsonDataAsString}));
+				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":JSON.parse(jsonDataAsString)}));
 		}
 		getDescriptionOfChatByID(response, {chatID:postdata.id, userID:postdata.userID})
 		return;

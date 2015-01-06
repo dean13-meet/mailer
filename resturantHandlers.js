@@ -974,9 +974,9 @@ function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, common
 		response = {socket:socket, postdata:postdata, trackers:trackers, user1:user1, user2:user2};
 		response.end = function (chatID){commonChat = chatID; 
 		if(this.socket)
-			this.socket.send(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+			this.socket.send(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 		else
-			console.log(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+			console.log(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 		
 		};
 		createChat(response, {participants:[user1.id, user2.id]});
@@ -984,16 +984,16 @@ function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, common
 		}
 
 	if(socket)
-		socket.send(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+		socket.send(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 	else
-		console.log(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+		console.log(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 	
 	return;
 	}
 	if(this.socket)
-		this.socket.send(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+		this.socket.send(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 	else
-		console.log(JSON.stringify({"eventRecieved":"chatWithPerson:"+user2.id,"chatID":commonChat}));
+		console.log(JSON.stringify({"eventRecieved":"getChatWithUser:"+user2.id,"chatID":commonChat}));
 }
 exports.getChatBetweenTwoUsers = getChatBetweenTwoUsers;
 

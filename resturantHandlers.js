@@ -266,6 +266,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 	 * var shouldAllowTextInput
 	 * var imageID
 	 * var resturantID
+	 * var isResturantQuestion -- means it belongs in "otherQuestions"
 	 */
 
 	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput || !postdata.resturantID)
@@ -306,7 +307,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 			}
 		});
 	}
-		if(resturant || (postdata.resturantID && typeOfID(postdata.resturantID)==="resturant"))
+		if((resturant || (postdata.resturantID && typeOfID(postdata.resturantID)==="resturant")) && postdata.isResturantQuestion)
 			{
 			if(!resturant)
 				{
@@ -907,6 +908,95 @@ function getDescriptionOfChatByID(response, postdata, trackers, chatObject, part
 }
 exports.getDescriptionOfChatByID = getDescriptionOfChatByID;
 
+function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, commonChat)
+{
+/*
+ * postdata:
+ * 
+ * user1ID
+ * user1Auth //user1 is user requesting this info
+ * user2ID
+ */	
+	
+/*
+ * returns: chatID with both of them, and ONLY them listed as users - whether the chat previously existed or a new
+ * one was created for them
+ * TODO make sure that the chat is only between the TWO users - in the current configuration, we will only have 2 
+ * user chats, so that will not be a problem. BUT if more than 2 users are ever present in a chat, the below code 
+ * will NOT ensure that there are only 2 users in the chat!! Someone can accidently send a message to the wrong
+ * person because of this!
+ */
+	
+	if(!postdata.user1ID || !postdata.user1Auth || !postdata.user2ID)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!commonChat){
+	if(!user1)
+		{
+		getObject(postdata.user1ID, getChatBetweenTwoUsers, [socket, postdata, trackers], false);
+		return;
+		}
+	if(user1.auth!==postdata.user1Auth)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Incorrect user auth"}));
+		else
+			console.log(JSON.stringify({"error": "Incorrect user auth"}));
+		return;
+		}
+	if(!user2)
+	{
+	getObject(postdata.user2ID, getChatBetweenTwoUsers, [socket, postdata, trackers], false);
+	return;
+	}
+	
+	//finding first common chat:
+	a = user1.chats;
+	b = user2.chats;
+	while( a.length > 0 && b.length > 0 )
+	  {  
+	     if(a[0] < b[0] ) a.shift(); 
+	     else if (a[0] > b[0] ) b.shift(); 
+	     else
+	     {
+	       commonChat = a.shift();
+	       break;
+	     }
+	  }
+	if(!commonChat)
+		{
+		response = {socket:socket, postdata:postdata, trackers:trackers, user1:user1, user2:user2};
+		response.end = function (chatID){commonChat = chatID; 
+		if(this.socket)
+			this.socket.send(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+		else
+			console.log(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+		
+		};
+		createChat(response, [user1.id, user2.id]);
+		return;
+		}
+
+	if(socket)
+		socket.send(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+	else
+		console.log(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+	
+	return;
+	}
+	if(this.socket)
+		this.socket.send(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+	else
+		console.log(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
+}
+exports.getChatBetweenTwoUsers = getChatBetweenTwoUsers;
+
 var defaultMessageLoad = 20;//20 messages loaded
 function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 {
@@ -923,7 +1013,6 @@ function getMessagesFromChatObject(socket, postdata, trackers, user, chatObject)
 	 * Returns:
 	 * {messages:["many messages"], shouldTimeSkip:(bool - whether to force skip)}
 	 */
-	console.log("sending messages");
 	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || (typeof postdata.messageIndex)==="undefined")//do undefined check, b/c messageIndex CAN be 0
 	{
 		if(socket)

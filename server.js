@@ -160,6 +160,7 @@ function start(route, handle) {
 	      handlers["getDesc"] = "/resturant/getDescOfID";
 	      handlers["qIDSforEntity"] = "/resturant/getquestionidsforentity";
 	      handlers["getQuestion"] = "resturant/getQuestion";
+	      handlers["getChatWithUser"] = "resturant/getChatBetweenTwoUsers";
 	    	  
 		  socket.on('default',function(event, data) {
 			  
@@ -176,15 +177,7 @@ function start(route, handle) {
 		  
 		  
 		});
-	/*
-	server.on('connection', function(socket){
-		  console.log('a user connected2');
-		  try{
-			  socket.broadcast.emit('hi');}catch(err){console.log("connection is not socket")}
-		  socket.on('disconnect', function(){
-			    console.log('user disconnected');
-			  });
-		});*/
+	
 }
 exports.start = start;
 

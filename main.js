@@ -42,6 +42,7 @@ handle["/resturant/saveuserresponsetoquestionbyquestionidanduserid"] = requestHa
 handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;
 handle["/resturant/getquestionidsforentity"] = requestHandlers.resturantApp.getQuestionIDSforEntity;
 handle["resturant/getquestion"] = requestHandlers.resturantApp.getQuestion;
+handle["resturant/getchatbetweentwousers"] = requestHandlers.resturantApp.getChatBetweenTwoUsers;
 
 
 //testing server:
@@ -50,6 +51,20 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 
 
 server.start(router.route, handle);
+
+/*
+json1 = {"imageID":"00795-ef76ea7696b1012ec2e22c1d2724ca2e", "text":"Did you enjoy our new sauce?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"}
+requestHandlers.resturantApp.createQuestion("", json1);
+
+json2 = {"imageID":"00795-ef76ea7696b1012ec2e22c1d2724ca2e", "text":"Did you enjoy your side dish?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"}
+requestHandlers.resturantApp.createQuestion("", json2);
+
+json3 = {"text":"How was the background music?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "isResturantQuestion":"true"};
+requestHandlers.resturantApp.createQuestion("", json3);
+*/
+
+
+
 
 
 //json = {"name":"Deanster", "pass":"admin"};

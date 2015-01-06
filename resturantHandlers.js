@@ -945,14 +945,14 @@ function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, common
 	if(user1.auth!==postdata.user1Auth)
 	{
 		if(socket)
-			socket.send(JSON.stringify({"error": "Incorrect user auth", user:user1, post:postdata}));
+			socket.send(JSON.stringify({"error": "Incorrect user auth"}));
 		else
 			console.log(JSON.stringify({"error": "Incorrect user auth"}));
 		return;
 		}
 	if(!user2)
 	{
-	getObject(postdata.user2ID, getChatBetweenTwoUsers, [socket, postdata, trackers], false);
+	getObject(postdata.user2ID, getChatBetweenTwoUsers, [socket, postdata, trackers, user1], false);
 	return;
 	}
 	

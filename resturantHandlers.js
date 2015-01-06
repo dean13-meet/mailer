@@ -1510,6 +1510,18 @@ function getDescOfID (socket, postdata, trackers, desc)
 	case "question":{
 		getQuestionDesc(id, getDescOfID, [socket, postdata, trackers],false);
 		return;}
+	case "chatObject":
+		{
+		response = {socket:socket, postdata:postdata, trackers:trackers};
+		response.end = function end(jsonDataAsString)
+		{
+			if(socket)
+				socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":jsonDataAsString}));
+			else
+				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":jsonDataAsString}));
+		}
+		return;
+		}
 	default:{
 		desc = {"desc":"NO DESC"};
 		return;}

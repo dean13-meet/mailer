@@ -1488,6 +1488,8 @@ function getDescOfID (socket, postdata, trackers, desc)
 	 * postdata
 	 * 
 	 * var id
+	 * 
+	 * (optional) var userID;//to send in case of requesting chatObject Description
 	 */
 	if(!postdata.id)
 	{
@@ -1520,6 +1522,7 @@ function getDescOfID (socket, postdata, trackers, desc)
 			else
 				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":jsonDataAsString}));
 		}
+		getDescriptionOfChatByID(response, {chatID:postdata.id, userID:postdata.userID})
 		return;
 		}
 	default:{

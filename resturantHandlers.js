@@ -945,7 +945,7 @@ function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, common
 	if(user1.auth!==postdata.user1Auth)
 	{
 		if(socket)
-			socket.send(JSON.stringify({"error": "Incorrect user auth"}));
+			socket.send(JSON.stringify({"error": "Incorrect user auth", user:user1}));
 		else
 			console.log(JSON.stringify({"error": "Incorrect user auth"}));
 		return;

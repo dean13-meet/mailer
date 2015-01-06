@@ -979,7 +979,7 @@ function getChatBetweenTwoUsers(socket, postdata, trackers, user1, user2, common
 			console.log(JSON.stringify({"chatWithPerson":user2.id,"chatID":commonChat}));
 		
 		};
-		createChat(response, [user1.id, user2.id]);
+		createChat(response, {participants:[user1.id, user2.id]});
 		return;
 		}
 

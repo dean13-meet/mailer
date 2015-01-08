@@ -161,6 +161,7 @@ function start(route, handle) {
 	      handlers["qIDSforEntity"] = "/resturant/getquestionidsforentity";
 	      handlers["getQuestion"] = "resturant/getQuestion";
 	      handlers["getChatWithUser"] = "resturant/getChatBetweenTwoUsers";
+	      handlers["getCustomers"] = "resturant/getCustomers";
 	    	  
 		  socket.on('default',function(event, data) {
 			  

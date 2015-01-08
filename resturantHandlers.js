@@ -1749,6 +1749,50 @@ function getQuestion (socket, postdata, trackers, questionObj)
 exports.getQuestion = getQuestion;
 
 
+function getCustomers(socket, postdata, trackers, resturant)
+{
+/*
+ * postdata:
+ * 
+ * resturantID
+ * auth
+ * 
+ */	
+	if(!postdata.resturantID || !postdata.auth)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!resturant)
+		{
+		getObject(postdata.resturantID, getCustomers, [socket, postdata, trackers], false);
+		return;
+		}
+	
+	if(resturant.auth !== postdata.auth)
+		{
+		if(socket)
+			socket.send(JSON.stringify({"error":"Incorrect auth"}));
+		else
+			console.log(JSON.stringify({"error":"Incorrect auth"}));
+		
+		return;
+		}
+	
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"getCustomers", "customers":resturant.customers}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+	else
+		console.log(JSON.stringify({"eventRecieved":"getCustomers", "customers":resturant.customers}));
+
+}
+exports.getCustomers = getCustomers;
+
+
+
 //helper methods:
 
 function typeOfID(id)

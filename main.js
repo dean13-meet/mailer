@@ -43,6 +43,7 @@ handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;
 handle["/resturant/getquestionidsforentity"] = requestHandlers.resturantApp.getQuestionIDSforEntity;
 handle["resturant/getquestion"] = requestHandlers.resturantApp.getQuestion;
 handle["resturant/getchatbetweentwousers"] = requestHandlers.resturantApp.getChatBetweenTwoUsers;
+handle["resturant/getcustomers"] = requestHandlers.resturantApp.getCustomers;
 
 
 //testing server:

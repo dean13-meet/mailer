@@ -1810,7 +1810,7 @@ function getUserNameForResturant(socket, postdata, trackers, user)
 	
 	if(!user)
 		{
-		getObject(userID, getUserNameForResturant, [socket, postdata, trackers], false);
+		getObject(postdata.userID, getUserNameForResturant, [socket, postdata, trackers], false);
 		return;
 		}
 	

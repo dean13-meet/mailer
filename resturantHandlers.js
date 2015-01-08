@@ -1553,7 +1553,7 @@ function getDescOfID (socket, postdata, trackers, desc)
 			else
 				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"name":resturantName}}));
 		}
-		getResturantNameByOrderID(response, {chatID:postdata.id, userID:postdata.userID})
+		getResturantNameByOrderID(response, {orderID:postdata.id})
 		return;
 		}
 		

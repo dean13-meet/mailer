@@ -163,7 +163,8 @@ function start(route, handle) {
 	      handlers["getChatWithUser"] = "/resturant/getChatBetweenTwoUsers";
 	      handlers["getCustomers"] = "/resturant/getCustomers";
 	      handlers["getUserNameForResturant"] = "/resturant/getUserNameForResturant";
-	    	  
+	      handlers["getUserOrdersAtResturant"] = "/resturant/getUserOrdersAtResturant";
+	      
 		  socket.on('default',function(event, data) {
 			  
 			  handler = handlers[event];

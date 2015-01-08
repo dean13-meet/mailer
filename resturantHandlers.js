@@ -1825,6 +1825,50 @@ function getUserNameForResturant(socket, postdata, trackers, user)
 exports.getUserNameForResturant = getUserNameForResturant;
 
 
+function getUserOrdersAtResturant(socket, postdata, trackers)
+{
+/*
+ * postdata:
+ * 
+ * userID
+ * resturantID
+ * 
+ */
+	if(!postdata.userID || !postdata.resturantID)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!user)
+	{
+	getObject(postdata.userID, getUserOrdersAtResturant, [socket, postdata, trackers], false);
+	return;
+	}
+	
+	orders = [];
+	userOrdersDic = user.orders
+	for(key in userOrdersDic)
+		{
+		if(userOrdersDic.hasOwnProperty(key))
+				{
+					if(userOrdersDic[key]===postdata.resturantID)
+						{
+						orders.push(key);
+						}
+				}
+		}
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"getUserOrdersAtResturant:"+postdata.userID,"orders":orders}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+	else
+		console.log(JSON.stringify({"eventRecieved":"getUserOrdersAtResturant:"+postdata.userID,"orders":orders}));
+	
+}
+exports.getUserOrdersAtResturant = getUserOrdersAtResturant;
+
 
 //helper methods:
 

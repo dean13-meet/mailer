@@ -57,6 +57,7 @@
  * array items
  * array employees
  * array otherQuestions
+ * dic customers (userID -> #timeVisitedResturant)
  * TODO rest
  * 
  * Image:
@@ -1180,7 +1181,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 
 	}
 	var needsAuth = !user.orders.contains(orderID);
-	if(!needsAuth||(needsAuth && postdata.auth === order.auth))
+	if(!needsAuth||(postdata.auth === order.auth))
 	{
 		
 
@@ -1211,12 +1212,13 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		//else
 			console.log("Sent: " + JSON.stringify(survey));
 
-		//Save order to user's orders AND notify trackers that user's orders changed:
+		//Save order to user's orders, notify trackers that user's orders changed, and save user to resturant's customers
 		if(needsAuth){
 			user.orders.push(orderID)
 			url = usersURL + user.id;
 			json = user;
 			saveURL(url, json, [stringFromIDAndField(user.id, "orders")], trackers);
+			saveUserToResturantCustomers(user.id, order.resturant, trackers);
 		}
 	}
 	else
@@ -1231,6 +1233,22 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 }
 exports.getSurveyByOrderIDandUserID = getSurveyByOrderIDandUserID;
 
+function saveUserToResturantCustomers(userID, resturantID, trackers, resturant)
+{
+	if(typeOfID(userID)!=="user" || typeOfID(resturantID)!=="resturant")
+		return;
+	
+	if(!resturant)
+		{
+		getObject(resturantID, saveUserToResturantCustomers, [userID, resturantID, trackers], false);
+		return;
+		}
+	if(!resturant.customers)resturant.customers={};
+	val = resturant.customers[userID];
+	val = !val ? 0 : val + 1;
+	resturant.customers[userID] = val;
+	saveObject(resturantID, resturant, [resturantID+"/customers"], trackers);
+}
 
 
 function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, trackers, question)

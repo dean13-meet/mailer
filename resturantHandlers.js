@@ -43,7 +43,7 @@
  * var name
  * var pass
  * var auth
- * array orders
+ * dic orders (orderID -> resturantID)//saves time needing to fetch order object to see which resturant it belongs to
  * array chats
  * TODO rest
  * 
@@ -350,7 +350,7 @@ function createUser(response, postdata, trackers, id)
 				name:postdata.name,
 				pass:postdata.pass,
 				auth:auth,
-				orders:[],
+				orders:{},
 				chats: []
 		}
 		options = {
@@ -1215,7 +1215,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 
 		//Save order to user's orders, notify trackers that user's orders changed, and save user to resturant's customers
 		if(needsAuth){
-			user.orders.push(orderID)
+			user.orders[orderID] = order.resturant;
 			url = usersURL + user.id;
 			json = user;
 			saveURL(url, json, [stringFromIDAndField(user.id, "orders")], trackers);

@@ -1543,6 +1543,20 @@ function getDescOfID (socket, postdata, trackers, desc)
 		getDescriptionOfChatByID(response, {chatID:postdata.id, userID:postdata.userID})
 		return;
 		}
+	case "order":
+		{
+		response = {socket:socket, postdata:postdata, trackers:trackers};
+		response.end = function end(resturantName)
+		{
+			if(this.socket)
+				this.socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"name":resturantName}}));
+			else
+				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"name":resturantName}}));
+		}
+		getResturantNameByOrderID(response, {chatID:postdata.id, userID:postdata.userID})
+		return;
+		}
+		
 	default:{
 		desc = {"desc":"NO DESC"};
 		return;}

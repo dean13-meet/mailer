@@ -1181,7 +1181,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		return this.indexOf(arr) !== -1;
 
 	}
-	var needsAuth = !user.orders.contains(orderID);
+	var needsAuth = !user.orders[orderID];
 	if(!needsAuth||(postdata.auth === order.auth))
 	{
 		

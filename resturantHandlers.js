@@ -407,7 +407,8 @@ function createResturant(response, postdata, trackers, id)
 				chats: [],
 				items: [],
 				employees: [],
-				otherQuestions: []
+				otherQuestions: [],
+				customers:{}
 		}
 		options = {
 				method:'PUT',
@@ -1243,7 +1244,6 @@ function saveUserToResturantCustomers(userID, resturantID, trackers, resturant)
 		getObject(resturantID, saveUserToResturantCustomers, [userID, resturantID, trackers], false);
 		return;
 		}
-	if(!resturant.customers)resturant.customers={};
 	val = resturant.customers[userID];
 	val = !val ? 1 : val + 1;
 	resturant.customers[userID] = val;
@@ -1790,6 +1790,39 @@ function getCustomers(socket, postdata, trackers, resturant)
 
 }
 exports.getCustomers = getCustomers;
+
+function getUserNameForResturant(socket, postdata, trackers, user)
+{
+/*
+ * postdata:
+ * 
+ * userID //its ok not veryfing with anything else, the userNameForResturant is supposed to be public
+ */	
+	
+	if(!postdata.userID)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!user)
+		{
+		getObject(userID, getUserNameForResturant, [socket, postdata, trackers], false);
+		return;
+		}
+	
+	
+	retval = user.userNameForResturant ? user.userNameForResturant : user.name;
+	
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"getUserNameForResturant:"+postdata.userID,"userID":postdata.userID , "name":retval}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+	else
+		console.log(JSON.stringify({"eventRecieved":"getUserNameForResturant:"+postdata.userID,"userID":postdata.userID , "name":retval}));
+}
+exports.getUserNameForResturant = getUserNameForResturant;
 
 
 

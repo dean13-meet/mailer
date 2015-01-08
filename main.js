@@ -41,9 +41,10 @@ handle["/resturant/getallresturantmenu"] = requestHandlers.resturantApp.getAllRe
 handle["/resturant/saveuserresponsetoquestionbyquestionidanduserid"] = requestHandlers.resturantApp.saveUserResponseToQuestionbyQuestionIDandUserID;
 handle["/resturant/getdescofid"] = requestHandlers.resturantApp.getDescOfID;
 handle["/resturant/getquestionidsforentity"] = requestHandlers.resturantApp.getQuestionIDSforEntity;
-handle["resturant/getquestion"] = requestHandlers.resturantApp.getQuestion;
-handle["resturant/getchatbetweentwousers"] = requestHandlers.resturantApp.getChatBetweenTwoUsers;
-handle["resturant/getcustomers"] = requestHandlers.resturantApp.getCustomers;
+handle["/resturant/getquestion"] = requestHandlers.resturantApp.getQuestion;
+handle["/resturant/getchatbetweentwousers"] = requestHandlers.resturantApp.getChatBetweenTwoUsers;
+handle["/resturant/getcustomers"] = requestHandlers.resturantApp.getCustomers;
+handle["/resturant/getusernameforresturant"] = requestHandlers.resturantApp.getUserNameForResturant;
 
 
 //testing server:

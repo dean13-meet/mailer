@@ -1825,7 +1825,7 @@ function getUserNameForResturant(socket, postdata, trackers, user)
 exports.getUserNameForResturant = getUserNameForResturant;
 
 
-function getUserOrdersAtResturant(socket, postdata, trackers)
+function getUserOrdersAtResturant(socket, postdata, trackers, user)
 {
 /*
  * postdata:

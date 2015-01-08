@@ -1245,7 +1245,7 @@ function saveUserToResturantCustomers(userID, resturantID, trackers, resturant)
 		}
 	if(!resturant.customers)resturant.customers={};
 	val = resturant.customers[userID];
-	val = !val ? 0 : val + 1;
+	val = !val ? 1 : val + 1;
 	resturant.customers[userID] = val;
 	saveObject(resturantID, resturant, [resturantID+"/customers"], trackers);
 }

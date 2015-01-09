@@ -1127,9 +1127,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	var orderID = order.id;
 	var needsAuth = true;
 	switch (typeOfID(postdata.userID)){
-		case "user":{needsAuth=!user.orders[orderID];}
-		case "resturant":{needsAuth = order.resturant===postdata.userID;}
-		default : {needsAuth=true;}
+		case "user":{needsAuth=!user.orders[orderID];break;}
+		case "resturant":{needsAuth = order.resturant===postdata.userID;break;}
+		default : {needsAuth=true;break;}
 	}
 	
 	if(needsAuth&&(postdata.auth !== order.auth))

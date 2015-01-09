@@ -1089,7 +1089,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	 * PostData:
 	 * var orderID
 	 * var auth -- optional
-	 * var userID
+	 * var userID ------- may be resturantID if resturant wants to look at a user's order
 	 * var userAuth
 	 */
 	
@@ -1124,6 +1124,23 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 			return;
 			}
 	}
+	var orderID = order.id;
+	var needsAuth = true;
+	switch (typeOfID(postdata.userID)){
+		case "user":{needsAuth=!user.orders[orderID];}
+		case "resturant":{needsAuth = order.resturant===postdata.userID;}
+		default : {needsAuth=true;}
+	}
+	
+	if(needsAuth&&(postdata.auth !== order.auth))
+		{
+		if(response)
+			response.end(JSON.stringify({error: "Error: Incorrect auth."}));
+		else
+			console.log("Error: Incorrect auth.");
+		
+		return;
+		}
 
 	if(!items)items = [];
 	if(items.length<order.itemsOrdered.length)
@@ -1173,10 +1190,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees,questionsOrder], true);
 		return;
 	}
-//	Auth:
 
 	
-	var orderID = order.id;
+	
 
 	Array.prototype.contains = function(arr)
 	{
@@ -1185,9 +1201,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		return this.indexOf(arr) !== -1;
 
 	}
-	var needsAuth = !user.orders[orderID];
-	if(!needsAuth||(postdata.auth === order.auth))
-	{
+	
+	
 		
 
 		questions = [];
@@ -1225,16 +1240,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 			saveURL(url, json, [stringFromIDAndField(user.id, "orders")], trackers);
 			saveUserToResturantCustomers(user.id, order.resturant, trackers);
 		}
-	}
-	else
-	{
-		if(response)
-			response.end(JSON.stringify({error: "Error: Incorrect auth."}));
-		else
-			console.log("Error: Incorrect auth.");
-	}
-
-
+	
 }
 exports.getSurveyByOrderIDandUserID = getSurveyByOrderIDandUserID;
 

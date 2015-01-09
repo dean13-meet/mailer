@@ -10,6 +10,7 @@
  * array items
  * array employeesServing
  * array extraQuestions
+ * var timestamp //since 1970
  * 
  * Item:
  * var id //will only be used for saving!
@@ -117,6 +118,8 @@ function createOrder(response, postdata, trackers, id)
 	}else{
 		auth = createAuth();
 
+		var d = new Date();
+		var n = d.getTime();
 		json = 
 		{
 				id:id,
@@ -124,7 +127,8 @@ function createOrder(response, postdata, trackers, id)
 				resturant:postdata.resturant,
 				itemsOrdered:postdata.items,
 				employeesServing:postdata.employeesServing,
-				extraQuestions:postdata.extraQuestions
+				extraQuestions:postdata.extraQuestions,
+				timestamp:n
 		}
 		options = {
 				method:'PUT',
@@ -1427,7 +1431,7 @@ function getResturantNameByResturantID(response, postdata, trackers, resturant)
 }
 exports.getResturantNameByResturantID = getResturantNameByResturantID;
 
-function getResturantNameByOrderID(response, postdata, trackers, order)
+function getResturantNameByOrderID(response, postdata, trackers, order)// returns timestamp of order - not restName
 {
 	/*
 	 * PostData:
@@ -1448,7 +1452,12 @@ function getResturantNameByOrderID(response, postdata, trackers, order)
 		return;
 		}
 	
-	getResturantNameByResturantID(response, {"resturantID":order.resturant});
+	if(response)
+		response.end(order.timestamp);
+	else
+		console.log(order.timestamp);
+		
+	//getResturantNameByResturantID(response, {"resturantID":order.resturant});
 }
 exports.getResturantNameByOrderID = getResturantNameByOrderID;
 
@@ -1546,12 +1555,12 @@ function getDescOfID (socket, postdata, trackers, desc)
 	case "order":
 		{
 		response = {socket:socket, postdata:postdata, trackers:trackers};
-		response.end = function end(resturantName)
+		response.end = function end(timestamp)
 		{
 			if(this.socket)
-				this.socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"name":resturantName}}));
+				this.socket.send(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"timestamp":timestamp}}));
 			else
-				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"name":resturantName}}));
+				console.log(JSON.stringify({"eventRecieved":"getDesc:"+this.postdata.id, "desc":{"timestamp":timestamp}}));
 		}
 		getResturantNameByOrderID(response, {orderID:postdata.id})
 		return;

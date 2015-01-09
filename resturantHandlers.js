@@ -1091,6 +1091,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	 * var auth -- optional
 	 * var userID ------- may be resturantID if resturant wants to look at a user's order
 	 * var userAuth
+	 * 
+	 * var secondorialUserID //userID of user that the resturant owner wants to see how the user filled in the order
 	 */
 	
 	if(!postdata.orderID || !postdata.userID || !postdata.userAuth)
@@ -1124,6 +1126,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 			return;
 			}
 	}
+	
+	
+	
 	var orderID = order.id;
 	var needsAuth = true;
 	switch (typeOfID(postdata.userID)){
@@ -1131,6 +1136,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		case "resturant":{needsAuth = order.resturant!==postdata.userID;break;}
 		default : {needsAuth=true;break;}
 	}
+	
+	
 	
 	if(needsAuth&&(postdata.auth !== order.auth))
 		{
@@ -1210,10 +1217,11 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		questions.pushArray(questionsEmployees)
 		questions.pushArray(questionsOrder);
 
+		var isResturant = typeOfID(postdata.userID);
 		for(i = 0; i < questions.length; i++)
 			{
 			question = questions[i];
-			userRep = question.userResponses[postdata.userID];
+			userRep = question.userResponses[isResturant?postdata.secondorialUserID:postdata.userID];
 			question.userResponses = userRep===undefined ? {"userStarRating":-1, "userTextResponse":""}: userRep;//changes from (dic of dic) to (dic)
 			
 			//question.id = "";//remove id - don't want users accessing questionID, b/c that is the only security for retriving answers of ALL users to the question

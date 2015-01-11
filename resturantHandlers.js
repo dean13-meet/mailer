@@ -1795,7 +1795,7 @@ function getQuestion (socket, postdata, trackers, questionObj)
 	else
 		{
 		if(socket)
-			socket.send(JSON.stringify({"error":"not authorized to get question"}));
+			socket.send(JSON.stringify({"error":"not authorized to get question", "data received" : postdata, "qObj":questionObj}));
 		else
 			console.log(JSON.stringify({"error":"not authorized to get question"}));
 	

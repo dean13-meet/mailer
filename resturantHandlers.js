@@ -1906,6 +1906,36 @@ function getUserOrdersAtResturant(socket, postdata, trackers, user)
 }
 exports.getUserOrdersAtResturant = getUserOrdersAtResturant;
 
+function imageIDFromEntity(socket, postdata, trackers, entity)
+{
+	/*
+	 * postdata:
+	 * 
+	 * entityID
+	 * 
+	 */
+		if(!postdata.entityID)
+		{
+			if(socket)
+				socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			else
+				console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+			return;
+		}
+		if(!entity)
+			{
+			getObject(postdata.entityID, imageIDFromEntity, [socket, postdata, trackers], false);
+			return;
+			}
+		
+		if(socket)
+			socket.send(JSON.stringify({"eventRecieved":"imageIDFromEntity:"+postdata.entityID,"imageID":entity.imageID}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+		else
+			console.log(JSON.stringify({"eventRecieved":"imageIDFromEntity:"+postdata.entityID,"imageID":entity.imageID}));
+		
+}
+exports.imageIDFromEntity = imageIDFromEntity;
+
 
 //helper methods:
 

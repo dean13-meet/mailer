@@ -46,6 +46,7 @@ handle["/resturant/getchatbetweentwousers"] = requestHandlers.resturantApp.getCh
 handle["/resturant/getcustomers"] = requestHandlers.resturantApp.getCustomers;
 handle["/resturant/getusernameforresturant"] = requestHandlers.resturantApp.getUserNameForResturant;
 handle["/resturant/getuserordersatresturant"] = requestHandlers.resturantApp.getUserOrdersAtResturant;
+handle["/resturant/imageidfromentity"] = requestHandlers.resturantApp.imageIDFromEntity;
 
 
 //testing server:

@@ -164,6 +164,7 @@ function start(route, handle) {
 	      handlers["getCustomers"] = "/resturant/getCustomers";
 	      handlers["getUserNameForResturant"] = "/resturant/getUserNameForResturant";
 	      handlers["getUserOrdersAtResturant"] = "/resturant/getUserOrdersAtResturant";
+	      handlers["imageIDFromEntity"] = "/resturant/imageIDFromEntity";
 	      
 		  socket.on('default',function(event, data) {
 			  

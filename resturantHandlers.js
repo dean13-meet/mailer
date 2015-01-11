@@ -282,7 +282,7 @@ function createQuestion(response, postdata, trackers, id, resturant, entity)
 	 * var isResturantQuestion -- means it belongs in "otherQuestions"
 	 */
 
-	if(!postdata.text || !postdata.shouldAllowStarRating || !postdata.shouldAllowTextInput || !postdata.resturantID)
+	if(!postdata.text || typeof postdata.shouldAllowStarRating === "undefined" || typeof postdata.shouldAllowTextInput === "undefined" || !postdata.resturantID)
 	{
 		if(response)
 			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
@@ -1795,7 +1795,7 @@ function getQuestion (socket, postdata, trackers, questionObj)
 	else
 		{
 		if(socket)
-			socket.send(JSON.stringify({"error":"not authorized to get question", "data received" : postdata, "qObj":questionObj}));
+			socket.send(JSON.stringify({"error":"not authorized to get question"}));
 		else
 			console.log(JSON.stringify({"error":"not authorized to get question"}));
 	

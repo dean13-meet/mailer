@@ -261,6 +261,13 @@ function createEmployee(response, postdata, trackers, id, resturant)
 }
 exports.createEmployee = createEmployee;
 
+function socketCreateQuestion(socket, postdata, trackers)
+{
+response = {};
+response.end = function (something){/*do nothing*/}
+createQuestion(response, postdata, trackers);
+}
+exports.socketCreateQuestion = socketCreateQuestion;
 
 function createQuestion(response, postdata, trackers, id, resturant)
 {

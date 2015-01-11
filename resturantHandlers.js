@@ -269,7 +269,7 @@ createQuestion(response, postdata, trackers);
 }
 exports.socketCreateQuestion = socketCreateQuestion;
 
-function createQuestion(response, postdata, trackers, id, resturant)
+function createQuestion(response, postdata, trackers, id, resturant, entity)
 {
 	/*
 	 * PostData:
@@ -277,6 +277,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 	 * var shouldAllowStarRating
 	 * var shouldAllowTextInput
 	 * var imageID
+	 * var entityID //e.g. item/employee
 	 * var resturantID
 	 * var isResturantQuestion -- means it belongs in "otherQuestions"
 	 */
@@ -289,7 +290,7 @@ function createQuestion(response, postdata, trackers, id, resturant)
 			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
 		return;
 	}
-	if(!resturant){//means we are in the process of saving to a resturant - question was ALREADY created, no need to recreate
+	if(!resturant || !entity){//means we are in the process of saving to a resturant/entity - question was ALREADY created, no need to recreate
 	if(!id){
 		createID("question", createQuestion, [response, postdata, trackers]);
 		return;
@@ -328,6 +329,16 @@ function createQuestion(response, postdata, trackers, id, resturant)
 				}
 			resturant.otherQuestions.push(id);
 			saveObject(resturant.id, resturant, [resturant.id+"/"+"otherQuestions"], trackers);
+			}
+		else//save to entity
+			{
+			if(!entity)
+				{
+				getObject(postdata.entityID, createQuestion, [response, postdata, trackers, id, resturant], false);//note resturant is undefined in this case
+				return;
+				}
+			entity.questions.push(id);
+			saveObject(entity.id, entity, [entity.id+"/question"], trackers);
 			}
 
 	

@@ -338,7 +338,7 @@ function createQuestion(response, postdata, trackers, id, resturant, entity)
 				return;
 				}
 			entity.questions.push(id);
-			saveObject(entity.id, entity, [entity.id+"/question"], trackers);
+			saveObject(entity.id, entity, [entity.id+"/questions"], trackers);
 			}
 
 	

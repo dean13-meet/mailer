@@ -1670,7 +1670,7 @@ function getItemDesc(itemID,callback, args, push, item, possibleQ, question)
 		avg = totUsersToCount>0? totStars/totUsersToCount : -1;
 		
 		name = item.name;
-		desc = {"name": name, stars:avg}
+		desc = {"name": name, stars:avg, imageID:item.imageID}
 		if(!push){
 			args.push(desc); }
 		else

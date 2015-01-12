@@ -600,8 +600,9 @@ function setEntityToHaveImage(socket, postdata, trackers, imageID, entity)
 				saveObject(questionObj.id, questionObj, [questionObj.id+"/imageID"], trackers);}
 			}
 			console.log("questions of entity: " + JSON.stringify(entity));
-			for(question in entity.questions)
+			for(i = 0; i < entity.questions.length; i++)
 				{
+				question = entity.questions[i];
 				console.log("getting object: " + question);
 				getObject(question, saveImageToQuestion, [imageID, trackers],false);
 				}

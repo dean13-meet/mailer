@@ -577,6 +577,7 @@ function setEntityToHaveImage(socket, postdata, trackers, imageID, entity)
 		setEntityToHaveImage(this.socket, this.postdata, this.trackers, newImageID);
 	}
 	uploadImage(response, {"resturantID":postdata.resturantID, "data":postdata.data}, trackers);
+	return;
 	}
 	
 	if(!entity)

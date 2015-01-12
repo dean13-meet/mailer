@@ -1762,7 +1762,10 @@ function getQuestionDesc(qID, callback, args, push, question)
 	avg = totStars/totUsersToCount;
 	}
 	
-	desc = {"name": text, stars:avg}
+	desc = {"name": text, 
+			stars:avg, 
+			"imageID": question.imageID
+			}
 	if(!push){
 		args.push(desc); }
 	else

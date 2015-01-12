@@ -33,6 +33,7 @@ handle["/resturant/getresturantnamebyresturantid"] = requestHandlers.resturantAp
 handle["/resturant/createchat"] = requestHandlers.resturantApp.createChat;
 handle["/resturant/getchatsbyuserid"] = requestHandlers.resturantApp.getChatsByUserID;
 handle["/resturant/getdescriptionofchatbyid"] = requestHandlers.resturantApp.getDescriptionOfChatByID;
+handle["/resturant/runTrackerUpdate"] = requestHandlers.resturantApp.runTrackerUpdate;
 
 //Note: must keep below --router uses them    //-- accepts only from sockets
 handle["/resturant/postmessage"] = requestHandlers.resturantApp.postMessage; 

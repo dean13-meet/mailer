@@ -2198,68 +2198,76 @@ function saveURL(url, json, trackerUpdates, trackers)
 	request(options, function(err, res, body) { if (err) {
 		throw Error(err); } else {
 			//DONE
+
 			console.log("Saved url: " + url);
 			console.log("trackers: " + trackerUpdates);
-			if(trackerUpdates && trackers){
-				idsSent = [];
-				Array.prototype.contains = function(arr)
-				{
-					console.log(arr);
-					console.log(this.indexOf(arr));
-					return this.indexOf(arr) !== -1;
-
-				}
-			for(i = 0; i < trackerUpdates.length; i++)
-				{
-				//NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
-				tracker = trackerUpdates[i];
-				console.log("Tracker updated: " + tracker);
-				clients = trackers[tracker];
-				if(clients)
-					{
-					for (var key in clients) {
-						  if (clients.hasOwnProperty(key)) 
-						  {
-							  client = clients[key];
-							  if(client.isOn){
-									console.log("randomized key");
-									client.send("Updated: " + tracker);
-									console.log("Updated: " + tracker)}
-							  else
-								  delete clients[key];
-						  }
-						}
-					
-					}
-				trackers[tracker] = clients; //--some clients may have been removed due to not being on
-				
-				id = tracker.substring(0, tracker.indexOf("/"));
-				if(!idsSent.contains(id))
-				{
-				idsSent.push(id);
-				trackerID = id +"/TRACK_ANY_FIELD";
-				clients = trackers[trackerID];
-				if(clients)
-				{
-				for (var key in clients) {
-					  if (clients.hasOwnProperty(key)) 
-					  {
-						  client = clients[key];
-						  if(client.isOn){
-								console.log("randomized key");
-								client.send("Updated: " + trackerID);
-								console.log("Updated: " + trackerID)}
-						  else
-							  delete clients[key];
-					  }
-					}
-				
-				}
-			trackers[trackerID] = clients; //--some clients may have been removed due to not being on
-				}
-				}
-		}
+			
+			runTrackers(trackerUpdates, trackers);
+		
 		}});
+}
+
+function runTrackers(trackerUpdates, trackers)
+{
+	if(trackerUpdates && trackers){
+		idsSent = [];
+		Array.prototype.contains = function(arr)
+		{
+			console.log(arr);
+			console.log(this.indexOf(arr));
+			return this.indexOf(arr) !== -1;
+
+		}
+	for(i = 0; i < trackerUpdates.length; i++)
+		{
+		//NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
+		tracker = trackerUpdates[i];
+		console.log("Tracker updated: " + tracker);
+		clients = trackers[tracker];
+		if(clients)
+			{
+			for (var key in clients) {
+				  if (clients.hasOwnProperty(key)) 
+				  {
+					  client = clients[key];
+					  if(client.isOn){
+							console.log("randomized key");
+							client.send("Updated: " + tracker);
+							console.log("Updated: " + tracker)}
+					  else
+						  delete clients[key];
+				  }
+				}
+			
+			}
+		trackers[tracker] = clients; //--some clients may have been removed due to not being on
+		
+		id = tracker.substring(0, tracker.indexOf("/"));
+		if(!idsSent.contains(id))
+		{
+		idsSent.push(id);
+		trackerID = id +"/TRACK_ANY_FIELD";
+		clients = trackers[trackerID];
+		if(clients)
+		{
+		for (var key in clients) {
+			  if (clients.hasOwnProperty(key)) 
+			  {
+				  client = clients[key];
+				  if(client.isOn){
+						console.log("randomized key");
+						client.send("Updated: " + trackerID);
+						console.log("Updated: " + trackerID)}
+				  else
+					  delete clients[key];
+			  }
+			}
+		
+		}
+	trackers[trackerID] = clients; //--some clients may have been removed due to not being on
+		}
+		}
+	}
 }
 
 function stringFromIDAndField(id, field)
@@ -2298,3 +2306,23 @@ function addMessage(response, postdata, trackers)
 	createChat(response, json, trackers);
 }
 exports.addMessage = addMessage;
+
+function runTrackerUpdate(response, postdata, trackers)
+{
+	/*
+	 * postdata:
+	 * 
+	 * array trackerUpdates
+	 */
+	if(!postdata.trackerUpdates)
+	{
+	if(response)
+		response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+	else
+		console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+	return;
+	}
+	runTrackers(postdata.trackerUpdates, trackers);
+	response.end("Completed");
+}
+exports.runTrackerUpdate = runTrackerUpdate;

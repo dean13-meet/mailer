@@ -476,7 +476,6 @@ requestImage.on('response', function (response)
         var base64 = new Buffer(body, 'binary').toString('base64'),
             
         data = base64;
-        console.log(data);
         json = {"data":data, "Content_Type":prefix};
         if(!push){
 			args.push(json); }
@@ -600,8 +599,9 @@ function setEntityToHaveImage(socket, postdata, trackers, imageID, entity)
 				questionObj.imageID = imageID;
 				saveObject(questionObj.id, questionObj, [questionObj.id+"/imageID"], trackers);}
 			}
-			for(question in entity.question)
+			for(question in entity.questions)
 				{
+				console.log("getting object: " + question);
 				getObject(question, saveImageToQuestion, [imageID, trackers],false);
 				}
 			}
@@ -2100,10 +2100,9 @@ function createID(typeOfObject, callback, args)
 				throw Error(err); } else {
 					var id = idPrefix + body2.rev;
 					console.log("s3");
-					console.log(body2);
-					console.log(id);
+					
 					args.push(id);
-					console.log("Callback: " + callback + " args: " + args)
+					
 					callback.apply(this, args)
 
 				}

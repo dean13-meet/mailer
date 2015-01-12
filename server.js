@@ -167,6 +167,7 @@ function start(route, handle) {
 	      handlers["imageIDFromEntity"] = "/resturant/imageIDFromEntity";
 	      handlers["socketCreateQuestion"] = "/resturant/socketCreateQuestion";
 	      handlers["setEntityToHaveImage"] = "/resturant/setEntityToHaveImage";
+	      handlers["socketGetImageFromID"] = "/resturant/socketGetImageFromID";
 	      
 		  socket.on('default',function(event, data) {
 			  

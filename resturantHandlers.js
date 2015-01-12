@@ -837,6 +837,37 @@ function getImageByID(response2, postdata, trackers, image)
 }
 exports.getImageByID = getImageByID;
 
+function socketGetImageFromID(socket, postdata, trackers)
+{
+	/*
+	 * postdata:
+	 * 
+	 * var imageID
+	 * 
+	 */
+	if(!postdata.imageID)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	response = {socket:socket, postdata:postdata, trackers:trackers};
+	response.end = function (imageData)
+	{
+		if(socket)
+			socket.send(JSON.stringify({"eventRecieved":"socketGetImageFromID", "imageID":postdata.imageID, "imageData":imageData}));
+		else
+			console.log(JSON.stringify({"eventRecieved":"socketGetImageFromID", "imageID":postdata.imageID, "imageData":imageData}));
+		
+	}
+
+	getImageByID(response, postdata, trackers);
+}
+exports.socketGetImageFromID = socketGetImageFromID;
+
 function getOrdersByUserID(response, postdata, trackers, user)
 {
 	/*

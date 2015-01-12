@@ -425,7 +425,7 @@ function createResturant(response, postdata, trackers, id)
 				name:postdata.name,
 				pass:postdata.pass,
 				auth:auth,
-				images:[],
+				images:["defFood", "defWaiter", "defGeneralQuestion"],
 				chats: [],
 				items: [],
 				employees: [],
@@ -537,21 +537,11 @@ function uploadImage(response, postdata, trackers, id, resturantObject)
 					    	}
 					}
 		}
-		console.log("JSON " + JSON.stringify(json))
-		options = {
-				method:'PUT',
-				url: getURLByIDType("image") + id,
-				json: json
-		};
-		request(options, function(err, res, body) { if (err) {
-			throw Error(err); } else {
-				if(response)
-					response.end("Created image: " + body);
-
-				console.log("Created image: " + JSON.stringify(body));
-
-			}
-		});
+		saveObject(id, json);
+		if(response)
+			response.end(id);
+		else
+			console.log(id);
 		
 		resturantObject.images.push(id);
 		saveURL(getURLForObject(resturantObject.id), resturantObject);
@@ -561,6 +551,63 @@ function uploadImage(response, postdata, trackers, id, resturantObject)
 	
 }
 exports.uploadImage = uploadImage;
+
+function setEntityToHaveImage(socket, postdata, trackers, imageID, entity)
+{
+	/*
+	 * PostData:
+	 * var entityID //item, employee, or question 
+	 * var resturantID
+	 * dic data {data, Content-Type}
+	 */
+	
+	if((!postdata.entityID || !postdata.resturantID || !postdata.data)&&!imageID)//if we are given an imageID, don't do any checks - this method can be used to simply set an entity to have an imageID, without uploading a new image
+	{
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		else
+			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		return;
+	}
+	
+	if(!imageID){
+	response = {socket:socket, postdata:postdata, trackers:trackers};
+	response.end = function(newImageID)
+	{
+		setEntityToHaveImage(this.socket, this.postdata, this.trackers, newImageID);
+	}
+	uploadImage(response, {"resturantID":postdata.resturantID, "data":postdata.data}, trackers);
+	}
+	
+	if(!entity)
+		{
+		getObject(postdata.entityID, setEntityToHaveImage, [socket, postdata, trackers, imageID], false);
+		return;
+		}
+	if(entity.imageID!==imageID)//user may try to set the current imageID to the same object - if this is the case, do nothing, its just a waste of time and database calls
+		{
+		prevID = entity.imageID;
+		entity.imageID = imageID;
+		saveObject(entity.id, entity, [entity.id+"/imageID"], trackers);
+		
+		//save every question that had a default id to have this id
+		if(typeOfID(entity.id)==="item" || typeOfID(entity.id)==="employee")
+			{
+			function saveImageToQuestion(imageID, trackers, questionObj)
+			{
+				if(questionObj.imageID!==imageID){
+				questionObj.imageID = imageID;
+				saveObject(questionObj.id, questionObj, [questionObj.id+"/imageID"], trackers);}
+			}
+			for(question in entity.question)
+				{
+				getObject(question, saveImageToQuestion, [imageID, trackers],false);
+				}
+			}
+		}
+	
+}
+exports.setEntityToHaveImage = setEntityToHaveImage;
 
 function createChat(response, postdata, trackers, id, participants)
 {

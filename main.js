@@ -48,6 +48,7 @@ handle["/resturant/getusernameforresturant"] = requestHandlers.resturantApp.getU
 handle["/resturant/getuserordersatresturant"] = requestHandlers.resturantApp.getUserOrdersAtResturant;
 handle["/resturant/imageidfromentity"] = requestHandlers.resturantApp.imageIDFromEntity;
 handle["/resturant/socketcreatequestion"] = requestHandlers.resturantApp.socketCreateQuestion;
+handle["/resturant/setentitytohaveimage"] = requestHandlers.resturantApp.setEntityToHaveImage;
 
 
 //testing server:

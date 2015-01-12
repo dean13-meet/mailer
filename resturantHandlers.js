@@ -594,7 +594,7 @@ function setEntityToHaveImage(socket, postdata, trackers, imageID, entity)
 		//save every question that had a default id to have this id
 		if(typeOfID(entity.id)==="item" || typeOfID(entity.id)==="employee")
 			{
-			function saveImageToQuestion(imageID, trackers, questionObj)
+			saveImageToQuestion = function (imageID, trackers, questionObj)
 			{
 				if(questionObj.imageID!==imageID){
 				questionObj.imageID = imageID;
@@ -825,10 +825,6 @@ function getImageByID(response2, postdata, trackers, image)
 	
 	if(response2)
 		{
-		console.log("Sending image: " + image);
-		console.log("Sending image json: " + JSON.stringify(image));
-		//response2.write('Content-Length:'+image.data.length+'\r\n');
-		//response2.write('Content-Type:' + image.Content_Type + '\r\n');
 		response2.end(image.data);
 		}
 

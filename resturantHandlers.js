@@ -1312,7 +1312,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		questions.pushArray(questionsEmployees)
 		questions.pushArray(questionsOrder);
 
-		var isResturant = typeOfID(postdata.userID);
+		var isResturant = typeOfID(postdata.userID)==="resturant";
 		for(i = 0; i < questions.length; i++)
 			{
 			question = questions[i];

@@ -1502,9 +1502,9 @@ function validateUserAuth(response, postdata, trackers, user)
 		else
 			{
 			if(response)
-				response.end(JSON.stringify({"validation":"false", "type":"error"}));
+				response.end(JSON.stringify({"validation":"false", "type":"error", "user":user, "data":postdata}));
 			//else
-				console.log(JSON.stringify({"validation":"false", "type":"error"}));
+				console.log(JSON.stringify({"validation":"false", "type":"error", "user":user, "data":postdata}));
 			}
 		
 		}

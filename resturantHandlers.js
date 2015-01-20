@@ -1266,11 +1266,10 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	var questionsItemsIDs = [];
 	for(i = 0; i < items.length; i++)
 		{
-		for(question in items[i].questions)
+		for(j = 0; j < items[i].questions.length;j++)//question in items[i].questions)
 		{
-		console.log("question1: " + question);
+		question = items[i].questions[j];
 		question2 = {qID:question, ownerName:items[i].name};
-		console.log("question2: " + JSON.stringify(question2));
 		questionsItemsIDs.push(question2);
 		}
 		}
@@ -1294,8 +1293,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	var questionsEmployeesIDs = [];
 	for(i = 0; i < employees.length; i++)
 		{
-		for(question in employees[i].questions)
+		for(j = 0; j < employees[i].questions.length; j++)//question in employees[i].questions)
 		{
+		question = employees[i].questions[j];
 		question2 = {qID:question, ownerName:employees[i].name};
 		questionsEmployeesIDs.push(question2);
 		}

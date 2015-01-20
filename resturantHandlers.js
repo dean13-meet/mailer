@@ -1284,7 +1284,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	for(i = 0; i < questionsItems.length; i++)
 	{
 	question = questionsItems[i];
-	question.ownerName = questionItemsIDs[i].ownerName;
+	question.ownerName = questionsItemsIDs[i].ownerName;
 	question.ownerType = "item";
 	}
 	

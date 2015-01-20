@@ -1268,7 +1268,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		{
 		for(question in items[i].questions)
 		{
+		console.log("question1: " + question);
 		question2 = {qID:question, ownerName:items[i].name};
+		console.log("question2: " + JSON.stringify(question2));
 		questionsItemsIDs.push(question2);
 		}
 		}

@@ -1390,6 +1390,7 @@ function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, track
 		getObject(postdata.questionID, saveUserResponseToQuestionbyQuestionIDandUserID, [socket, postdata, trackers], false);
 		return;
 		}
+	
 	response = {
 			userID:postdata.userID,
 			textResponse:postdata.textResponse?postdata.textResponse:"",
@@ -1431,6 +1432,7 @@ function signIn(response, postdata, trackers, retVal, user)
 		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
 		return;
 		}
+		console.log("getting retval id: " + retVal.id);
 	if(!user)
 		{
 		id = retVal.id;

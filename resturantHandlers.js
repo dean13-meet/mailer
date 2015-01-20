@@ -1309,7 +1309,7 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 	
 	for(i = 0; i < questionsEmployees.length; i++)
 	{
-	question = questionEmployees[i];
+	question = questionsEmployees[i];
 	question.ownerName = questionsEmployeesIDs[i].ownerName;
 	question.ownerType = "employee";
 	}

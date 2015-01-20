@@ -1260,30 +1260,61 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees], true);
 		return;
 	}
+	
+	
+	
 	var questionsItemsIDs = [];
 	for(i = 0; i < items.length; i++)
 		{
+		for(question in items[i].questions)
+		{
+		question = {qID:question, ownerName:items[i].name};
+		}
 		questionsItemsIDs.pushArray(items[i].questions)}
-	
 	
 	if(!questionsItems)questionsItems = [];
 	if(questionsItems.length<questionsItemsIDs.length)
 	{
-		url = questionsItemsIDs[questionsItems.length];
+		url = questionsItemsIDs[questionsItems.length].qID;
 		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems], true);
 		return;
 	}
+	
+	for(i = 0; i < questionsItems.length; i++)
+	{
+	question = questionsItems[i];
+	question.ownerName = questionItemsIDs[i].ownerName;
+	question.ownerType = "item";
+	}
+	
+	
 	var questionsEmployeesIDs = [];
 	for(i = 0; i < employees.length; i++)
-		{questionsEmployeesIDs.pushArray(employees[i].questions)}
+		{
+		for(question in employees[i].questions)
+		{
+		question = {qID:question, ownerName:employees[i].name};
+		}
+		questionsEmployeesIDs.pushArray(employees[i].questions)
+		}
 	
 	if(!questionsEmployees){questionsEmployees = [];}
 	if(questionsEmployees.length<questionsEmployeesIDs.length)
 	{
-		url = questionsEmployeesIDs[questionsEmployees.length];
+		url = questionsEmployeesIDs[questionsEmployees.length].qID;
 		getObject(url, getSurveyByOrderIDandUserID, [response, postdata, trackers, order, user, items, employees, questionsItems, questionsEmployees], true);
 		return;
 	}
+	
+	for(i = 0; i < questionsEmployees.length; i++)
+	{
+	question = questionEmployees[i];
+	question.ownerName = questionsEmployeesIDs[i].ownerName;
+	question.ownerType = "employee";
+	}
+	
+	
+	
 	
 	if(!questionsOrder){questionsOrder = [];}
 	if(questionsOrder.length<order.extraQuestions.length)
@@ -1293,7 +1324,10 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		return;
 	}
 
-	
+	for(question in questionsOrder)
+	{
+	question.ownerType = "other";
+	}
 	
 
 	Array.prototype.contains = function(arr)
@@ -1304,9 +1338,6 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 
 	}
 	
-	
-		
-
 		questions = [];
 		questions.pushArray(questionsItems);
 		questions.pushArray(questionsEmployees)
@@ -1432,7 +1463,7 @@ function signIn(response, postdata, trackers, retVal, user)
 		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
 		return;
 		}
-	console.log("retval: " + retVal);
+	console.log("retval: " + JSON.stringify(retVal));
 	if(retVal.id === undefined)
 	{
 		if(response)

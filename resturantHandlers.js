@@ -1432,7 +1432,15 @@ function signIn(response, postdata, trackers, retVal, user)
 		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
 		return;
 		}
-		console.log("getting retval id: " + retVal.id);
+
+	if(!retVal.id)
+	{
+		if(response)
+				response.end(JSON.stringify({error: "Error: Incorrect username or password."}));
+			else
+				console.log("Error: Incorrect username or password.");
+	}
+
 	if(!user)
 		{
 		id = retVal.id;

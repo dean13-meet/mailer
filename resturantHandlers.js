@@ -1432,7 +1432,7 @@ function signIn(response, postdata, trackers, retVal, user)
 		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
 		return;
 		}
-	console.log("retval: " + retval);
+	console.log("retval: " + retVal);
 	if(retVal.id === undefined)
 	{
 		if(response)

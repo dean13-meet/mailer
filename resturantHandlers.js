@@ -1269,8 +1269,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		for(question in items[i].questions)
 		{
 		question = {qID:question, ownerName:items[i].name};
+		questionsItemsIDs.push(question);
 		}
-		questionsItemsIDs.pushArray(items[i].questions)}
+		}
 	
 	if(!questionsItems)questionsItems = [];
 	if(questionsItems.length<questionsItemsIDs.length)
@@ -1294,8 +1295,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		for(question in employees[i].questions)
 		{
 		question = {qID:question, ownerName:employees[i].name};
+		questionsEmployeesIDs.push(question);
 		}
-		questionsEmployeesIDs.pushArray(employees[i].questions)
 		}
 	
 	if(!questionsEmployees){questionsEmployees = [];}

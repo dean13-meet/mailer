@@ -1432,8 +1432,8 @@ function signIn(response, postdata, trackers, retVal, user)
 		getURL(names_to_ids+postdata.name, signIn, [response, postdata, trackers], false);
 		return;
 		}
-
-	if(!retVal.id)
+	console.log("retval: " + retval);
+	if(retVal.id === undefined)
 	{
 		if(response)
 				response.end(JSON.stringify({error: "Error: Incorrect username or password."}));

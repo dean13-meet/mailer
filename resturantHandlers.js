@@ -1268,8 +1268,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		{
 		for(question in items[i].questions)
 		{
-		question = {qID:question, ownerName:items[i].name};
-		questionsItemsIDs.push(question);
+		question2 = {qID:question, ownerName:items[i].name};
+		questionsItemsIDs.push(question2);
 		}
 		}
 	
@@ -1294,8 +1294,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		{
 		for(question in employees[i].questions)
 		{
-		question = {qID:question, ownerName:employees[i].name};
-		questionsEmployeesIDs.push(question);
+		question2 = {qID:question, ownerName:employees[i].name};
+		questionsEmployeesIDs.push(question2);
 		}
 		}
 	

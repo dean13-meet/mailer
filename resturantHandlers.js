@@ -1329,7 +1329,8 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 
 	for(question in questionsOrder)
 	{
-	question.ownerType = "other";
+	question.ownerType = "Restaurant";
+	question.ownerName = question.text;//use questionText for the name
 	}
 	
 
@@ -1350,7 +1351,6 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		for(i = 0; i < questions.length; i++)
 			{
 			question = questions[i];
-			console.log("question: : : " + JSON.stringify(question));
 			userRep = question.userResponses[isResturant?postdata.secondorialUserID:postdata.userID];
 			question.userResponses = userRep===undefined ? {"userStarRating":-1, "userTextResponse":""}: userRep;//changes from (dic of dic) to (dic)
 			

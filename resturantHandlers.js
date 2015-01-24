@@ -1327,8 +1327,9 @@ function getSurveyByOrderIDandUserID(response, postdata, trackers, order, user, 
 		return;
 	}
 
-	for(question in questionsOrder)
+	for(i = 0; i < questionsOrder.length i++)
 	{
+	question = questionsOrder[i];
 	question.ownerType = "Restaurant";
 	question.ownerName = question.text;//use questionText for the name
 	}

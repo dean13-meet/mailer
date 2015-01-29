@@ -687,6 +687,8 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 	 * objectReference (e.g. image/order)
 	 * text
 	 * timestamp
+	 *
+	 * messageStamp -- used only for notifying sender that the message was delivered
 	 */
 	if(!postdata.userID || !postdata.userAuth || !postdata.chatObjectID || /*!postdata.objectReference ||*/ !postdata.text || !postdata.timestamp)
 	{
@@ -739,9 +741,14 @@ function postMessage(socket, postdata, trackers, user, chatObject)
 		{
 		trackerUpdates[i] += "/chats";
 		}
-	console.log("traking dfds: " + trackerUpdates);
 	trackerUpdates.push((chatObject.id+"/"+"messages"));
 	saveObject(chatObject.id, chatObject, trackerUpdates, trackers);
+	/*
+	if(socket)
+		socket.send(JSON.stringify({"eventRecieved":"postMessage:"+postdata.messageStamp}));
+	else
+		console.log(JSON.stringify({"eventRecieved":"postMessage:"+postdata.messageStamp}));
+	*/
 }
 exports.postMessage = postMessage;
 
@@ -1426,11 +1433,13 @@ function saveUserResponseToQuestionbyQuestionIDandUserID(socket, postdata, track
 		getObject(postdata.questionID, saveUserResponseToQuestionbyQuestionIDandUserID, [socket, postdata, trackers], false);
 		return;
 		}
-	
+	var d = new Date();
+	var n = d.getTime();
 	response = {
 			userID:postdata.userID,
 			textResponse:postdata.textResponse?postdata.textResponse:"",
-			starRating:postdata.starRating?postdata.starRating:-1
+			starRating:postdata.starRating?postdata.starRating:-1,
+			timestamp:n
 	}
 	question.userResponses[postdata.userID] = response;
 	saveObject(question.id, question, [question.id+"/userResponses"], trackers);

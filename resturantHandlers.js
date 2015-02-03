@@ -1449,7 +1449,7 @@ exports.saveUserResponseToQuestionbyQuestionIDandUserID = saveUserResponseToQues
 
 
 
-var userQueryURL = "https://resturantapp.couchappy.com/resturant_users/_design/queryName/_view/queryName";
+var userQueryURL = "https://couchdb-03f661.smileupps.com/resturant_users/_design/queryName/_view/queryName";
 function signIn(response, postdata, trackers, retVal, user)
 {
 /*
@@ -2143,7 +2143,7 @@ function getURLForObject(objectID)
 	return categoryURL==="error" ? categoryURL : categoryURL+objectID;
 }
 //urls:
-var baseURL = "https://resturantapp.couchappy.com/";
+var baseURL = "https://couchdb-03f661.smileupps.com/";
 var idCreator = baseURL + "resturant_id_creator/getID";
 var ordersURL = baseURL + "resturant_orders/";
 var itemURL = baseURL + "resturant_items/";

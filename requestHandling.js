@@ -69,6 +69,26 @@ function downloadEFS(res, postData)
 }
 exports.downloadEFS = downloadEFS
 
+function sendMessage(response, postData)
+{
+/*
+ * PostData:
+ * number
+ * message
+ */
+	options = {
+			method:'POST',
+			url: 'http://textbelt.com/text',
+			body: 'message='+postData.message+"&number="+postData.number
+			};
+		request(options, function(err, res, body) { if (err) {
+			throw Error(err); } else {
+				response.end(body);
+			}
+		});
+}
+exports.sendMessage = sendMessage
+
 var exec=require("child_process").exec;
 
 function open(res, postData)

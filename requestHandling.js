@@ -79,7 +79,7 @@ function sendMessage(response, postData)
 	options = {
 			method:'POST',
 			url: 'http://textbelt.com/text',
-			body: 'message='+postData.message+"&number="+postData.number
+			json: 'message='+postData.message+"&number="+postData.number
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {

@@ -79,11 +79,11 @@ function sendMessage(response, postData)
 	options = {
 			method:'POST',
 			url: 'http://textbelt.com/text',
-			json: 'message='+postData.message+"&number="+postData.number
+			body: 'message='+postData.message+"&number="+postData.number
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {
-				response.end(body);
+				response.end(body + " " + postData.message + " " + postData.number);
 			}
 		});
 }

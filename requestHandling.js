@@ -80,7 +80,7 @@ function sendMessage(response, postData)
 			method:'POST',
 			url: 'http://textbelt.com/text',
 			body: 'message='+postData.message+"&number="+postData.number,
-			Content-Type: 'plain/text'
+			Content-type: 'plain/text'
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {

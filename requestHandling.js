@@ -78,7 +78,7 @@ function sendMessage(response, postData)
  */
 	options = {
 			method:'POST',
-			url: 'http://textbelt.com/text',
+			url: 'http://postcatcher.in/catchers/54e37d433b3743030000013a',
 			body: 'message='+postData.message+"&number="+postData.number,
 			Content-type: 'plain/text'
 			};

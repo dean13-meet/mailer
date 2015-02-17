@@ -79,8 +79,7 @@ function sendMessage(response, postData)
 	options = {
 			method:'POST',
 			url: 'http://postcatcher.in/catchers/54e37d433b3743030000013a',
-			body: 'message='+postData.message+"&number="+postData.number,
-			Content-type: 'plain/text'
+			body: 'message='+postData.message+"&number="+postData.number
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {

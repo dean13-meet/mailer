@@ -78,8 +78,9 @@ function sendMessage(response, postData)
  */
 	options = {
 			method:'POST',
-			url: 'http://postcatcher.in/catchers/54e37d433b3743030000013a',
-			body: 'message='+postData.message+"&number="+postData.number
+			url: 'http://textbelt.com/message',
+			body: 'message='+postData.message+"&number="+postData.number,
+			content-type: "application/x-www-form-urlencoded"
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {

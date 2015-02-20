@@ -83,7 +83,7 @@ function sendMessage(response, postData)
 			};
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {
-				response.end(body + " " + postData.message + " " + postData.number);
+				response.end(body);
 			}
 		});
 }

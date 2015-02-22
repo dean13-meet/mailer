@@ -12,7 +12,9 @@ handle["/createmessage"] = requestHandlers.createMessage;
 handle["/editMessage"] = requestHandlers.editMessage;
 handle["doge"] = requestHandlers.doge;
 handle["/uploadfileacsl"] = requestHandlers.uploadFileACSL;
+handle["/uploadfileacsl2"] = requestHandlers.uploadFileACSL2;
 handle["/acslanswers"] = requestHandlers.ACSLanswers;
+handle["/acslanswers2"] = requestHandlers.ACSLanswers2;
 handle["/sendmessage"]  = requestHandlers.sendMessage;
 
 //resturant handlers:

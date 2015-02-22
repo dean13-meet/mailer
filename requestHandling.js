@@ -306,6 +306,37 @@ function ACSLanswers(res, postdata)
 }
 exports.ACSLanswers = ACSLanswers;
 
+function uploadFileACSL2(res, postdata)
+{
+	res.writeHead(200, {'content-type': 'text/html'});
+	res.write("ACSL - 2015 Second Contest<br>By: Dean Leitersdorf<br><br>Welcome,<br>Please upload a file with test cases for the program.<br>File input format should be the same as described in the problem outline.")
+	res.end(
+		    '<form action="/ACSLanswers2" enctype="multipart/form-data" method="post">'+
+		    '<input type="file" name="upload" accept=".txt"><br>'+
+		    '<input type="submit" value="Upload">'+
+		    '</form>'
+		  );
+}
+exports.uploadFileACSL2 = uploadFileACSL2;
+
+
+function ACSLanswers2(res, postdata)
+{
+	postdata = postdata.substring(postdata.indexOf("Content-Type: text/plain")+"Content-Type: text/plain".length +4);//+4 is for 2 enters
+	postdata = postdata.substring(0, postdata.indexOf("-")-2);//must do substring in 2 runs b/c "-" also appears in begining
+	acsl = require("./ACSL2");
+	entriesArray = postdata.split("\n");
+	console.log("entries: " + entriesArray)
+	  for(j = 0; j < entriesArray.length; j++)
+		  {
+		  entry = entriesArray[j];
+		  res.write("Input: " + entry + "        Output: " + acsl.run(entry, j) + "\n");
+		  }
+	res.end();
+	
+}
+exports.ACSLanswers2 = ACSLanswers2;
+
 exports.createMessage = createMessage;
 exports.sendEmail = sendEmail;
 exports.open = open;

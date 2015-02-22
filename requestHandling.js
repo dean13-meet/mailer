@@ -327,10 +327,18 @@ function ACSLanswers2(res, postdata)
 	acsl = require("./ACSL2");
 	entriesArray = postdata.split("\n");
 	console.log("entries: " + entriesArray)
+	
+	//Min length of Input line: 50
+	minLength = 50;
 	  for(j = 0; j < entriesArray.length; j++)
 		  {
 		  entry = entriesArray[j];
-		  res.write("Input: " + entry + "                                                     Output: " + acsl.run(entry, j) + "\n");
+		  res.write("Input: " + entry); 
+		  for(i = ("Input " + entry).length ; i < minLength; i++)
+			  {
+			  res.write(" ");
+			  }
+		  res.write("Output: " + acsl.run(entry, j) + "\n");
 		  }
 	res.end();
 	

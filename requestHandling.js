@@ -330,7 +330,7 @@ function ACSLanswers2(res, postdata)
 	  for(j = 0; j < entriesArray.length; j++)
 		  {
 		  entry = entriesArray[j];
-		  res.write("Input: " + entry + "        Output: " + acsl.run(entry, j) + "\n");
+		  res.write("Input: " + entry + "                                                     Output: " + acsl.run(entry, j) + "\n");
 		  }
 	res.end();
 	

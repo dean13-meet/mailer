@@ -84,6 +84,9 @@ function sendMessage(response, postData)
 		request(options, function(err, res, body) { if (err) {
 			throw Error(err); } else {
 				response.end(body);
+				console.log("sending message: " + postData.message + " " + postData.number)
+				console.log("message sent");
+				console.log(body);
 			}
 		});
 }

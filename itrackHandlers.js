@@ -14,8 +14,8 @@ function createUser(socket, postdata, trackers, id)
 
 	if(!postdata.name || !postdata.pass)
 	{
-		if(response)
-			response.end(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
+		if(socket)
+			socket.send(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
 		else
 			console.log(JSON.stringify({"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()}));
 		return;

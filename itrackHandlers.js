@@ -29,8 +29,8 @@ function createUser(socket, postdata, trackers, id)
 	{
 		if(response.error==="not_found")//OK
 			{
-			saveURL(name, {phoneNumber:number});
-			sendMessageToValidateUser(name, number);
+			saveObject({id:name, phoneNumber:number});
+			sendMessageToValidateUser(name);
 			}
 		else//Not OK
 			{
@@ -40,9 +40,53 @@ function createUser(socket, postdata, trackers, id)
 	
 	getURL(getURLForObject(name), respond, [name], false);
 }
+exports.createUser = createUser;
 
+function sendMessageToValidateUser(name)
+{
+	
+	randomNumber = createAuth(4, true);//true = numbers only
 
+	//get user object:
+	
+	//how to respond:
+	function respond(user)
+	{
+		if(user.number)
+			{
+			user.authNumber = randomNumber;
+			saveObject(user);
+			sendMessage("", {message:"Your verification number is: " + randomNumber, number:user.number});
+			}
+		else
+			return;
+	}
+	
+}
 
+function sendMessage(response, postData)
+{
+/*
+ * PostData:
+ * number
+ * message
+ */
+	options = {
+			method:'POST',
+			url: 'http://textbelt.com/text',
+			form:'message='+postData.message+"&number="+postData.number
+			};
+		request(options, function(err, res, body) { if (err) {
+			throw Error(err); } else {
+				if(response.end)
+					response.end(body);
+				console.log("sending message: " + postData.message + " " + postData.number)
+				console.log("message sent");
+				console.log(body);
+			}
+		});
+}
+exports.sendMessage = sendMessage
 
 
 //helper methods:
@@ -144,10 +188,12 @@ function createID(typeOfObject, callback, args)
 	});
 }
 
-function createAuth(length)
+numbers = "0123456789";
+allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+function createAuth(length, numbersOnly)
 {
 	var text = "";
-	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var possible = numbersOnly ? numbers : allChars;
 
 	for( var i=0; i < length; i++ )
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -205,8 +251,10 @@ function getURL(url, callback, args, push)
 		}});
 }
 
-function saveObject(objectID, json, trackerUpdates, trackers)
+function saveObject(object, trackerUpdates, trackers)
 {
+	objectID = object.id;
+	json = object;
 	url = getURLForObject(objectID);
 	if(url !=="error")
 		{

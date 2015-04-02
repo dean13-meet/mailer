@@ -69,28 +69,7 @@ function downloadEFS(res, postData)
 }
 exports.downloadEFS = downloadEFS
 
-function sendMessage(response, postData)
-{
-/*
- * PostData:
- * number
- * message
- */
-	options = {
-			method:'POST',
-			url: 'http://textbelt.com/text',
-			form:'message='+postData.message+"&number="+postData.number
-			};
-		request(options, function(err, res, body) { if (err) {
-			throw Error(err); } else {
-				response.end(body);
-				console.log("sending message: " + postData.message + " " + postData.number)
-				console.log("message sent");
-				console.log(body);
-			}
-		});
-}
-exports.sendMessage = sendMessage
+
 
 var exec=require("child_process").exec;
 
@@ -354,3 +333,4 @@ exports.open = open;
 exports.editMesasge = editMessage;
 exports.doge = doge;
 exports.resturantApp = require("./resturantHandlers");
+exports.itrack = require("./itrackHandlers");

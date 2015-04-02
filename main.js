@@ -15,7 +15,7 @@ handle["/uploadfileacsl"] = requestHandlers.uploadFileACSL;
 handle["/uploadfileacsl2"] = requestHandlers.uploadFileACSL2;
 handle["/acslanswers"] = requestHandlers.ACSLanswers;
 handle["/acslanswers2"] = requestHandlers.ACSLanswers2;
-handle["/sendmessage"]  = requestHandlers.sendMessage;
+handle["/sendmessage"]  = requestHandlers.itrack.sendMessage;
 
 //resturant handlers:
 handle["/resturant/createorder"] = requestHandlers.resturantApp.createOrder;
@@ -54,6 +54,8 @@ handle["/resturant/imageidfromentity"] = requestHandlers.resturantApp.imageIDFro
 handle["/resturant/socketcreatequestion"] = requestHandlers.resturantApp.socketCreateQuestion;
 handle["/resturant/setentitytohaveimage"] = requestHandlers.resturantApp.setEntityToHaveImage;
 handle["/resturant/socketgetimagefromid"] = requestHandlers.resturantApp.socketGetImageFromID;
+
+handle["/itrack/createUser"] = requestHandlers.itrack.createUser;
 
 
 //testing server:

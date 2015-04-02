@@ -55,7 +55,7 @@ handle["/resturant/socketcreatequestion"] = requestHandlers.resturantApp.socketC
 handle["/resturant/setentitytohaveimage"] = requestHandlers.resturantApp.setEntityToHaveImage;
 handle["/resturant/socketgetimagefromid"] = requestHandlers.resturantApp.socketGetImageFromID;
 
-handle["/itrack/createUser"] = requestHandlers.itrack.createUser;
+handle["/itrack/createuser"] = requestHandlers.itrack.createUser;
 
 
 //testing server:

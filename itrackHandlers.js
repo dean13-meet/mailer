@@ -195,12 +195,12 @@ function verifyAuthForUserName(socket, postdata, trackers)//gives userUUID if ve
 		if(user.auth && user.auth==auth)//check user.auth --- what someone might try doing is sending auth = nil so that if user.auth is nil they will equal and the hacker gets the userUUID!
 			{
 			sendToSocket(socket, 
-					{"eventRecieved":"verifyAuth", "success":true, userUUID:user.UUID});
+					{"eventRecieved":"verifyAuthForUserName", "success":true, userUUID:user.UUID});
 			}
 		else
 			{
 			sendToSocket(socket, 
-					{"eventRecieved":"verifyAuth", "success":false});
+					{"eventRecieved":"verifyAuthForUserName", "success":false});
 			}
 	}
 	getObject(postdata.name, respond, [postdata.auth], false, "user");

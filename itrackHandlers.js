@@ -307,7 +307,8 @@ function createGeofence(socket, postdata, trackers)
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	function respond(geofenceID, postdata, isRequestingNameForUser, response)
 	{
-		//console.log(response);
+		
+		response = response.rows[0];
 		ownerName = isRequestingNameForUser?response.value:postdata.owner
 		requesterName = isRequestingNameForUser?"":response.value
 				
@@ -339,25 +340,24 @@ function createGeofence(socket, postdata, trackers)
 		
 		function savingFunc(geofence, savingToUser, response)
 		{
-			//console.log(response);
-			console.log("rows thingy: " + JSON.stringify(response));
-			response = response.rows[0];
 			if(savingToUser)
 				{
-				response.geofences.push(geofence);
+				response.geofences.push(geofence._id);
 				}
 			else
 				{
-				response.requestedGeofences.push(geofence);
+				response.requestedGeofences.push(geofence._id);
 				}
-			saveObject(response, "user", [response.userUUID+savingToUser?"/geofences":"/requestedGeofences"], trackers
+			saveObject(response, "user", [response.UUID+(savingToUser?"/geofences":"/requestedGeofences")], trackers
 					);//sending updates based on userUUID
 			
 		}
 		//save geofence to owner -- tracker update when saving
+		console.log(ownerName);
 		getObject(ownerName, savingFunc, [geofence, true], false, "user");
 		if(requesterName!=="")
 			{
+			console.log("requesterName");
 			getObject(requesterName, savingFunc, [geofence, false], false, "user");
 			}
 	}

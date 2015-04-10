@@ -302,7 +302,7 @@ function createGeofence(socket, postdata, trackers)
 	 */
 	
 	if(!requires(postdata, ["owner", "arrivalMessage", "leaveMessage", "lat", "long"
-	                        , "onArrival", "onLeave", "radius", "recs", "repeat"], socket))return;
+	                        , "onArrival", "onLeave", "radius", "recs", "repeat", "address"], socket))return;
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	function respond(geofenceID, postdata, isRequestingNameForUser, response)

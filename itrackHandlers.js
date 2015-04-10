@@ -7,7 +7,7 @@ function requires(postdata, listOfStrings, socket)
 	for(index in listOfStrings)
 		{
 		string = listOfStrings[index];
-		if(!postdata[string])
+		if(!postdata.hasOwnProperty(string))
 			{
 			sendToSocket(socket, 
 					{"error": "Missing info", "data received" : postdata, "missing":string});

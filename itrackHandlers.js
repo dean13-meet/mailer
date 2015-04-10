@@ -9,6 +9,7 @@ function requires(postdata, listOfStrings, socket)
 		string = listOfStrings[index];
 		if(!postdata.hasOwnProperty(string))//so that we can take things like "0" or "false"
 			{
+			console.log("missing " + string);
 			sendToSocket(socket, 
 					{"error": "Missing info", "data received" : postdata, "missing":string});
 			return false;

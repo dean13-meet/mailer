@@ -265,6 +265,11 @@ exports.sendMessage = sendMessage
  *  (NOTE: listen to user by userUUID - the app isn't supposed to have username of yourself, therefore
  *  saves will send updates by userUUID)
  *  
+ *  
+ *  //Trackers:
+ *  trackers will be sent by userUUID if a geofence is created/deleted.
+ *  trackers will be sent by geofence userKnownIdentifier if a geofence is modified.
+ *  
  *  BIG NOTE:::: 
  *  For now, we just overwrite changes to a geofence - no checking for add/remove as details above. 
  *  What is above is good, and should be implemented in the future - no time for it now (want to finish

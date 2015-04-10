@@ -25,6 +25,7 @@ function sendToSocket(socket, json)
 		console.log(JSON.stringify(json));
 }
 
+//Sign In
 function usernameEntered(socket, postdata, trackers)//log in
 {
 	/*
@@ -93,7 +94,7 @@ function createUser(socket, postdata, trackers)//sign up
 			else
 				console.log(JSON.stringify({"eventRecieved":"createUser", "success":true}));
 			
-			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:[], number:null, type:"user"}, "user");
+			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:[], requestedGeofences:[], number:null, type:"user"}, "user");
 			}
 		else//username taken
 			{
@@ -194,6 +195,13 @@ function retryValidation(socket, postdata, trackers)
 }
 exports.retryValidation = retryValidation;
 
+//userUUID:
+/*
+ * Purpose
+ * The purpose of the userUUID is to save the user login on the phone. It should NOT be used for 
+ * refrencing in database (e.g. a Geofence should NOT have its owner field populated with a userUUID, 
+ * instead it should use the username).
+ */
 function verifyAuthForUserName(socket, postdata, trackers)//gives userUUID if verify success
 {
 	if(!requires(postdata, ["auth", "name"], socket))return;
@@ -240,19 +248,133 @@ function sendMessage(response, postData)
 exports.sendMessage = sendMessage
 
 
+//Sync Geofences
+/*
+ * 
+ * Geofence syncing works on the following priorities:
+ * 
+ * Pushes:
+ * To update a geofence, you can only send "additions/removals". E.g., adding 1 person to rec list. YOU ARE NOT allowed
+ * to "set" - e.g. setting the rec list to be ____. This allows for multiple instances to cause changes with minimal
+ * conflicts.
+ * 
+ * Pulls:
+ * When app loads, it automatically pulls all geofences. App continues to listen for tracker updates on ALL geofences,
+ *  and USER's geofences and requestedGeofences fields (in case a new geofence gets created).
+ *  (NOTE: listen to user by userUUID - the app isn't supposed to have username of yourself, therefore
+ *  saves will send updates by userUUID)
+ * 
+ */
+
+
+function createGeofence(socket, postdata, trackers)
+{//currently only supports self-creation
+	/*
+	 * PostData:
+	 * Required
+	 * owner - userUUID OR username (e.g. if not self-created)
+	 * arrivalMessage
+	 * leaveMessage
+	 * lat
+	 * long
+	 * onArrival
+	 * onLeave
+	 * radius
+	 * recs
+	 * repeat
+	 * 
+	 * 
+	 * Optional
+	 * requester - userUUID, or blank
+	 * status - automatically active if this is left blank
+	 * 
+	 */
+	
+	/*
+	 * Security Check!
+	 * If there is no requester, then owner MUST be userUUID! This is to ensure that you 
+	 * cannot supply the username of another person and instantly add a tracker to them! To add a tracker,
+	 * either you are the user (in that case you have the userUUID), or you are requesting (in that case
+	 * the actual user must accept afterwards).
+	 * If there is a requester, the requester must be a userUUID (you cannot request for someone using
+	 * their username)
+	 */
+	
+	if(!requires(postdata, ["owner", "arrivalMessage", "leaveMessage", "lat", "long"
+	                        , "onArrival", "onLeave", "radius", "recs", "repeat"], socket))return;
+	
+	geofenceID = "GEOFENCE-"+createAuth(30);
+	function respond(geofenceID, postdata, isRequestingNameForUser, response)
+	{
+		ownerName = isRequestingNameForUser?response.value:postdata.owner
+		requesterName = isRequestingNameForUser?"":response.value
+				
+		geofence = 
+			{
+				_id:geofenceID,
+				arrivalMessage:postdata.arrivalMessage,
+				leaveMessage:postdata.leaveMessage,
+				lat:postdata.lat,
+				long:postdata.long,
+				onArrival:postdata.onArrival,
+				onLeave:postdata.onLeave,
+				owner:ownerName,
+				radius:postdata.radius,
+				recs:postdata.recs,
+				repeat:postdata.repeat,
+				requestApproved:isRequestingNameForUser?"N/A":"Pending",
+				requestedBy:requesterName,
+				status:postdata.status||"Active",
+				type:"geofence"
+			}
+		
+		//save geofence -- note, no need to update trackers as no one is possibly tracking this (it 
+		// is just now being created)
+		saveObject(geofence, "geofence");
+		
+		function savingFunc(geofence, savingToUser, response)
+		{
+			if(savingToUser)
+				{
+				response.geofences.push(geofence);
+				}
+			else
+				{
+				response.requestedGeofences.push(geofence);
+				}
+			saveObject(response, "user", [response.userUUID+savingToUser?"/geofences":"/requestedGeofences"], trackers
+					);//sending updates based on userUUID
+			
+		}
+		//save geofence to owner -- tracker update when saving
+		getObject(ownerName, savingFunc, [geofence, true], false, "user");
+		if(requesterName!=="")
+			{
+			getObject(requesterName, savingFunc, [geofence, false], false, "user");
+			}
+	}
+	//finding username:
+	if(!postdata.requester)//then we must fetch owner username from userUUID
+		{
+		url = usernameFromUUIDURL + "%22"+postdata.owner+"%22";
+		getURL(url, respond, [geofenceID, postdata, true], false);
+		}
+	
+	else
+		{
+		//to deal with soon enough...
+		}
+}
+exports.createGeofence = createGeofence;
+
 //helper methods:
 
+//typeOfID is outdated.
 function typeOfID(id)
 {
 	/* 
 	 * id allocation:
 	 * user - 001_...
-	 * resturant - 002_...
-	 * order - 003_...
-	 * item - 004_....
-	 * employee - 005_...
-	 * question - 006_...
-	 * images - 007_...
 	 */
 	str = id.substring(0,3);
 	switch(str)
@@ -269,6 +391,7 @@ function getURLByIDType(idType)
 	switch(idType)
 	{
 	case "user": return usersURL;
+	case "geofence" : return usersURL;
 	default:return "error"
 	}
 }
@@ -277,7 +400,7 @@ var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 
 var usersURL = baseURL + "users/";
 var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22DEMO-USERNAME%22
-
+var usernameFromUUIDURL = "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 
 
 function getURLForObject(objectID, knownType)

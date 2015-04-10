@@ -7,7 +7,7 @@ function requires(postdata, listOfStrings, socket)
 	for(index in listOfStrings)
 		{
 		string = listOfStrings[index];
-		if(!postdata.hasOwnProperty(string))
+		if(!postdata.hasOwnProperty(string))//so that we can take things like "0" or "false"
 			{
 			sendToSocket(socket, 
 					{"error": "Missing info", "data received" : postdata, "missing":string});
@@ -404,7 +404,7 @@ var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 
 var usersURL = baseURL + "users/";
 var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22DEMO-USERNAME%22
-var usernameFromUUIDURL = "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
+var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 
 
 function getURLForObject(objectID, knownType)

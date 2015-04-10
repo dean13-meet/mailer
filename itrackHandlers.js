@@ -4,7 +4,7 @@
 
 function requires(postdata, listOfStrings, socket)
 {
-	for(index in listOfStrings)
+	for(index = 0; index < listOfStrings.length;index++)
 		{
 		stringToCheck = listOfStrings[index];
 		if(!postdata.hasOwnProperty(stringToCheck))//so that we can take things like "0" or "false"
@@ -264,6 +264,12 @@ exports.sendMessage = sendMessage
  *  and USER's geofences and requestedGeofences fields (in case a new geofence gets created).
  *  (NOTE: listen to user by userUUID - the app isn't supposed to have username of yourself, therefore
  *  saves will send updates by userUUID)
+ *  
+ *  BIG NOTE:::: 
+ *  For now, we just overwrite changes to a geofence - no checking for add/remove as details above. 
+ *  What is above is good, and should be implemented in the future - no time for it now (want to finish
+ *  version 1 first). Since it is assumable that not many will log into the same account from 2 dif
+ *  phones at the same time, above doesn't really matter now.
  * 
  */
 

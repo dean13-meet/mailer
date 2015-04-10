@@ -10,7 +10,7 @@ function requires(postdata, listOfStrings, socket)
 		if(!postdata[string])
 			{
 			sendToSocket(socket, 
-					{"error": "Missing info", "data received" : postdata, "atFunction":arguments.callee.toString()});
+					{"error": "Missing info", "data received" : postdata, "missing":string});
 			return false;
 			}
 		}

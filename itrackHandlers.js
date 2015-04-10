@@ -95,7 +95,7 @@ function createUser(socket, postdata, trackers)//sign up
 			else
 				console.log(JSON.stringify({"eventRecieved":"createUser", "success":true}));
 			
-			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:[], requestedGeofences:[], number:null, type:"user"}, "user");
+			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:{}, requestedGeofences:{}, number:null, type:"user"}, "user");
 			}
 		else//username taken
 			{
@@ -317,8 +317,8 @@ function createGeofence(socket, postdata, trackers)
 	{
 		
 		response = response.rows[0];
-		ownerName = isRequestingNameForUser?response.value:postdata.owner
-		requesterName = isRequestingNameForUser?"":response.value
+		ownerName = isRequestingNameForUser?response.value._id:postdata.owner
+		requesterName = isRequestingNameForUser?"":response.value._id
 				
 		geofence = 
 			{
@@ -347,15 +347,15 @@ function createGeofence(socket, postdata, trackers)
 		// is just now being created)
 		saveObject(geofence, "geofence");
 		
-		function savingFunc(geofence, savingToUser, response)
+		function savingFunc(geofence, postdata, savingToUser, response)
 		{
 			if(savingToUser)
 				{
-				response.geofences.push(geofence._id);
+				response.geofences[postdata.userKnownIdentifier] = geofence._id;
 				}
 			else
 				{
-				response.requestedGeofences.push(geofence._id);
+				response.requestedGeofences[postdata.userKnownIdentifier] = geofence._id;
 				}
 			saveObject(response, "user", [response.UUID+(savingToUser?"/geofences":"/requestedGeofences")], trackers
 					);//sending updates based on userUUID
@@ -363,11 +363,11 @@ function createGeofence(socket, postdata, trackers)
 		}
 		//save geofence to owner -- tracker update when saving
 		console.log(ownerName);
-		getObject(ownerName, savingFunc, [geofence, true], false, "user");
+		getObject(ownerName, savingFunc, [geofence, postdata, true], false, "user");
 		if(requesterName!=="")
 			{
 			console.log("requesterName");
-			getObject(requesterName, savingFunc, [geofence, false], false, "user");
+			getObject(requesterName, savingFunc, [geofence, postdata, false], false, "user");
 			}
 	}
 	//finding username:
@@ -384,6 +384,22 @@ function createGeofence(socket, postdata, trackers)
 		}
 }
 exports.createGeofence = createGeofence;
+
+function deleteGeofence(socket, postdata, trackers)
+{
+	/*
+	 * Postdata
+	 * 
+	 * Required
+	 * userUUID
+	 * userKnownIdentifier
+	 */
+	
+	function respond(postdata, trackers, response)
+	{	user = response.rows[0].doc;
+		if(user.)
+	}
+}
 
 //helper methods:
 
@@ -419,7 +435,8 @@ var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 var usersURL = baseURL + "users/";
 var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22userUUID%22
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
-
+var userobjectFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?include_docs=true&key=";//+%22userUUID%22
+var geofenceFromUserKnownIdentifier = baseURL + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";//+%22userKnownIdentifier%22"
 
 function getURLForObject(objectID, knownType)
 {

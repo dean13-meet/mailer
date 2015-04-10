@@ -89,18 +89,18 @@ function createUser(socket, postdata, trackers)//sign up
 		if(!response._id)//username free
 			{
 			if(socket)
-				socket.send(JSON.stringify({"eventRecieved":"createUsername", "success":true}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+				socket.send(JSON.stringify({"eventRecieved":"createUser", "success":true}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
 			else
-				console.log(JSON.stringify({"eventRecieved":"createUsername", "success":true}));
+				console.log(JSON.stringify({"eventRecieved":"createUser", "success":true}));
 			
 			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:[], number:null, type:"user"}, "user");
 			}
 		else//username taken
 			{
 			if(socket)
-				socket.send(JSON.stringify({"eventRecieved":"createUsername", "success":false}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+				socket.send(JSON.stringify({"eventRecieved":"createUser", "success":false}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
 			else
-				console.log(JSON.stringify({"eventRecieved":"createUsername", "success":false}));
+				console.log(JSON.stringify({"eventRecieved":"createUser", "success":false}));
 			
 			}
 	}

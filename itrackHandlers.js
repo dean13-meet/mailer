@@ -399,7 +399,7 @@ function deleteGeofence(socket, postdata, trackers)
 	 * userUUID
 	 * userKnownIdentifier
 	 */
-	
+	if(!requires(postdata, ["userUUID", "userKnownIdentifier"], socket))return;
 	function respond(postdata, trackers, userKnownIdentifier, response)
 	{
 		user = response.rows[0].doc;
@@ -448,6 +448,57 @@ function deleteGeofence(socket, postdata, trackers)
 }
 exports.deleteGeofence = deleteGeofence;
 
+
+function getGeofencesForUserUUID(socket, postdata, trackers)
+{
+/*
+ * Postdata
+ * 
+ * userUUID - nothing else; if they have the UUID, they already signed in so they are in the clear
+ * 
+ */	
+	
+	if(!requires(postdata, ["userUUID"], socket))return;
+	
+	getURL(geofencesFromUserURL+"%22"+postdata.userUUID+"%22", function(socket, response){
+		
+		sendToSocket(socket, response.rows);
+		
+	}, [socket], false);
+	
+	
+}
+exports.getGeofencesForUserUUID = getGeofencesForUserUUID;
+
+function getRequestedGeofencesForUserUUID(socket, postdata, trackers)
+{
+/*
+ * Postdata
+ * 
+ * userUUID - nothing else; if they have the UUID, they already signed in so they are in the clear
+ * 
+ */	
+	
+	if(!requires(postdata, ["userUUID"], socket))return;
+	
+	getURL(requestedGeofencesFromUserURL+"%22"+postdata.userUUID+"%22", function(socket, response){
+		
+		sendToSocket(socket, response.rows);
+		
+	}, [socket], false);
+	
+	
+}
+exports.getRequestedGeofencesForUserUUID = getRequestedGeofencesForUserUUID;
+
+//Send Requests to Others
+function requestGeofence(socket, postdata, trackers)
+{
+	
+}
+
+
+
 //helper methods:
 
 //typeOfID is outdated.
@@ -481,6 +532,7 @@ var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 
 var usersURL = baseURL + "users/";
 var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22userUUID%22
+var requestedGeofencesFromUserURL = baseURL + "users/_design/userDesign/_view/requestedGeofencesFromUser?include_docs=true&key=";//+%22userUUID%22
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 var userobjectFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?include_docs=true&key=";//+%22userUUID%22
 var geofenceFromUserKnownIdentifier = baseURL + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";//+%22userKnownIdentifier%22"

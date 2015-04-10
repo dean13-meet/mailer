@@ -186,6 +186,14 @@ function sendMessageToValidateUser(name)
 	getObject(name, respond, [], false, "user");
 }
 
+function retryValidation(socket, postdata, trackers)
+{
+	if(!requires(postdata, ["name"], socket))return;
+	
+	sendMessageToValidateUser(postdata.name);
+}
+exports.retryValidation = retryValidation;
+
 function verifyAuthForUserName(socket, postdata, trackers)//gives userUUID if verify success
 {
 	if(!requires(postdata, ["auth", "name"], socket))return;

@@ -307,7 +307,7 @@ function createGeofence(socket, postdata, trackers)
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	function respond(geofenceID, postdata, isRequestingNameForUser, response)
 	{
-		console.log(response);
+		//console.log(response);
 		ownerName = isRequestingNameForUser?response.value:postdata.owner
 		requesterName = isRequestingNameForUser?"":response.value
 				
@@ -339,7 +339,8 @@ function createGeofence(socket, postdata, trackers)
 		
 		function savingFunc(geofence, savingToUser, response)
 		{
-			console.log(response);
+			//console.log(response);
+			response = response.rows[0];
 			if(savingToUser)
 				{
 				response.geofences.push(geofence);
@@ -363,7 +364,7 @@ function createGeofence(socket, postdata, trackers)
 	if(!postdata.requester)//then we must fetch owner username from userUUID
 		{
 		url = usernameFromUUIDURL + "%22"+postdata.owner+"%22";
-		console.log(url);
+		//console.log(url);
 		getURL(url, respond, [geofenceID, postdata, true], false);
 		}
 	

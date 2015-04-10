@@ -290,6 +290,7 @@ function createGeofence(socket, postdata, trackers)
 	 * recs
 	 * repeat
 	 * address
+	 * userKnownIdentifier --the identifier created for the fence by the iPhone
 	 * 
 	 * 
 	 * Optional
@@ -309,7 +310,7 @@ function createGeofence(socket, postdata, trackers)
 	 */
 	
 	if(!requires(postdata, ["owner", "arrivalMessage", "leaveMessage", "lat", "long"
-	                        , "onArrival", "onLeave", "radius", "recs", "repeat", "address"], socket))return;
+	                        , "onArrival", "onLeave", "radius", "recs", "repeat", "address", "userKnownIdentifier"], socket))return;
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	function respond(geofenceID, postdata, isRequestingNameForUser, response)
@@ -322,6 +323,7 @@ function createGeofence(socket, postdata, trackers)
 		geofence = 
 			{
 				_id:geofenceID,
+				userKnownIdentifier:postdata.userKnownIdentifier,
 				arrivalMessage:postdata.arrivalMessage,
 				leaveMessage:postdata.leaveMessage,
 				lat:postdata.lat,
@@ -415,7 +417,7 @@ function getURLByIDType(idType)
 var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 
 var usersURL = baseURL + "users/";
-var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22DEMO-USERNAME%22
+var geofencesFromUserURL = baseURL + "users/_design/userDesign/_view/geofencesFromUser?include_docs=true&key=";//+%22userUUID%22
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 
 
@@ -552,6 +554,40 @@ function saveObject(object, knownType, trackerUpdates, trackers, callAfter, args
 		}
 }
 
+function deleteObject(objectID, knownType, trackerUpdates, trackers, callAfter, args)
+{
+	url = getURLForObject(objectID, knownType);
+	if(url !=="error")
+		{
+		deleteURL(url, trackerUpdates, trackers, callAfter, args);
+		}
+}
+
+function deleteURL(url, trackerUpdates, trackers, callAfter, args)
+{
+	function respond(url, trackerUpdates, trackers, callAfter, args, doc){
+		if(!doc._rev)return;
+	options = {
+			method:'DELETE',
+			url: url + "?rev="+doc._rev
+			};
+	request(options, function(err, res, body) { if (err) {
+		throw Error(err); } else {
+			//DONE
+
+			console.log("Deleted url: " + url);
+			console.log("trackers: " + trackerUpdates);
+			
+			runTrackers(trackerUpdates, trackers);
+			
+			if(callAfter)
+				callAfter.apply(this, args)
+		
+		}});
+		}
+	//must get the object b4 deleting to know the _rev
+	getURL(url, respond, [url, trackerUpdates, trackers, callAfter, args], false);
+}
 
 //NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
 function saveURL(url, json, trackerUpdates, trackers, callAfter, args)

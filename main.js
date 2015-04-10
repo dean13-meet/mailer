@@ -71,11 +71,11 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 
 server.start(router.route, handle);
 
-
+/*
 json1 = {"userUUID":"u9ekhOWbtnUiQXxxQZryoRqCLP2g7R","userKnownIdentifier":"Ku0jWFSk14x3owHPB2fycSpzWpFhrk"}
 requestHandlers.itrack.deleteGeofence(0, json1);
 
-/*
+
 json2 = {"name":"deanL", "auth":0912}
 requestHandlers.itrack.verifyAuthForUserName("", json2);
 

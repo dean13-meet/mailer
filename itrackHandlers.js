@@ -340,7 +340,7 @@ function createGeofence(socket, postdata, trackers)
 		function savingFunc(geofence, savingToUser, response)
 		{
 			//console.log(response);
-			console.log("rows thingy: " + response);
+			console.log("rows thingy: " + JSON.stringify(response));
 			response = response.rows[0];
 			if(savingToUser)
 				{

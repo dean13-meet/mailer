@@ -282,6 +282,7 @@ function createGeofence(socket, postdata, trackers)
 	 * radius
 	 * recs
 	 * repeat
+	 * address
 	 * 
 	 * 
 	 * Optional
@@ -325,7 +326,10 @@ function createGeofence(socket, postdata, trackers)
 				requestApproved:isRequestingNameForUser?"N/A":"Pending",
 				requestedBy:requesterName,
 				status:postdata.status||"Active",
-				type:"geofence"
+				type:"geofence",
+				address:postdata.address,
+				arrivalsSent:[],
+				leavesSent:[]
 			}
 		
 		//save geofence -- note, no need to update trackers as no one is possibly tracking this (it 

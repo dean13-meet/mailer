@@ -51,7 +51,7 @@ function usernameEntered(socket, postdata, trackers)//log in
 			else
 				console.log(JSON.stringify({"eventRecieved":"usernameEntered", "nameExists":true, last4DigitsOfNumber:response.number%10000}));
 			
-			sendMessageToValidateUser(name);
+			sendMessageToValidateUser(postdata.name);
 			return;
 			}
 		

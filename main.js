@@ -71,10 +71,10 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 
 server.start(router.route, handle);
 
-
+/*
 json1 = {"owner":"u9ekhOWbtnUiQXxxQZryoRqCLP2g7R","onArrival":1,"onLeave":0,"radius":100,"arrivalMessage":"I have arrived","recs":[16508627453],"leaveMessage":"I have left","repeat":1,"address":"916 Menlo Ave\nMenlo Park, CA  94025-4607\nUnited States","lat":37.44839,"long":-122.1858}
 requestHandlers.itrack.createGeofence(0, json1);
-/*
+
 json2 = {"name":"deanL", "auth":0912}
 requestHandlers.itrack.verifyAuthForUserName("", json2);
 

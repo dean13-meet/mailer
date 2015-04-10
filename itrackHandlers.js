@@ -462,7 +462,7 @@ function getGeofencesForUserUUID(socket, postdata, trackers)
 	
 	getURL(geofencesFromUserURL+"%22"+postdata.userUUID+"%22", function(socket, response){
 		
-		sendToSocket(socket, response.rows);
+		sendToSocket(socket, {"eventRecieved":"getGeofencesForUserUUID", rows:response.rows});
 		
 	}, [socket], false);
 	
@@ -483,7 +483,7 @@ function getRequestedGeofencesForUserUUID(socket, postdata, trackers)
 	
 	getURL(requestedGeofencesFromUserURL+"%22"+postdata.userUUID+"%22", function(socket, response){
 		
-		sendToSocket(socket, response.rows);
+		sendToSocket(socket,{"eventRecieved":"getRequestedGeofencesForUserUUID", rows:response.rows});
 		
 	}, [socket], false);
 	

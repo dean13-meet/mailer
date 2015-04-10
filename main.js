@@ -55,7 +55,13 @@ handle["/resturant/socketcreatequestion"] = requestHandlers.resturantApp.socketC
 handle["/resturant/setentitytohaveimage"] = requestHandlers.resturantApp.setEntityToHaveImage;
 handle["/resturant/socketgetimagefromid"] = requestHandlers.resturantApp.socketGetImageFromID;
 
-handle["/itrack/createuser"] = requestHandlers.itrack.createUser;
+//console.log(requestHandlers.itrack);
+for(funcName in requestHandlers.itrack)
+{
+//console.log(requestHandlers.itrack[funcName]);
+handle["/itrack/"+funcName.toLowerCase()] = requestHandlers.itrack[funcName];
+}
+//handle["/itrack/createuser"] = requestHandlers.itrack.createUser;
 
 
 //testing server:
@@ -66,11 +72,11 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 server.start(router.route, handle);
 
 /*
-json1 = {"imageID":"00795-ef76ea7696b1012ec2e22c1d2724ca2e", "text":"Did you enjoy our new sauce?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"}
-requestHandlers.resturantApp.createQuestion("", json1);
+json1 = {"name":"deanL", "number":6503508998, "shouldAutoCallForVerification":true}
+requestHandlers.itrack.setPhoneNumberForUserName(0, json1);
 
-json2 = {"imageID":"00795-ef76ea7696b1012ec2e22c1d2724ca2e", "text":"Did you enjoy your side dish?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc"}
-requestHandlers.resturantApp.createQuestion("", json2);
+json2 = {"name":"deanL", "auth":0912}
+requestHandlers.itrack.verifyAuthForUserName("", json2);
 
 json3 = {"text":"How was the background music?", "shouldAllowStarRating":1, "shouldAllowTextInput":1, "resturantID":"00237-e7e3e8b5789c82bcb8b58ab92b7458dc", "isResturantQuestion":"true"};
 requestHandlers.resturantApp.createQuestion("", json3);

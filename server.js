@@ -4,6 +4,8 @@
 var http = require("http");
 var url = require("url");
 var trackers = {};
+var extend = require('util')._extend;// to allow cloning of objects
+
 
 function start(route, handle) {
 	function onRequest(request, response) {
@@ -31,6 +33,46 @@ function start(route, handle) {
 	server.listen(process.env.PORT || 5000);
 	console.log("Server has started.");
 	
+	
+	 handlers = {};
+     handlers["postMessage"] = "/resturant/postmessage";
+     handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
+     handlers["getAllResturantMenu"] = "/resturant/getallresturantmenu";
+     handlers["saveResponse"] = "/resturant/saveuserresponsetoquestionbyquestionidanduserid";
+     handlers["getDesc"] = "/resturant/getDescOfID";
+     handlers["qIDSforEntity"] = "/resturant/getquestionidsforentity";
+     handlers["getQuestion"] = "/resturant/getQuestion";
+     handlers["getChatWithUser"] = "/resturant/getChatBetweenTwoUsers";
+     handlers["getCustomers"] = "/resturant/getCustomers";
+     handlers["getUserNameForResturant"] = "/resturant/getUserNameForResturant";
+     handlers["getUserOrdersAtResturant"] = "/resturant/getUserOrdersAtResturant";
+     handlers["imageIDFromEntity"] = "/resturant/imageIDFromEntity";
+     handlers["socketCreateQuestion"] = "/resturant/socketCreateQuestion";
+     handlers["setEntityToHaveImage"] = "/resturant/setEntityToHaveImage";
+     handlers["socketGetImageFromID"] = "/resturant/socketGetImageFromID";
+     
+     
+     //we are assuming that all iTrack methods accept socket, expect for those listed here:
+     itrackMethodsNotAcceptingSockets = ["sendMessage", "printTrackers", "runTrackerUpdate"]; //-- make this all lower case plz
+     
+
+     var handleCopy = extend({}, handle);//makes a copy
+     for(index in itrackMethodsNotAcceptingSockets)
+   	  {
+   	  delete handleCopy["/itrack/" + itrackMethodsNotAcceptingSockets[index]];
+   	  }
+     
+     
+     //console.log(handleCopy);
+     
+     for(string in handleCopy)//handle came from main
+   	  {
+   	  if(string.indexOf("/itrack/")!=-1)//means this is an itrack method
+   		  {
+   		  handlers[string]=string;
+   		  }
+   	  }
+     //console.log(handlers);
 	var io = require('socket.io').listen(server)
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
@@ -152,23 +194,7 @@ function start(route, handle) {
 		      }
 		  }
 
-		  handlers = {};
-	      handlers["postMessage"] = "/resturant/postmessage";
-	      handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
-	      handlers["getAllResturantMenu"] = "/resturant/getallresturantmenu";
-	      handlers["saveResponse"] = "/resturant/saveuserresponsetoquestionbyquestionidanduserid";
-	      handlers["getDesc"] = "/resturant/getDescOfID";
-	      handlers["qIDSforEntity"] = "/resturant/getquestionidsforentity";
-	      handlers["getQuestion"] = "/resturant/getQuestion";
-	      handlers["getChatWithUser"] = "/resturant/getChatBetweenTwoUsers";
-	      handlers["getCustomers"] = "/resturant/getCustomers";
-	      handlers["getUserNameForResturant"] = "/resturant/getUserNameForResturant";
-	      handlers["getUserOrdersAtResturant"] = "/resturant/getUserOrdersAtResturant";
-	      handlers["imageIDFromEntity"] = "/resturant/imageIDFromEntity";
-	      handlers["socketCreateQuestion"] = "/resturant/socketCreateQuestion";
-	      handlers["setEntityToHaveImage"] = "/resturant/setEntityToHaveImage";
-	      handlers["socketGetImageFromID"] = "/resturant/socketGetImageFromID";
-	      
+		 
 		  socket.on('default',function(event, data) {
 			  
 			  handler = handlers[event];

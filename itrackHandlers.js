@@ -313,7 +313,7 @@ function createGeofence(socket, postdata, trackers)
 	                        , "onArrival", "onLeave", "radius", "recs", "repeat", "address", "userKnownIdentifier"], socket))return;
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
-	function respond(geofenceID, postdata, isRequestingNameForUser, response)
+	function respond(geofenceID, postdata, isRequestingNameForUser, trackers, response)
 	{
 		
 		response = response.rows[0];
@@ -347,7 +347,7 @@ function createGeofence(socket, postdata, trackers)
 		// is just now being created)
 		saveObject(geofence, "geofence");
 		
-		function savingFunc(geofence, postdata, savingToUser, response)
+		function savingFunc(geofence, postdata, savingToUser, trackers, response)
 		{
 			if(savingToUser)
 				{
@@ -362,8 +362,8 @@ function createGeofence(socket, postdata, trackers)
 			
 		}
 		//save geofence to owner -- tracker update when saving
-		console.log(ownerName);
-		getObject(ownerName, savingFunc, [geofence, postdata, true], false, "user");
+		//console.log(ownerName);
+		getObject(ownerName, savingFunc, [geofence, postdata, true, trackers], false, "user");
 		if(requesterName!=="")
 			{
 			console.log("requesterName");
@@ -375,7 +375,7 @@ function createGeofence(socket, postdata, trackers)
 		{
 		url = usernameFromUUIDURL + "%22"+postdata.owner+"%22";
 		//console.log(url);
-		getURL(url, respond, [geofenceID, postdata, true], false);
+		getURL(url, respond, [geofenceID, postdata, true, trackers], false);
 		}
 	
 	else
@@ -395,11 +395,53 @@ function deleteGeofence(socket, postdata, trackers)
 	 * userKnownIdentifier
 	 */
 	
-	function respond(postdata, trackers, response)
-	{	user = response.rows[0].doc;
-		if(user.)
+	function respond(postdata, trackers, userKnownIdentifier, response)
+	{
+		user = response.rows[0].doc;
+		userOwnsFence = !!user.geofences[userKnownIdentifier];//do !! to turn to bool
+		if(!userOwnsFence && !user.requestedGeofences[userKnownIdentifier])return;//user has no relationship to this fence
+		
+		//first get the geofence object so that later we know owner/requester
+		getObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
+				
+		function(postdata, trackers, response, geofence){
+			
+			//delete the geofence object
+			deleteObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
+					"geofence");//no need to tracker update, tracker updates will be sent out once we update that the
+			//fence is gone in the user.geofences/user.requestedFences
+			
+			function removeFenceFromUser(geofence, postdata, removingFromOwner, response)
+		{
+			if(removingFromOwner)
+				{
+				delete response.geofences[postdata.userKnownIdentifier];
+				}
+			else
+				{
+				delete response.requestedGeofences[postdata.userKnownIdentifier];
+				}
+			saveObject(response, "user", [response.UUID+(removingFromOwner?"/geofences":"/requestedGeofences")], trackers
+					);//sending updates based on userUUID
+			
+		}
+			getObject(geofence.owner, removeFenceFromUser, [geofence, postdata, true], false, "user");
+			if(geofence.requestedBy!=="")
+				{
+				getObject(geofence.requestedBy, removeFenceFromUser, [geofence, postdata, false], false, "user");
+				}
+			
+			
+		},[postdata, trackers, response], false, "geofence"	
+		);
+		
+		
 	}
+	
+	url = userobjectFromUUIDURL + "%22"+postdata.userUUID+"%22";
+	getURL(url, respond, [postdata, trackers, postdata.userKnownIdentifier], false);
 }
+exports.deleteGeofence = deleteGeofence;
 
 //helper methods:
 

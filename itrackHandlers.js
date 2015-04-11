@@ -148,16 +148,35 @@ function setPhoneNumberForUserName(socket, postdata, trackers)
 				}
 			else//no number set
 				{
-				user.number = postdata.number;
-				if(socket)
-					socket.send(JSON.stringify({"eventRecieved":"setPhoneNumber", "success":true}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
-				else
-					console.log(JSON.stringify({"eventRecieved":"setPhoneNumber", "success":true}));
-				saveObject(user, "user", false , false, 
-						postdata.shouldAutoCallForVerification ? 
-								function (name){sendMessageToValidateUser(name)}:false,
-								[postdata.name]);
-				//sync-call message verification only after save of new number completes.
+				
+				//check if anyone else has that number:
+				
+				function respond2(user, postdata, socket, response)
+				{
+					
+					if(response.rows.count==0){
+					user.number = postdata.number;
+					if(socket)
+						socket.send(JSON.stringify({"eventRecieved":"setPhoneNumber", "success":true}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description
+					else
+						console.log(JSON.stringify({"eventRecieved":"setPhoneNumber", "success":true}));
+					saveObject(user, "user", false , false, 
+							postdata.shouldAutoCallForVerification ? 
+									function (name){sendMessageToValidateUser(name)}:false,
+									[postdata.name]);
+					//sync-call message verification only after save of new number completes.
+					}
+					else
+						{
+						sendToSocket(socket, {"eventRecieved":"setPhoneNumber", "success":false, "reason":"number_taken"});
+						return;
+						}
+				}
+				
+				getURL(userFromNumber+"%22"+postdata.number+"%22", respond2, [user, postdata, socket], false);
+				
+				
+				
 				}
 			}
 	}
@@ -538,6 +557,8 @@ var requestedGeofencesFromUserURL = baseURL + "users/_design/userDesign/_view/re
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 var userobjectFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?include_docs=true&key=";//+%22userUUID%22
 var geofenceFromUserKnownIdentifier = baseURL + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";//+%22userKnownIdentifier%22"
+var userFromNumber = baseURL + "users/_design/userDesign/_view/userByNumber?key=";//+%22number%22
+
 
 function getURLForObject(objectID, knownType)
 {

@@ -745,6 +745,7 @@ function runTrackers(trackerUpdates, trackers)
 		tracker = trackerUpdates[i];
 		console.log("Tracker updated: " + tracker);
 		clients = trackers[tracker];
+		console.log("all trackers: " + JSON.stringify(trackers));
 		if(clients)
 			{
 			for (var key in clients) {

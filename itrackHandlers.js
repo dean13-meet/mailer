@@ -319,7 +319,8 @@ function createGeofence(socket, postdata, trackers)
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	
-	console.log("trackers we got: " + JSON.stringify(trackers));
+	console.log("trackers we got: " + trackers);
+	console.log(trackers);
 	function respond(geofenceID, postdata, isRequestingNameForUser, trackers, response)
 	{
 		

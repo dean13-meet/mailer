@@ -536,7 +536,7 @@ function userNameFromQuery(socket, postdata, trackers)
 		}
 		else
 			{
-			sendToSocket(socket, {"eventRecieved":"userNameFromQuery:"+postdata.number, "success":true, "username":rows[0].id});
+			sendToSocket(socket, {"eventRecieved":"userNameFromQuery:"+postdata.number, "success":true, "username":response.rows[0].id});
 			return;
 			}
 	}

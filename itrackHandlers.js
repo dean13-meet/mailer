@@ -95,7 +95,7 @@ function createUser(socket, postdata, trackers)//sign up
 			else
 				console.log(JSON.stringify({"eventRecieved":"createUser", "success":true}));
 			
-			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:{}, requestedGeofences:{}, number:null, type:"user"}, "user");
+			saveObject({_id:name, UUID: createAuth(30), auth:null, geofences:{}, requestedGeofences:{}, number:null, type:"user", updates:[]}, "user");
 			}
 		else//username taken
 			{

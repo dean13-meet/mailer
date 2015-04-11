@@ -153,7 +153,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers)
 				
 				function respond2(user, postdata, socket, response)
 				{
-					console.log("response: " + JSON.stringify(response));
+					//console.log("response: " + JSON.stringify(response));
 					if(response.rows.length==0){
 					user.number = postdata.number;
 					if(socket)
@@ -173,7 +173,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers)
 						}
 				}
 				
-				getURL(userFromNumber+"%22"+postdata.number+"%22", respond2, [user, postdata, socket], false);
+				getURL(userFromNumber+postdata.number, respond2, [user, postdata, socket], false);
 				
 				
 				
@@ -513,6 +513,39 @@ function getRequestedGeofencesForUserUUID(socket, postdata, trackers)
 exports.getRequestedGeofencesForUserUUID = getRequestedGeofencesForUserUUID;
 
 //Send Requests to Others
+
+function userNameFromQuery(socket, postdata, trackers)
+{
+/*
+ * Postdata
+ * 
+ * Required
+ * number
+ * 
+ */
+	if(!requires(postdata, ["number"], socket))return;
+	
+	function respond(postdata, socket, response)
+	{
+		//console.log("response: " + JSON.stringify(response));
+		if(response.rows.length==0){
+			sendToSocket(socket, {"eventRecieved":"userNameFromQuery:"+postdata.number, "success":false, "reason":"doesn't_exist"});
+			return;
+		}
+		else
+			{
+			sendToSocket(socket, {"eventRecieved":"userNameFromQuery:"+postdata.number, "success":true, "username":rows[0].id});
+			return;
+			}
+	}
+	
+	getURL(userFromNumber+postdata.number, respond, [postdata, socket], false);
+	
+}
+exports.userNameFromQuery;
+
+
+
 function requestGeofence(socket, postdata, trackers)
 {
 	
@@ -557,7 +590,7 @@ var requestedGeofencesFromUserURL = baseURL + "users/_design/userDesign/_view/re
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 var userobjectFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?include_docs=true&key=";//+%22userUUID%22
 var geofenceFromUserKnownIdentifier = baseURL + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";//+%22userKnownIdentifier%22"
-var userFromNumber = baseURL + "users/_design/userDesign/_view/userByNumber?key=";//+%22number%22
+var userFromNumber = baseURL + "users/_design/userDesign/_view/userByNumber?key=";//+number (NOTE: no need for %22 - this is a number not string)
 
 
 function getURLForObject(objectID, knownType)

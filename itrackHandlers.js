@@ -396,7 +396,7 @@ function createGeofence(socket, postdata, trackers)
 			getObject(requesterName, savingFunc, [geofence, postdata, false, trackers], false, "user");
 			}
 	}
-	//finding username:
+	//finding username
 	if(!postdata.requester)//then we must fetch owner username from userUUID
 		{
 		url = usernameFromUUIDURL + "%22"+postdata.owner+"%22";
@@ -404,9 +404,11 @@ function createGeofence(socket, postdata, trackers)
 		getURL(url, respond, [geofenceID, postdata, true, trackers], false);
 		}
 	
-	else
+	else//then we must fetch requester name from userUUID
 		{
-		//to deal with soon enough...
+		url = usernameFromUUIDURL + "%22"+postdata.requester+"%22";
+		//console.log(url);
+		getURL(url, respond, [geofenceID, postdata, false, trackers], false);
 		}
 }
 exports.createGeofence = createGeofence;
@@ -548,8 +550,45 @@ exports.userNameFromQuery;
 
 function requestGeofence(socket, postdata, trackers)
 {
+	/*
+	 * PostData:
+	 * Required
+	 * owner - username (this is the person we are requesting from)
+	 * requester - userUUID (this is us)
+	 * arrivalMessage
+	 * leaveMessage
+	 * lat
+	 * long
+	 * onArrival
+	 * onLeave
+	 * radius
+	 * repeat
+	 * address
+	 * userKnownIdentifier --the identifier created for the fence by the iPhone
+	 * 
+	 * 
+	 * Optional
+	 * status - automatically active if this is left blank
+	 * 
+	 * NOTE: createGeofences requires "recs" ------ when requestingGeofence, the only person to be in "recs"
+	 * is the requester. Therefore, do not pass "recs" in postdata as this method will automatically create
+	 * an array with just the requester's number.
+	 * 
+	 */
 	
+	if(!requires(postdata, ["owner", "arrivalMessage", "leaveMessage", "lat", "long"
+	                        , "onArrival", "onLeave", "radius", "requester", "repeat", "address", "userKnownIdentifier"], socket))return;
+	
+	//get requester number:
+	function respond(postdata, socket, trackers, response)
+	{
+		if(!response.number)return;//some error occured!
+		postdata.recs = [response.number];
+		createGeofence(socket, postdata, trackers);
+	}
+	getObject(postdata.requester, respond, [postdata, socket, trackers], false, "user");
 }
+exports.requestGeofence = requestGeofence;
 
 
 

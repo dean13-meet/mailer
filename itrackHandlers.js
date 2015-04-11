@@ -383,7 +383,7 @@ function createGeofence(socket, postdata, trackers)
 				{
 				response.requestedGeofences[postdata.userKnownIdentifier] = geofence._id;
 				}
-			saveObject(response, "user", [response.UUID+(savingToUser?"/geofences":"/requestedGeofences")], trackers
+			saveObject(response, "user", [response.UUID+(savingToOwner?"/geofences":"/requestedGeofences")], trackers
 					);//sending updates based on userUUID
 			
 		}

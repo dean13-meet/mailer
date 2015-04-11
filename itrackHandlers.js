@@ -154,7 +154,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers)
 				function respond2(user, postdata, socket, response)
 				{
 					console.log("response: " + JSON.stringify(response));
-					if(response.rows.count==0){
+					if(response.rows.length==0){
 					user.number = postdata.number;
 					if(socket)
 						socket.send(JSON.stringify({"eventRecieved":"setPhoneNumber", "success":true}));//must include id describing - many descriptors are listening on other side, need them to know who gets the description

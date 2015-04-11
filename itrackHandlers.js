@@ -582,11 +582,12 @@ function requestGeofence(socket, postdata, trackers)
 	//get requester number:
 	function respond(postdata, socket, trackers, response)
 	{
+		response = response.rows[0].doc;
 		if(!response.number)return;//some error occured!
 		postdata.recs = [response.number];
 		createGeofence(socket, postdata, trackers);
 	}
-	getObject(postdata.requester, respond, [postdata, socket, trackers], false, "user");
+	getURL(userobjectFromUUIDURL+"%22"+postdata.requester+"%22", respond, [postdata, socket, trackers], false);
 }
 exports.requestGeofence = requestGeofence;
 

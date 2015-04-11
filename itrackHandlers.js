@@ -544,7 +544,7 @@ function userNameFromQuery(socket, postdata, trackers)
 	getURL(userFromNumber+postdata.number, respond, [postdata, socket], false);
 	
 }
-exports.userNameFromQuery;
+exports.userNameFromQuery = userNameFromQuery;
 
 
 

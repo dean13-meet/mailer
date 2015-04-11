@@ -373,9 +373,9 @@ function createGeofence(socket, postdata, trackers)
 		// is just now being created)
 		saveObject(geofence, "geofence");
 		
-		function savingFunc(geofence, postdata, savingToUser, trackers, response)
+		function savingFunc(geofence, postdata, savingToOwner, trackers, response)
 		{
-			if(savingToUser)
+			if(savingToOwner)
 				{
 				response.geofences[postdata.userKnownIdentifier] = geofence._id;
 				}

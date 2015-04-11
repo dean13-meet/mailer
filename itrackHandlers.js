@@ -153,7 +153,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers)
 				
 				function respond2(user, postdata, socket, response)
 				{
-					
+					console.log("response: " + JSON.stringify(response));
 					if(response.rows.count==0){
 					user.number = postdata.number;
 					if(socket)

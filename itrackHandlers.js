@@ -9,7 +9,7 @@ function requires(postdata, listOfStrings, socket)
 		stringToCheck = listOfStrings[index];
 		if(!postdata.hasOwnProperty(stringToCheck))//so that we can take things like "0" or "false"
 			{
-			console.log("missing " + stringToCheck);
+			//console.log("missing " + stringToCheck);
 			sendToSocket(socket, 
 					{"error": "Missing info", "data received" : postdata, "missing":stringToCheck});
 			return false;
@@ -319,7 +319,7 @@ function createGeofence(socket, postdata, trackers)
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
 	
-	console.log("trackers we got: " + JSON.stringify(trackers["u9ekhOWbtnUiQXxxQZryoRqCLP2g7R/geofences"]))
+	//console.log("trackers we got: " + JSON.stringify(trackers["u9ekhOWbtnUiQXxxQZryoRqCLP2g7R/geofences"]))
 	function respond(geofenceID, postdata, isRequestingNameForUser, trackers, response)
 	{
 		
@@ -747,7 +747,7 @@ function runTrackers(trackerUpdates, trackers)
 		tracker = trackerUpdates[i];
 		console.log("Tracker updated: " + tracker);
 		clients = trackers[tracker];
-		console.log("all trackers: " + JSON.stringify(trackers));
+		//console.log("all trackers: " + JSON.stringify(trackers));
 		if(clients)
 			{
 			for (var key in clients) {

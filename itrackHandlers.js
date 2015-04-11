@@ -541,7 +541,7 @@ function userNameFromQuery(socket, postdata, trackers)
 			}
 	}
 	
-	getURL(userFromNumber+postdata.number, respond, [postdata, socket], false);
+	getURL(userFromNumber+"%22"+postdata.number+"%22", respond, [postdata, socket], false);
 	
 }
 exports.userNameFromQuery = userNameFromQuery;
@@ -629,7 +629,7 @@ var requestedGeofencesFromUserURL = baseURL + "users/_design/userDesign/_view/re
 var usernameFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?key=";//+%22userUUID%22
 var userobjectFromUUIDURL = baseURL + "users/_design/userDesign/_view/UUIDtoUsername?include_docs=true&key=";//+%22userUUID%22
 var geofenceFromUserKnownIdentifier = baseURL + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";//+%22userKnownIdentifier%22"
-var userFromNumber = baseURL + "users/_design/userDesign/_view/userByNumber?key=";//+number (NOTE: no need for %22 - this is a number not string)
+var userFromNumber = baseURL + "users/_design/userDesign/_view/userByNumber?key=";//+%22number%22
 
 
 function getURLForObject(objectID, knownType)

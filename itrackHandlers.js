@@ -318,6 +318,8 @@ function createGeofence(socket, postdata, trackers)
 	                        , "onArrival", "onLeave", "radius", "recs", "repeat", "address", "userKnownIdentifier"], socket))return;
 	
 	geofenceID = "GEOFENCE-"+createAuth(30);
+	
+	console.log("trackers we got: " + JSON.stringify(trackers));
 	function respond(geofenceID, postdata, isRequestingNameForUser, trackers, response)
 	{
 		
@@ -372,7 +374,7 @@ function createGeofence(socket, postdata, trackers)
 		if(requesterName!=="")
 			{
 			console.log("requesterName");
-			getObject(requesterName, savingFunc, [geofence, postdata, false], false, "user");
+			getObject(requesterName, savingFunc, [geofence, postdata, false, trackers], false, "user");
 			}
 	}
 	//finding username:

@@ -609,14 +609,27 @@ function deleteGeofence(socket, postdata, trackers) {
 										: "/requestedGeofences") ], trackers,
 								function(removingFromOwner, response2, user,
 										geofence, trackers) {
-									if (!removingFromOwner) {
+									if (!removingFromOwner && geofence.requestedBy!=user._id) {
+										//we are removing from requester, and the person removing is not the requester 
+										//then we must notify the requester that their fence was removed
 										createUpdate(response2, 0, 0, {
-											"updateName" : "deletedGeofence",
+											"updateName" : "deletedGeofenceByOwner",
 											"deletedBy" : user._id,
-											"geofenceID" : geofence._id
+											"geofence" : geofence
 										}, trackers);
 									}
-								}, [ removingFromOwner, response2, user,
+									else if
+									(removingFromOwner && geofence.owner!=user._id) {
+										//we are removing from owner, and the person removing is not the owner 
+										//then we must notify the owner that their fence was removed
+										createUpdate(response2, 0, 0, {
+											"updateName" : "deletedGeofenceByRequester",
+											"deletedBy" : user._id,
+											"geofence" : geofence
+										}, trackers);
+										
+									}
+									}, [ removingFromOwner, response2, user,
 										geofence, trackers ]);
 					}
 					getObject(geofence.owner, removeFenceFromUser, [ geofence,

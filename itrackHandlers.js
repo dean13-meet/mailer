@@ -417,7 +417,9 @@ function createGeofence(socket, postdata, trackers)
 		//save geofence -- note, no need to update trackers as no one is possibly tracking this (it 
 		// is just now being created)
 		//just make sure that if its being requested, then an update is launched
-		saveObject(geofence, "geofence", 0, 0, function(isRequestingNameForUser, postdata, requesterName, geofenceID, trackers){if(!isRequestingNameForUser)
+		saveObject(geofence, "geofence", 0, 0, 
+				function(isRequestingNameForUser, postdata, requesterName, geofenceID, trackers){
+			if(!isRequestingNameForUser)
 		{
 			createUpdate(0, postdata.owner, 0, {
 				"updateName":"requestedGeofence", 
@@ -495,7 +497,7 @@ function deleteGeofence(socket, postdata, trackers)
 					"geofence");//no need to tracker update, tracker updates will be sent out once we update that the
 			//fence is gone in the user.geofences/user.requestedFences
 			
-			function removeFenceFromUser(geofence, postdata, removingFromOwner, user, response2, trackers)
+			function removeFenceFromUser(geofence, postdata, removingFromOwner, user, trackers, response2)
 		{
 			if(removingFromOwner)
 				{

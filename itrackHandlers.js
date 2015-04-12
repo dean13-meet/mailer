@@ -484,14 +484,15 @@ function deleteGeofence(socket, postdata, trackers)
 	function respond(postdata, trackers, userKnownIdentifier, response)
 	{
 		user = response.rows[0].doc;
-		userOwnsFence = !!user.geofences[userKnownIdentifier];//do !! to turn to bool
+		userOwnsFence = !(!user.geofences[userKnownIdentifier]);//do !(!..) to turn to bool -> not(not...) = ... (bool form)
 		if(!userOwnsFence && !user.requestedGeofences[userKnownIdentifier])return;//user has no relationship to this fence
 		
 		//first get the geofence object so that later we know owner/requester
 		getObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
 				
-		function(postdata, trackers, user, geofence){
+		function(postdata, trackers, user, userKnownIdentifier, geofence){
 			
+			console.log("Deleting: " + JSON.stringify(geofence));
 			//delete the geofence object
 			deleteObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
 					"geofence");//no need to tracker update, tracker updates will be sent out once we update that the
@@ -526,7 +527,7 @@ function deleteGeofence(socket, postdata, trackers)
 				}
 			
 			
-		},[postdata, trackers, user], false, "geofence"	
+		},[postdata, trackers, user, userKnownIdentifier], false, "geofence"	
 		);
 		
 		

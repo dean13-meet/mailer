@@ -270,6 +270,12 @@ exports.sendMessage = sendMessage
 //Updates for user
 function createUpdate(userObject, name, userUUID, update, trackers)
 {
+	
+	console.log("createUpdate");
+	console.log(name);
+	console.log(userUUID);
+	console.log(userObject);
+	console.log(JSON.stringify(update));
 	//You can send either userObject, name, or userUUID - the first one that is non-nil will be used.
 	
 	if(userObject)

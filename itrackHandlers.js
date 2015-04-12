@@ -384,14 +384,14 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	update.updateID = updateID;
 
 	if (userObject) {
-		userObject.updates.push(update);
+		userObject.updates[updateID] = update;
 		console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
 				trackers);
 	}
 	else if (name) {
 		function respondName(update, trackers, response) {
-			response.updates.push(update);
+			response.updates[updateID] = update;
 			saveObject(response, "user", [ response.UUID + "/updates" ],
 					trackers);
 
@@ -401,7 +401,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (userUUID) {
 		function respondUserUUID(update, trackers, response) {
 			user = response.rows[0].doc;
-			user.updates.push(update);
+			user.updates[updateID] = update;
 			saveObject(user, "user", [ user.UUID + "/updates" ], trackers);
 		}
 		url = userobjectFromUUIDURL + "%22" + userUUID + "%22";

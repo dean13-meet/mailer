@@ -488,14 +488,14 @@ function deleteGeofence(socket, postdata, trackers)
 		//first get the geofence object so that later we know owner/requester
 		getObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
 				
-		function(postdata, trackers, response, geofence){
+		function(postdata, trackers, user, geofence){
 			
 			//delete the geofence object
 			deleteObject(userOwnsFence?user.geofences[userKnownIdentifier]:user.requestedGeofences[userKnownIdentifier], 
 					"geofence");//no need to tracker update, tracker updates will be sent out once we update that the
 			//fence is gone in the user.geofences/user.requestedFences
 			
-			function removeFenceFromUser(geofence, postdata, removingFromOwner, response2)
+			function removeFenceFromUser(geofence, postdata, removingFromOwner, user, response2, trackers)
 		{
 			if(removingFromOwner)
 				{
@@ -505,18 +505,26 @@ function deleteGeofence(socket, postdata, trackers)
 				{
 				delete response2.requestedGeofences[postdata.userKnownIdentifier];
 				}
-			saveObject(response2, "user", [response2.UUID+(removingFromOwner?"/geofences":"/requestedGeofences")], trackers
-					);//sending updates based on userUUID
-			
+			saveObject(response2, "user", [response2.UUID+(removingFromOwner?"/geofences":"/requestedGeofences")], trackers,
+					function(removingFromOwner, response2, user, geofence, trackers){
+				if(!removingFromOwner)
+					{
+						createUpdate(response2, 0, 0, {
+							"updateName":"deletedGeofence", 
+							"deletedBy":user._id,
+							"geofenceID":geofence._id
+							}, trackers);
+						}}, [removingFromOwner, response2, user, geofence, trackers]
+					);
 		}
-			getObject(geofence.owner, removeFenceFromUser, [geofence, postdata, true], false, "user");
+			getObject(geofence.owner, removeFenceFromUser, [geofence, postdata, true, user, trackers], false, "user");
 			if(geofence.requestedBy!=="")
 				{
-				getObject(geofence.requestedBy, removeFenceFromUser, [geofence, postdata, false], false, "user");
+				getObject(geofence.requestedBy, removeFenceFromUser, [geofence, postdata, false, user, trackers], false, "user");
 				}
 			
 			
-		},[postdata, trackers, response], false, "geofence"	
+		},[postdata, trackers, user], false, "geofence"	
 		);
 		
 		

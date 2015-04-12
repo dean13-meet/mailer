@@ -267,6 +267,43 @@ function sendMessage(response, postData)
 }
 exports.sendMessage = sendMessage
 
+//Updates for user
+function createUpdate(userObject, name, userUUID, update, trackers)
+{
+	//You can send either userObject, name, or userUUID - the first one that is non-nil will be used.
+	
+	if(userObject)
+		{
+		userObject.updates.push(update);
+		saveObject(userObject, "user", [userObject.UUID+"/updates"], trackers);
+		return;
+		}
+	if(name)
+		{
+		function respondName(update, trackers, response)
+		{
+			response.updates.push(update);
+			saveObject(response, "user", [response.UUID+"/updates"], trackers);
+			
+		}
+		getObject(name, respondName, [update, trackers], false, "user");
+		return;
+		}
+	if(userUUID)
+		{
+		function respondUserUUID(update, trackers, response)
+		{
+			user = response.rows[0].doc;
+			user.updates.push(update);
+			saveObject(user, "user", [user.UUID+"/updates"], trackers);
+		}
+		url = userobjectFromUUIDURL + "%22"+userUUID+"%22";
+		getURL(url, respondUserUUID, [update, trackers], false);
+		}
+	
+}
+
+
 
 //Sync Geofences
 /*
@@ -345,6 +382,8 @@ function createGeofence(socket, postdata, trackers)
 		response = response.rows[0];
 		ownerName = isRequestingNameForUser?response.value._id:postdata.owner
 		requesterName = isRequestingNameForUser?"":response.value._id
+			
+		
 				
 		geofence = 
 			{
@@ -371,7 +410,17 @@ function createGeofence(socket, postdata, trackers)
 		
 		//save geofence -- note, no need to update trackers as no one is possibly tracking this (it 
 		// is just now being created)
-		saveObject(geofence, "geofence");
+		//just make sure that if its being requested, then an update is launched
+		saveObject(geofence, "geofence", 0, 0, function(isRequestingNameForUser, postdata, requesterName, geofenceID, trackers){if(!isRequestingNameForUser)
+		{
+			createUpdate(0, postdata.owner, 0, {
+				"updateName":"requestedGeofence", 
+				"requester":requesterName,
+				"geofenceID":geofenceID
+				}, trackers);
+			}}, [isRequestingNameForUser, postdata, requesterName, geofenceID, trackers]);
+		
+		
 		
 		function savingFunc(geofence, postdata, savingToOwner, trackers, response)
 		{
@@ -409,6 +458,7 @@ function createGeofence(socket, postdata, trackers)
 		url = usernameFromUUIDURL + "%22"+postdata.requester+"%22";
 		//console.log(url);
 		getURL(url, respond, [geofenceID, postdata, false, trackers], false);
+		
 		}
 }
 exports.createGeofence = createGeofence;
@@ -468,6 +518,13 @@ function deleteGeofence(socket, postdata, trackers)
 	
 	url = userobjectFromUUIDURL + "%22"+postdata.userUUID+"%22";
 	getURL(url, respond, [postdata, trackers, postdata.userKnownIdentifier], false);
+	
+	
+	//REMEMBER::::
+	/*
+	 * If deleting a fence with a requester, send an "update" to the requester to notify them (we want them to 
+	 * see a popup when they log in next time)!
+	 */
 }
 exports.deleteGeofence = deleteGeofence;
 

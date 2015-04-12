@@ -381,6 +381,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 
 	if (userObject) {
 		userObject.updates.push(update);
+		console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
 				trackers);
 		return;

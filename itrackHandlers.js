@@ -611,7 +611,7 @@ function deleteGeofence(socket, postdata, trackers) {
 									if (!removingFromOwner && geofence.requestedBy!=user._id) {
 										//we are removing from requester, and the person removing is not the requester 
 										//then we must notify the requester that their fence was removed
-										createUpdate(response2, 0, 0, {
+										createUpdate(0, response2._id, 0, {
 											"updateName" : "deletedGeofenceByOwner",
 											"deletedBy" : user._id,
 											"geofence" : geofence
@@ -621,7 +621,7 @@ function deleteGeofence(socket, postdata, trackers) {
 									(removingFromOwner && geofence.owner!=user._id) {
 										//we are removing from owner, and the person removing is not the owner 
 										//then we must notify the owner that their fence was removed
-										createUpdate(response2, 0, 0, {
+										createUpdate(0,response2._id, 0, {
 											"updateName" : "deletedGeofenceByRequester",
 											"deletedBy" : user._id,
 											"geofence" : geofence

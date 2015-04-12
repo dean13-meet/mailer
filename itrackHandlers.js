@@ -409,7 +409,78 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	}
 }
 
-function 
+function getUpdatesForUser(socket, postdata, trackers)
+{
+
+	/*
+	 * Postdata
+	 * Required
+	 * userUUID
+	 */
+	
+	if (!requires(postdata, [ "userUUID" ], socket))
+		return;
+	
+	function respond(response)
+	{
+		if(response.rows.length==0)
+			{//no user for this userUUID
+			
+			sendToSocket(socket, {
+				"eventRecieved" : "getUpdatesForUser",
+				success:false, "reason":"invalid_userUUID"
+			});
+			return;
+			}
+			
+		user = response.rows[0].doc;
+		sendToSocket(socket, {
+			"eventRecieved" : "getUpdatesForUser",
+			success:true, "updates":user.updates
+		});
+		
+	}
+	
+	url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
+	// console.log(url);
+	getURL(url, respond, [], false);
+	
+}
+exports.getUpdatesForUser = getUpdatesForUser;
+
+function dismissUpdateForUser(socket, postdata, trackers)
+{
+	//NOTE: Doesn't send update to trackers (since you are supposed to know that you deleted this update...)
+/*
+ * Postdata
+ * Required
+ * userUUID
+ * updateID
+ */	
+	if (!requires(postdata, [ "userUUID" , "updateID"], socket))
+		return;
+	
+	function respond(response)
+	{
+		if(response.rows.length==0)
+			{//no user for this userUUID
+			return;
+			}
+			
+		user = response.rows[0].doc;
+		if(!user.updates[updateID])return;
+		delete user.updates[updateID];
+		
+		saveObject(user, "user")
+		
+	}
+	
+	url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
+	// console.log(url);
+	getURL(url, respond, [], false);
+	
+}
+exports.dismissUpdateForUser = dismissUpdateForUser;
 
 
 // Sync Geofences

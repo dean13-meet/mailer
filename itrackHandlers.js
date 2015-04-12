@@ -545,14 +545,14 @@ function createGeofence(socket, postdata, trackers) {// currently only
 	// finding username
 	if (!postdata.requester)// then we must fetch owner username from userUUID
 	{
-		url = usernameFromUUIDURL + "%22" + postdata.owner + "%22";
+		url = userobjectFromUUIDURL + "%22" + postdata.owner + "%22";
 		// console.log(url);
 		getURL(url, respond, [ geofenceID, postdata, true, trackers ], false);
 	}
 
 	else// then we must fetch requester name from userUUID
 	{
-		url = usernameFromUUIDURL + "%22" + postdata.requester + "%22";
+		url = userobjectFromUUIDURL + "%22" + postdata.requester + "%22";
 		// console.log(url);
 		getURL(url, respond, [ geofenceID, postdata, false, trackers ], false);
 

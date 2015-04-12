@@ -378,6 +378,10 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	console.log(JSON.stringify(update));
 	// You can send either userObject, name, or userUUID - the first one that is
 	// non-nil will be used.
+	
+	//Create an id for the update:
+	updateID = createAuth(30);
+	update.updateID = updateID;
 
 	if (userObject) {
 		userObject.updates.push(update);
@@ -403,8 +407,9 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		url = userobjectFromUUIDURL + "%22" + userUUID + "%22";
 		getURL(url, respondUserUUID, [ update, trackers ], false);
 	}
-
 }
+
+
 
 // Sync Geofences
 /*

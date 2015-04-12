@@ -384,9 +384,8 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
 				trackers);
-		return;
 	}
-	if (name) {
+	else if (name) {
 		function respondName(update, trackers, response) {
 			response.updates.push(update);
 			saveObject(response, "user", [ response.UUID + "/updates" ],
@@ -394,9 +393,8 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 
 		}
 		getObject(name, respondName, [ update, trackers ], false, "user");
-		return;
 	}
-	if (userUUID) {
+	else if (userUUID) {
 		function respondUserUUID(update, trackers, response) {
 			user = response.rows[0].doc;
 			user.updates.push(update);

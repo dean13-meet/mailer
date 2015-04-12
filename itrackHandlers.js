@@ -489,17 +489,17 @@ function deleteGeofence(socket, postdata, trackers)
 					"geofence");//no need to tracker update, tracker updates will be sent out once we update that the
 			//fence is gone in the user.geofences/user.requestedFences
 			
-			function removeFenceFromUser(geofence, postdata, removingFromOwner, response)
+			function removeFenceFromUser(geofence, postdata, removingFromOwner, response2)
 		{
 			if(removingFromOwner)
 				{
-				delete response.geofences[postdata.userKnownIdentifier];
+				delete response2.geofences[postdata.userKnownIdentifier];
 				}
 			else
 				{
-				delete response.requestedGeofences[postdata.userKnownIdentifier];
+				delete response2.requestedGeofences[postdata.userKnownIdentifier];
 				}
-			saveObject(response, "user", [response.UUID+(removingFromOwner?"/geofences":"/requestedGeofences")], trackers
+			saveObject(response2, "user", [response2.UUID+(removingFromOwner?"/geofences":"/requestedGeofences")], trackers
 					);//sending updates based on userUUID
 			
 		}
@@ -519,7 +519,7 @@ function deleteGeofence(socket, postdata, trackers)
 	url = userobjectFromUUIDURL + "%22"+postdata.userUUID+"%22";
 	getURL(url, respond, [postdata, trackers, postdata.userKnownIdentifier], false);
 	
-	
+	//TODO
 	//REMEMBER::::
 	/*
 	 * If deleting a fence with a requester, send an "update" to the requester to notify them (we want them to 

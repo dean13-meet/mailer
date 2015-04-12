@@ -409,6 +409,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	}
 }
 
+function 
 
 
 // Sync Geofences
@@ -512,16 +513,16 @@ function createGeofence(socket, postdata, trackers) {// currently only
 		// just make sure that if its being requested, then an update is
 		// launched
 		saveObject(geofence, "geofence", 0, 0, function(
-				isRequestingNameForUser, postdata, requesterName, geofenceID,
+				isRequestingNameForUser, postdata, requesterName, geofence,
 				trackers) {
 			if (!isRequestingNameForUser) {
 				createUpdate(0, postdata.owner, 0, {
 					"updateName" : "requestedGeofence",
 					"requester" : requesterName,
-					"geofenceID" : geofenceID
+					"geofence" : geofence
 				}, trackers);
 			}
-		}, [ isRequestingNameForUser, postdata, requesterName, geofenceID,
+		}, [ isRequestingNameForUser, postdata, requesterName, geofence,
 				trackers ]);
 
 		function savingFunc(geofence, postdata, savingToOwner, trackers,

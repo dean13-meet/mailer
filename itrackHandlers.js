@@ -913,7 +913,7 @@ function acceptGeofence(socket, postdata, trackers)
 			console.log(5);
 			if(!geofence.requestedBy)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
 			console.log(4);
-			geofence.requestAccepted = "Accepted";
+			geofence.requestApproved = "Accepted";
 			console.log(JSON.stringify(geofence));
 			saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
 					trackers,function(

@@ -376,6 +376,7 @@ exports.sendMessage = sendMessage
  * -deletedGeofenceByOwner
  * -deletedGeofenceByRequester
  * -requestedGeofence
+ * -requestedGeofenceAccepted
  * 
  */
 function createUpdate(userObject, name, userUUID, update, trackers) {
@@ -524,7 +525,7 @@ exports.dismissUpdateForUser = dismissUpdateForUser;
  * 
  * 
  * //Trackers: trackers will be sent by userUUID if a geofence is
- * created/deleted. trackers will be sent by geofence userKnownIdentifier if a
+ * created/deleted/accepted/declined. trackers will be sent by geofence userKnownIdentifier if a
  * geofence is modified.
  * 
  * BIG NOTE:::: For now, we just overwrite changes to a geofence - no checking
@@ -878,6 +879,64 @@ function requestGeofence(socket, postdata, trackers) {
 			respondRequest, [ postdata, socket, trackers ], false);
 }
 exports.requestGeofence = requestGeofence;
+
+function acceptGeofence(socket, postdata, trackers)
+{
+	//For user accepting - tracker updates sent
+	//For requesting user - createUpdate sent
+	
+	//This is because the accepting user already knows the fence is being accepted and so they
+	//expect their mapview to auto update. However, the requesting user doesn't yet know their
+	//fence was accepted.
+	
+	
+	/*
+	 * Postdata
+	 * userUUID - owner (person accepting)
+	 * geofenceID
+	 */
+	
+	if (!requires(postdata, [ "userUUID", "geofenceID" ], socket))
+	              		return;
+	
+	function respond(postdata, trackers, geofence)
+	{
+		
+		function respond2(postdata, trackers, geofence, response)
+		{
+			if(response.rows.count==0)return;//user trying to accept geofence doesn't exist (userUUID doesn't match any user)
+			user = response.rows[0].doc;
+			
+			if(user.name != geofence.owner)return;//if the user trying to accept this geofence isn't the owner then don't allow them...
+			if(!geofence.requester)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
+			
+			geofence.requestAccepted = "Accepted";
+			saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
+					trackers,function(
+							geofence, trackers) {
+							createUpdate(0, geofence.requester, 0, {
+								"updateName" : "requestedGeofenceAccepted",
+								"geofence" : geofence
+							}, trackers);
+					}, [ geofence, trackers ]
+			);
+		}
+		
+		url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
+		getURL(url, respond2, [ postdata, trackers, geofence ], false);
+		
+	}
+	
+	getObject(postdata.geofenceID, respond, [postdata, trackers], false, "geofence");
+	
+	
+}
+exports.acceptGeofence = acceptGeofence;
+
+
+
+
+
 
 // helper methods:
 

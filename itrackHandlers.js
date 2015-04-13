@@ -918,7 +918,7 @@ function acceptGeofence(socket, postdata, trackers)
 			saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
 					trackers,function(
 							geofence, trackers) {
-							createUpdate(0, geofence.requester, 0, {
+							createUpdate(0, geofence.requestedBy, 0, {
 								"updateName" : "requestedGeofenceAccepted",
 								"geofence" : geofence
 							}, trackers);

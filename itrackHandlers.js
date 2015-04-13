@@ -395,6 +395,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	function retry(userObject, name, userUUID, update, trackers, response)
 	//if there was a doc-update conflict, then over here we can retry
 	{
+		console.log("retry got: " + JSON.stringify(response));
 		if(response.error=='conflict')
 			{
 			createUpdate(userObject, name, userUUID, update, trackers)
@@ -1054,7 +1055,7 @@ function saveObject(object, knownType, trackerUpdates, trackers, callAfter,
 	json = object;
 	url = getURLForObject(objectID, knownType);
 	if (url !== "error") {
-		saveURL(url, json, trackerUpdates, trackers, callAfter, args);
+		saveURL(url, json, trackerUpdates, trackers, callAfter, args, getResponse);
 	}
 }
 

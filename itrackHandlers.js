@@ -484,7 +484,7 @@ function dismissUpdateForUser(socket, postdata, trackers)
 	if (!requires(postdata, [ "userUUID" , "updateID"], socket))
 		return;
 	
-	function respond(response)
+	function respond(updateID, response)
 	{
 		if(response.rows.length==0)
 			{//no user for this userUUID
@@ -501,7 +501,7 @@ function dismissUpdateForUser(socket, postdata, trackers)
 	
 	url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
 	// console.log(url);
-	getURL(url, respond, [], false);
+	getURL(url, respond, [postdata.updateID], false);
 	
 }
 exports.dismissUpdateForUser = dismissUpdateForUser;

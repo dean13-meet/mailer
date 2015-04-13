@@ -392,17 +392,29 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	updateID = createAuth(30);
 	update.updateID = updateID;
 
+	function retry(userObject, name, userUUID, update, trackers, response)
+	//if there was a doc-update conflict, then over here we can retry
+	{
+		if(response.error=='conflict')
+			{
+			createUpdate(userObject, name, userUUID, update, trackers)
+			}
+	}
+	
 	if (userObject) {
 		userObject.updates[updateID] = update;
 		console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
-				trackers);
+				trackers,
+		retry, [0, userObject.name, userUUID, update, trackers], true		
+		);//if we failed in the userObject case, then don't resend the same userObject -_-
+		//instead, we send the name from the userObject
 	}
 	else if (name) {
 		function respondName(update, trackers, response) {
 			response.updates[updateID] = update;
 			saveObject(response, "user", [ response.UUID + "/updates" ],
-					trackers);
+					trackers, retry, [userObject, name, userUUID, update, trackers], true);
 
 		}
 		getObject(name, respondName, [ update, trackers ], false, "user");
@@ -411,7 +423,8 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		function respondUserUUID(update, trackers, response) {
 			user = response.rows[0].doc;
 			user.updates[updateID] = update;
-			saveObject(user, "user", [ user.UUID + "/updates" ], trackers);
+			saveObject(user, "user", [ user.UUID + "/updates" ], trackers, retry, [userObject, name, 
+			userUUID, update, trackers], true);
 		}
 		url = userobjectFromUUIDURL + "%22" + userUUID + "%22";
 		getURL(url, respondUserUUID, [ update, trackers ], false);
@@ -1034,7 +1047,7 @@ function getURL(url, callback, args, push) {
 }
 
 function saveObject(object, knownType, trackerUpdates, trackers, callAfter,
-		args)// for syncronous saves, send a func to call after to be called
+		args, getResponse)// for syncronous saves, send a func to call after to be called
 // after save is completed.
 {
 	objectID = object._id;
@@ -1071,7 +1084,8 @@ function deleteURL(url, trackerUpdates, trackers, callAfter, args) {
 				console.log("trackers: " + trackerUpdates);
 
 				runTrackers(trackerUpdates, trackers);
-
+				
+				
 				if (callAfter)
 					callAfter.apply(this, args)
 
@@ -1084,7 +1098,8 @@ function deleteURL(url, trackerUpdates, trackers, callAfter, args) {
 }
 
 // NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
-function saveURL(url, json, trackerUpdates, trackers, callAfter, args) {
+function saveURL(url, json, trackerUpdates, trackers, callAfter, args, getResponse) {
+	//getResponse says whether you want the "ok":"201" back - if so, it will be added to args
 	options = {
 		method : 'PUT',
 		url : url,
@@ -1103,6 +1118,9 @@ function saveURL(url, json, trackerUpdates, trackers, callAfter, args) {
 			console.log("trackers: " + trackerUpdates);
 
 			runTrackers(trackerUpdates, trackers);
+			
+			if(getResponse)
+				args.push(body);
 
 			if (callAfter)
 				callAfter.apply(this, args)

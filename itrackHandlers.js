@@ -1095,8 +1095,11 @@ function saveURL(url, json, trackerUpdates, trackers, callAfter, args) {
 			throw Error(err);
 		} else {
 			// DONE
+			
+			
 
 			console.log("Saved url: " + url);
+			console.log(body);
 			console.log("trackers: " + trackerUpdates);
 
 			runTrackers(trackerUpdates, trackers);

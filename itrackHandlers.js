@@ -369,6 +369,15 @@ function sendMessage(response, postData) {
 exports.sendMessage = sendMessage
 
 // Updates for user
+
+/*
+ * 
+ * Applicable updates:
+ * -deletedGeofenceByOwner
+ * -deletedGeofenceByRequester
+ * -requestedGeofence
+ * 
+ */
 function createUpdate(userObject, name, userUUID, update, trackers) {
 
 	console.log("createUpdate");

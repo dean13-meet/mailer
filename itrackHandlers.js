@@ -899,18 +899,21 @@ function acceptGeofence(socket, postdata, trackers)
 	if (!requires(postdata, [ "userUUID", "geofenceID" ], socket))
 	              		return;
 	
+	console.log(1);
+	
 	function respond(postdata, trackers, geofence)
-	{
+	{console.log(2);
 		
 		function respond2(postdata, trackers, geofence, response)
-		{
+		{console.log(3);
 			if(response.rows.count==0)return;//user trying to accept geofence doesn't exist (userUUID doesn't match any user)
 			user = response.rows[0].doc;
-			
+			console.log(JSON.stringify(user));
 			if(user.name != geofence.owner)return;//if the user trying to accept this geofence isn't the owner then don't allow them...
 			if(!geofence.requester)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
-			
+			console.log(4);
 			geofence.requestAccepted = "Accepted";
+			console.log(JSON.stringify(geofence));
 			saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
 					trackers,function(
 							geofence, trackers) {

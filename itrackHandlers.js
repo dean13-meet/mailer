@@ -670,7 +670,9 @@ function deleteGeofence(socket, postdata, trackers) {
 	if (!requires(postdata, [ "userUUID", "userKnownIdentifier" ], socket))
 		return;
 	function respond(postdata, trackers, userKnownIdentifier, response) {
+		if(!response || !response.rows || !response.rows[0]) return;
 		user = response.rows[0].doc;
+		if(!user)return;
 		userOwnsFence = !(!user.geofences[userKnownIdentifier]);// do !(!..) to
 		// turn to bool
 		// ->

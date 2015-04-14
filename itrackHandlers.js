@@ -377,6 +377,7 @@ exports.sendMessage = sendMessage
  * -deletedGeofenceByRequester
  * -requestedGeofence
  * -requestedGeofenceAccepted
+ * -requestedGeofenceDeclined
  * 
  */
 function createUpdate(userObject, name, userUUID, update, trackers) {
@@ -684,7 +685,7 @@ function deleteGeofence(socket, postdata, trackers) {
 				userOwnsFence ? user.geofences[userKnownIdentifier]
 						: user.requestedGeofences[userKnownIdentifier],
 
-				function(postdata, trackers, user, userKnownIdentifier,
+				function(postdata, trackers, user, userKnownIdentifier,socket,
 						geofence) {
 
 					console.log("Deleting: " + JSON.stringify(geofence));
@@ -698,15 +699,21 @@ function deleteGeofence(socket, postdata, trackers) {
 					// fence is gone in the user.geofences/user.requestedFences
 
 					function removeFenceFromUser(geofence, postdata,
-							removingFromOwner, user, trackers, response2) {
+							removingFromOwner, user, trackers, socket, response2) {
 						if (removingFromOwner) {
 							delete response2.geofences[postdata.userKnownIdentifier];
 						} else {
 							delete response2.requestedGeofences[postdata.userKnownIdentifier];
 						}
-						saveObject(response2, "user", [ response2.UUID
-								+ (removingFromOwner ? "/geofences"
-										: "/requestedGeofences") ], trackers,
+						
+						tracker = response2.UUID
+						+ (removingFromOwner ? "/geofences"
+								: "/requestedGeofences");
+						socketIgnore = {};
+						socketIgnore[tracker] = true;
+						ignoreClients = {};
+						ignoreClients[socket.id] = socketIgnore;
+						saveObject(response2, "user", [ tracker , ignoreClients], trackers,
 								function(removingFromOwner, response2, user,
 										geofence, trackers) {
 									if (!removingFromOwner && geofence.requestedBy!=user._id) {
@@ -733,10 +740,10 @@ function deleteGeofence(socket, postdata, trackers) {
 										geofence, trackers ]);
 					}
 					getObject(geofence.owner, removeFenceFromUser, [ geofence,
-							postdata, true, user, trackers ], false, "user");
+							postdata, true, user, trackers , socket], false, "user");
 					if (geofence.requestedBy !== "") {
 						getObject(geofence.requestedBy, removeFenceFromUser, [
-								geofence, postdata, false, user, trackers ],
+								geofence, postdata, false, user, trackers , socket],
 								false, "user");
 					}
 
@@ -746,7 +753,7 @@ function deleteGeofence(socket, postdata, trackers) {
 	}
 
 	url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
-	getURL(url, respond, [ postdata, trackers, postdata.userKnownIdentifier ],
+	getURL(url, respond, [ postdata, trackers, postdata.userKnownIdentifier , socket],
 			false);
 
 	// TODO
@@ -933,12 +940,61 @@ function acceptGeofence(socket, postdata, trackers)
 	
 	getObject(postdata.geofenceID, respond, [postdata, trackers], false, "geofence");
 	
-	
 }
 exports.acceptGeofence = acceptGeofence;
 
-
-
+function declineGeofence(socket, postdata, trackers)
+{
+	//For user declining - tracker updates sent
+	//For requesting user - createUpdate sent
+	
+	//This is because the declining user already knows the fence is being accepted and so they
+	//expect their mapview to auto update. However, the requesting user doesn't yet know their
+	//fence was accepted.
+	
+	
+	/*
+	 * Postdata
+	 * userUUID - owner (person declining)
+	 * geofenceID
+	 */
+	
+	if (!requires(postdata, [ "userUUID", "geofenceID" ], socket))
+	              		return;
+	
+	console.log(1);
+	
+	function respond(postdata, trackers, geofence)
+	{console.log(2);
+		console.log(JSON.stringify(geofence));
+		function respond2(postdata, trackers, geofence, response)
+		{console.log(3);
+			if(response.rows.count==0)return;//user trying to accept geofence doesn't exist (userUUID doesn't match any user)
+			user = response.rows[0].doc;
+			console.log(JSON.stringify(user));
+			if(user._id != geofence.owner)return;//if the user trying to accept this geofence isn't the owner then don't allow them...
+			console.log(5);
+			if(!geofence.requestedBy)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
+			console.log(4);
+			deleteObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
+					trackers,function(
+							geofence, trackers) {
+							createUpdate(0, geofence.requestedBy, 0, {
+								"updateName" : "requestedGeofenceDeclined",
+								"geofence" : geofence
+							}, trackers);
+					}, [ geofence, trackers ]
+			);
+		}
+		
+		url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
+		getURL(url, respond2, [ postdata, trackers, geofence ], false);
+		
+	}
+	
+	getObject(postdata.geofenceID, respond, [postdata, trackers], false, "geofence");
+}
+exports.declineGeofence = declineGeofence;
 
 
 
@@ -1202,6 +1258,16 @@ function runTrackers(trackerUpdates, trackers) {
 			return this.indexOf(arr) !== -1;
 
 		}
+		
+		ignoreClients;
+		
+		lastTracker = trackerUpdates[trackerUpdates.length-1];
+		if(typeof lastTracker === typeof {})
+			{
+			ignoreClients = lastTracker;
+			trackerUpdates.splice(trackerUpdates.length-1, 1);
+			}
+		
 		for (i = 0; i < trackerUpdates.length; i++) {
 			// NOTE: field "TRACK_ANY_FIELD" will send track info on change for
 			// ANY field
@@ -1213,6 +1279,8 @@ function runTrackers(trackerUpdates, trackers) {
 				for ( var key in clients) {
 					if (clients.hasOwnProperty(key)) {
 						client = clients[key];
+						if(ignoreClients && ignoreClients[client.id] && ignoreClients[client.id][key])continue;
+								
 						if (client.isOn) {
 							console.log("randomized key");
 							client.send("Updated: " + tracker);

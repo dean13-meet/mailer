@@ -1259,7 +1259,7 @@ function runTrackers(trackerUpdates, trackers) {
 
 		}
 		
-		ignoreClients;
+		var ignoreClients;
 		
 		lastTracker = trackerUpdates[trackerUpdates.length-1];
 		if(typeof lastTracker === typeof {})

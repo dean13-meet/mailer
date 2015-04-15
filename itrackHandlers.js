@@ -1005,11 +1005,10 @@ function declineGeofence(socket, postdata, trackers)
 							
 							getObject(geofence.owner, removeFenceFromUser, [ geofence,
 									true], false, "user");
-							if (geofence.requestedBy !== "") {
-								getObject(geofence.requestedBy, removeFenceFromUser, [
-										geofence, true],
+							getObject(geofence.requestedBy, removeFenceFromUser, [
+										geofence, false],
 										false, "user");
-							}
+							
 							
 					}, [ geofence, trackers ]
 			);

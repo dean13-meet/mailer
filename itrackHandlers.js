@@ -669,7 +669,7 @@ function deleteGeofence(socket, postdata, trackers) {
 	 */
 	if (!requires(postdata, [ "userUUID", "userKnownIdentifier" ], socket))
 		return;
-	function respond(postdata, trackers, userKnownIdentifier, response) {
+	function respond(postdata, trackers, userKnownIdentifier, socket, response) {
 		if(!response || !response.rows || !response.rows[0]) return;
 		user = response.rows[0].doc;
 		console.log("user: " + JSON.stringify(user));
@@ -750,7 +750,7 @@ function deleteGeofence(socket, postdata, trackers) {
 								false, "user");
 					}
 
-				}, [ postdata, trackers, user, userKnownIdentifier ], false,
+				}, [ postdata, trackers, user, userKnownIdentifier, socket ], false,
 				"geofence");
 
 	}

@@ -992,13 +992,17 @@ function declineGeofence(socket, postdata, trackers)
 							
 							function removeFenceFromUser(geofence, 
 									removingFromOwner, response2) {
+								
+								console.log("removing from: " + removeFromOwner + " " + geofence.userKnownIdentifier);
 								if (removingFromOwner) {
-									delete response2.geofences[geofence.userKnwonIdentifier];
+									delete response2.geofences[geofence.userKnownIdentifier];
 								} else {
 									delete response2.requestedGeofences[geofence.userKnownIdentifier];
 								}
 								saveObject(response2, "user");
 							}
+							
+							
 							getObject(geofence.owner, removeFenceFromUser, [ geofence,
 									true], false, "user");
 							if (geofence.requestedBy !== "") {

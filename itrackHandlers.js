@@ -979,7 +979,7 @@ function declineGeofence(socket, postdata, trackers)
 			console.log(5);
 			if(!geofence.requestedBy)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
 			console.log(4);
-			deleteObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
+			deleteObject(geofence._id, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
 					trackers,function(
 							geofence, trackers) {
 							createUpdate(0, geofence.requestedBy, 0, {

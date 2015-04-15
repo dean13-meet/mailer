@@ -993,7 +993,7 @@ function declineGeofence(socket, postdata, trackers)
 							function removeFenceFromUser(geofence, 
 									removingFromOwner, response2) {
 								
-								console.log("removing from: " + removeFromOwner + " " + geofence.userKnownIdentifier);
+								console.log("removing from: " + removingFromOwner + " " + geofence.userKnownIdentifier);
 								if (removingFromOwner) {
 									delete response2.geofences[geofence.userKnownIdentifier];
 								} else {

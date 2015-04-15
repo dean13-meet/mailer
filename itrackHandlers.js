@@ -986,6 +986,27 @@ function declineGeofence(socket, postdata, trackers)
 								"updateName" : "requestedGeofenceDeclined",
 								"geofence" : geofence
 							}, trackers);
+							
+							//remove geofence from users: 
+							//(no need to send any updates, enough updates sent above)
+							
+							function removeFenceFromUser(geofence, 
+									removingFromOwner, response2) {
+								if (removingFromOwner) {
+									delete response2.geofences[geofence.userKnwonIdentifier];
+								} else {
+									delete response2.requestedGeofences[geofence.userKnownIdentifier];
+								}
+								saveObject(response2, "user");
+							}
+							getObject(geofence.owner, removeFenceFromUser, [ geofence,
+									true], false, "user");
+							if (geofence.requestedBy !== "") {
+								getObject(geofence.requestedBy, removeFenceFromUser, [
+										geofence, true],
+										false, "user");
+							}
+							
 					}, [ geofence, trackers ]
 			);
 		}

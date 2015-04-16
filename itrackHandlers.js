@@ -378,6 +378,8 @@ exports.sendMessage = sendMessage
  * -requestedGeofence
  * -requestedGeofenceAccepted
  * -requestedGeofenceDeclined
+ * -requesterChangedFence
+ * -ownerChangedFence
  * 
  */
 function createUpdate(userObject, name, userUUID, update, trackers) {
@@ -840,7 +842,7 @@ function editGeofence(socket, postdata, trackers)
 					radius : postdata.radius,
 					recs : postdata.recs,
 					repeat : postdata.repeat,
-					requestApproved : geofence.requestApproved,//don't let user change this! Not here..
+					requestApproved : isRequestingNameForUser?geofence.requestApproved:"Pending",//If the user changing is the requester, change requestApproved to pending
 					requestedBy : requesterName,
 					status : postdata.status,
 					type : "geofence",
@@ -868,7 +870,7 @@ function editGeofence(socket, postdata, trackers)
 					}, trackers);}
 				}
 			}, [ isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
-					trackers ]);
+					trackers ], !isRequestingNameForUser?[postdata.requester+"/requestedGeofences"]:false, !isRequestingNameForUser?trackers:false);
 			
 			
 		}

@@ -828,6 +828,7 @@ function editGeofence(socket, postdata, trackers)
 			console.log("passed");
 			geofence = {
 					_id : geofence._id,
+					_rev : geofence._rev,
 					userKnownIdentifier : postdata.userKnownIdentifier,
 					arrivalMessage : postdata.arrivalMessage,
 					leaveMessage : postdata.leaveMessage,

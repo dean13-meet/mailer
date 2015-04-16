@@ -798,17 +798,18 @@ function editGeofence(socket, postdata, trackers)
 	 * address 
 	 * userKnownIdentifier
 	 * status
+	 * amIOwner -- must send since we cannot identify between userUUID and names
 	 * 
 	 * 
 	 * 
 	 * Optional 
-	 * requester - userUUID, or blank
+	 * requester - userUUID, or name, or blank
 	 * 
 	 */
 	
 	if (!requires(postdata, [ "owner", "arrivalMessage", "leaveMessage", "lat",
 	              			"long", "onArrival", "onLeave", "radius", "recs", "repeat",
-	              			"address", "userKnownIdentifier", "status" ], socket))
+	              			"address", "userKnownIdentifier", "status" , "amIOwner"], socket))
 	              		return;
 	console.log(JSON.stringify(postdata));
 	function respond(postdata, isRequestingNameForUser, trackers,
@@ -887,7 +888,7 @@ function editGeofence(socket, postdata, trackers)
 					onLeave : postdata.onLeave,
 					owner : ownerName,
 					radius : postdata.radius,
-					recs : postdata.recs,
+					recs : requesterName==""?postdata.recs:geofence.recs,//can't change recs if there is a requester
 					repeat : postdata.repeat,
 					requestApproved : isRequestingNameForUser?geofence.requestApproved:"Pending",//If the user changing is the requester, change requestApproved to pending
 					requestedBy : requesterName,
@@ -928,7 +929,7 @@ function editGeofence(socket, postdata, trackers)
 		}
 	
 	// finding username
-	if (!postdata.requester)// then we must fetch owner username from userUUID
+	if (postdata.amIOwner)// then we must fetch owner username from userUUID
 	{
 		url = userobjectFromUUIDURL + "%22" + postdata.owner + "%22";
 		// console.log(url);

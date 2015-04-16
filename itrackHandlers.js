@@ -867,8 +867,9 @@ function editGeofence(socket, postdata, trackers)
 			
 			
 		}
-				
-
+		
+		url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
+		getURL(url, respond2, [postdata, isRequestingNameForUser, trackers, user, ownerName, requesterName], false);
 		
 		}
 	

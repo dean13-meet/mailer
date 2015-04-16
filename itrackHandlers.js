@@ -823,8 +823,8 @@ function editGeofence(socket, postdata, trackers)
 			console.log(ownerName);
 			console.log(requesterName);
 			if(!geofence){console.log("no geofence, returning");return;}
-			if(geofence.owner!=ownerName){console.log("owners don't match, returning");return;}
-			if(geofence.requestedBy!=requesterName){console.log("requesters don't match, returning");return;}
+			if(geofence.owner!==ownerName){console.log("owners don't match, returning");return;}
+			if(geofence.requestedBy!==requesterName){console.log("requesters don't match, returning");return;}
 			console.log("passed");
 			geofence = {
 					_id : geofence._id,

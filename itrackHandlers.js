@@ -808,7 +808,7 @@ function editGeofence(socket, postdata, trackers)
 	              			"long", "onArrival", "onLeave", "radius", "recs", "repeat",
 	              			"address", "userKnownIdentifier", "status" ], socket))
 	              		return;
-	
+	console.log(JSON.stringify(postdata));
 	function respond(postdata, isRequestingNameForUser, trackers,
 			response) {
 

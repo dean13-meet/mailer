@@ -825,6 +825,7 @@ function editGeofence(socket, postdata, trackers)
 			if(!geofence)return;
 			if(geofence.owner!=ownerName)return;
 			if(geofence.requestedBy!=requesterName)return;
+			console.log("passed");
 			geofence = {
 					_id : geofence._id,
 					userKnownIdentifier : postdata.userKnownIdentifier,

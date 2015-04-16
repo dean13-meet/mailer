@@ -829,31 +829,46 @@ function editGeofence(socket, postdata, trackers)
 			if(geofence.owner!==ownerName){console.log("owners don't match, returning");return;}
 			if(geofence.requestedBy!==requesterName){console.log("requesters don't match, returning");return;}
 			console.log("passed");
+			a = geofence.leaveMessage ==postdata.leaveMessage;
+			b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
+			c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
+			d = geofence.onArrival == postdata.onArrival;
+			e = geofence.onLeave == postdata.onLeave;
+			f = geofence.radius == postdata.radius;
+			g = geofence.recs == postdata.recs;
+			h = geofence.repeat == postdata.repeat;
+			i = geofence.status == postdata.status;
+			j = geofence.address == postdata.address;
 			if(geofence.arrivalMessage==postdata.arrivalMessage
 					&&
-			   geofence.leaveMessage ==postdata.leaveMessage
+			   a
 			   &&
-			   ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1)
+			  b
 			   &&
-			   ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1)
+			   c
 			   &&
-			   geofence.onArrival == postdata.onArrival
+			   d
 			   &&
-			   geofence.onLeave == postdata.onLeave
+			   e
 			   &&
-			   geofence.radius == postdata.radius
+			   f
 			   &&
-			   geofence.recs == postdata.recs
+			   g
 			   &&
-			   geofence.repeat == postdata.repeat
+			   h
 			   &&
-			   geofence.status == postdata.status
+			   i
 			   &&
-			   geofence.address == postdata.address
+			   j
 			)
 				{
 				console.log("Fence did not change, returning");
 				return;
+				}
+			else
+				{
+				console.log("a: " + a + "b: " + b + "c: " + c + "d: " + d + "e: " + e + "f: " + f + "g: " + g 
+						+"h: " + h + "i: " + i + "j: " + j);
 				}
 			geofence = {
 					_id : geofence._id,

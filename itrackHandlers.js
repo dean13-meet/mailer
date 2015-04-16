@@ -901,6 +901,8 @@ function editGeofence(socket, postdata, trackers)
 			saveObject(geofence, "geofence", 0, 0, function(
 					isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
 					trackers) {
+				
+				
 				if (requesterName && requesterName!="") {
 					if(isRequestingNameForUser)
 						{//owner changed fence
@@ -911,6 +913,9 @@ function editGeofence(socket, postdata, trackers)
 						}, trackers);
 						}
 					else{
+						if(a&&b&&c&&d&&e&&f&&g&&h&&j && postdata.status=="Completed")return;
+						//if the only thing that is different is turning off the fence, then no update should be sent!!
+
 					createUpdate(0, ownerName, 0, {
 						"updateName" : "requesterChangedFence",
 						"changedBy" : requesterName,

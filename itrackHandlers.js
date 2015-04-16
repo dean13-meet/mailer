@@ -829,10 +829,36 @@ function editGeofence(socket, postdata, trackers)
 			if(geofence.owner!==ownerName){console.log("owners don't match, returning");return;}
 			if(geofence.requestedBy!==requesterName){console.log("requesters don't match, returning");return;}
 			console.log("passed");
+			if(geofence.arrivalMessage==postdata.arrivalMessage
+					&&
+			   geofence.leaveMessage ==postdata.leaveMessage
+			   &&
+			   ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1)
+			   &&
+			   ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1)
+			   &&
+			   geofence.onArrival == postdata.onArrival
+			   &&
+			   geofence.onLeave == postdata.onLeave
+			   &&
+			   geofence.radius == postdata.radius
+			   &&
+			   geofence.recs == postdata.recs
+			   &&
+			   geofence.repeat == postdata.repeat
+			   &&
+			   geofence.status == postdata.status
+			   &&
+			   geofence.address == postdata.address
+			)
+				{
+				console.log("Fence did not change, returning");
+				return;
+				}
 			geofence = {
 					_id : geofence._id,
 					_rev : geofence._rev,
-					userKnownIdentifier : postdata.userKnownIdentifier,
+					userKnownIdentifier : geofence.userKnownIdentifier,
 					arrivalMessage : postdata.arrivalMessage,
 					leaveMessage : postdata.leaveMessage,
 					lat : postdata.lat,

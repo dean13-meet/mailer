@@ -812,6 +812,7 @@ function editGeofence(socket, postdata, trackers)
 	function respond(postdata, isRequestingNameForUser, trackers,
 			response) {
 
+		if(!response || !response.rows[0] || ! response[0].doc)return;
 		user = response.rows[0].doc;
 		ownerName = isRequestingNameForUser ? user._id
 				: postdata.owner

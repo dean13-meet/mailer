@@ -840,7 +840,7 @@ function editGeofence(socket, postdata, trackers)
 			d = geofence.onArrival == postdata.onArrival;
 			e = geofence.onLeave == postdata.onLeave;
 			f = geofence.radius == postdata.radius;
-			g = assert.deepEqual(geofence.recs, postdata.recs)
+			g = requesterName!="" || assert.deepEqual(geofence.recs, postdata.recs)//if we have a requester, then recs are just that requester by default
 			h = geofence.repeat == postdata.repeat;
 			i = geofence.status == postdata.status;
 			j = geofence.address == postdata.address;

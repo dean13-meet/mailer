@@ -818,12 +818,11 @@ function editGeofence(socket, postdata, trackers)
 				
 		function respond2(postdata, isRequestingNameForUser, trackers, user, ownerName, requesterName, response2)
 		{
-			geofence = response2.rows[0];
+			geofence = response2.rows[0].value;
 			console.log(JSON.stringify(geofence));
 			console.log(ownerName);
 			console.log(requesterName);
 			if(!geofence){console.log("no geofence, returning");return;}
-			console.log(geofence.owner);
 			if(geofence.owner!==ownerName){console.log("owners don't match, returning");return;}
 			if(geofence.requestedBy!==requesterName){console.log("requesters don't match, returning");return;}
 			console.log("passed");

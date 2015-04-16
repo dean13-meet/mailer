@@ -768,6 +768,129 @@ function deleteGeofence(socket, postdata, trackers) {
 }
 exports.deleteGeofence = deleteGeofence;
 
+function editGeofence(socket, postdata, trackers)
+{
+	//NOTE: DO NOT send tracker updates to the person sending this edit! It can throw them into an 
+	//infinite loop - imagine the case where they think an update occurs everytime they download new
+	//geofence info; if you send them the stuff was updated, they might think the updates are new
+	//and will recall this, etc, etc.
+	
+	//NOTE: owner/requester are NOT allowed to change! If the owner/requester sent here do not
+	//match what's on the database, reject the edit!
+	
+	/*
+	 * PostData: 
+	 * Required 
+	 * owner - userUUID OR username
+	 * arrivalMessage
+	 * leaveMessage 
+	 * lat 
+	 * long 
+	 * onArrival 
+	 * onLeave
+	 * radius 
+	 * recs 
+	 * repeat 
+	 * address 
+	 * userKnownIdentifier
+	 * status
+	 * 
+	 * 
+	 * 
+	 * Optional 
+	 * requester - userUUID, or blank
+	 * 
+	 */
+	
+	if (!requires(postdata, [ "owner", "arrivalMessage", "leaveMessage", "lat",
+	              			"long", "onArrival", "onLeave", "radius", "recs", "repeat",
+	              			"address", "userKnownIdentifier", "status" ], socket))
+	              		return;
+	
+	function respond(postdata, isRequestingNameForUser, trackers,
+			response) {
+
+		user = response.rows[0].doc;
+		ownerName = isRequestingNameForUser ? user._id
+				: postdata.owner
+		requesterName = isRequestingNameForUser ? "" : user._id
+
+				
+		function respond2(postdata, isRequestingNameForUser, trackers, user, ownerName, requesterName, response2)
+		{
+			geofence = response2.rows[0];
+			if(!geofence)return;
+			if(geofence.owner!=ownerName)return;
+			if(geofence.requestedBy!=requesterName)return;
+			geofence = {
+					_id : geofence._id,
+					userKnownIdentifier : postdata.userKnownIdentifier,
+					arrivalMessage : postdata.arrivalMessage,
+					leaveMessage : postdata.leaveMessage,
+					lat : postdata.lat,
+					long : postdata.long,
+					onArrival : postdata.onArrival,
+					onLeave : postdata.onLeave,
+					owner : ownerName,
+					radius : postdata.radius,
+					recs : postdata.recs,
+					repeat : postdata.repeat,
+					requestApproved : geofence.requestApproved,//don't let user change this! Not here..
+					requestedBy : requesterName,
+					status : postdata.status,
+					type : "geofence",
+					address : postdata.address,
+					arrivalsSent : geofence.arrivalsSent,
+					leavesSent : geofence.leavesSent
+				}
+			saveObject(geofence, "geofence", 0, 0, function(
+					isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
+					trackers) {
+				if (requesterName && requesterName!="") {
+					if(isRequestingNameForUser)
+						{//owner changed fence
+						createUpdate(0, requesterName, 0, {
+							"updateName" : "ownerChangedFence",
+							"changedBy" : ownerName,
+							"geofence" : geofence
+						}, trackers);
+						}
+					else{
+					createUpdate(0, ownerName, 0, {
+						"updateName" : "requesterChangedFence",
+						"changedBy" : requesterName,
+						"geofence" : geofence
+					}, trackers);}
+				}
+			}, [ isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
+					trackers ]);
+			
+			
+		}
+				
+
+		
+		}
+	
+	// finding username
+	if (!postdata.requester)// then we must fetch owner username from userUUID
+	{
+		url = userobjectFromUUIDURL + "%22" + postdata.owner + "%22";
+		// console.log(url);
+		getURL(url, respond, [postdata, true, trackers ], false);
+	}
+
+	else// then we must fetch requester name from userUUID
+	{
+		url = userobjectFromUUIDURL + "%22" + postdata.requester + "%22";
+		// console.log(url);
+		getURL(url, respond, [postdata, false, trackers ], false);
+
+	}
+	
+}
+exports.editGeofence = editGeofence;
+
 function getGeofencesForUserUUID(socket, postdata, trackers) {
 	/*
 	 * Postdata

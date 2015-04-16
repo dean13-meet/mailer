@@ -829,13 +829,16 @@ function editGeofence(socket, postdata, trackers)
 			if(geofence.owner!==ownerName){console.log("owners don't match, returning");return;}
 			if(geofence.requestedBy!==requesterName){console.log("requesters don't match, returning");return;}
 			console.log("passed");
+			
+			
+			
 			a = geofence.leaveMessage ==postdata.leaveMessage;
 			b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
 			c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
 			d = geofence.onArrival == postdata.onArrival;
 			e = geofence.onLeave == postdata.onLeave;
 			f = geofence.radius == postdata.radius;
-			g = geofence.recs == postdata.recs;
+			g = assert.deepEqual(geofence.recs, postdata.recs)
 			h = geofence.repeat == postdata.repeat;
 			i = geofence.status == postdata.status;
 			j = geofence.address == postdata.address;

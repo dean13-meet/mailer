@@ -2,6 +2,8 @@
  * New node file
  */
 
+assert = require('assert');
+
 function requires(postdata, listOfStrings, socket) {
 	for (index = 0; index < listOfStrings.length; index++) {
 		stringToCheck = listOfStrings[index];

@@ -819,6 +819,9 @@ function editGeofence(socket, postdata, trackers)
 		function respond2(postdata, isRequestingNameForUser, trackers, user, ownerName, requesterName, response2)
 		{
 			geofence = response2.rows[0];
+			console.log(JSON.stringify(geofence));
+			console.log(ownerName);
+			console.log(requesterName);
 			if(!geofence)return;
 			if(geofence.owner!=ownerName)return;
 			if(geofence.requestedBy!=requesterName)return;

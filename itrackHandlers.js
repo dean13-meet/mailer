@@ -383,6 +383,13 @@ exports.sendMessage = sendMessage
  * -requesterChangedFence
  * -ownerChangedFence
  * 
+ * 
+ * Exclusive Updates
+ * --These updates are normal updates, with the exception that a user can only have one of them
+ * --at a time. For instance, a geofence request updated should only be stored once, with the latest
+ * --version.
+ * -requesterChangedFence
+ * -ownerChangedFence
  */
 function createUpdate(userObject, name, userUUID, update, trackers) {
 
@@ -397,6 +404,19 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	//Create an id for the update:
 	updateID = createAuth(30);
 	update.updateID = updateID;
+	
+	exclusiveUpdates = ["requesterChangedFence", "ownerChangedFence"];
+	
+	//first check for exclusive updates:
+	//See if the update being created is even exclusive:
+	isAnExclusiveUpdate = false;
+	for(i = 0; i < exclusiveUpdates.length;i++)
+		{
+		if(update.updateName==exclusiveUpdates[i])
+			{
+			isAnExlusiveUpdate = true;break;
+			}
+		}
 
 	function retry(userObject, name, userUUID, update, trackers, response)
 	//if there was a doc-update conflict, then over here we can retry
@@ -409,6 +429,17 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	}
 	
 	if (userObject) {
+		if(!isAnExlusiveUpdate){
+		for(key in userObject.updates)
+			{
+			value = userObject.updates[key];
+			if(value.updateName == update.updateName)
+				{
+				delete userObject.updates[key];
+				break;
+				}
+			}
+		}
 		userObject.updates[updateID] = update;
 		console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
@@ -419,6 +450,19 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	}
 	else if (name) {
 		function respondName(update, trackers, response) {
+			
+			if(!isAnExlusiveUpdate){
+				for(key in response.updates)
+					{
+					value = response.updates[key];
+					if(value.updateName == update.updateName)
+						{
+						delete response.updates[key];
+						break;
+						}
+					}
+				}
+			
 			response.updates[updateID] = update;
 			saveObject(response, "user", [ response.UUID + "/updates" ],
 					trackers, retry, [userObject, name, userUUID, update, trackers], true);
@@ -429,6 +473,17 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (userUUID) {
 		function respondUserUUID(update, trackers, response) {
 			user = response.rows[0].doc;
+			if(!isAnExlusiveUpdate){
+				for(key in user.updates)
+					{
+					value = user.updates[key];
+					if(value.updateName == update.updateName)
+						{
+						delete user.updates[key];
+						break;
+						}
+					}
+				}
 			user.updates[updateID] = update;
 			saveObject(user, "user", [ user.UUID + "/updates" ], trackers, retry, [userObject, name, 
 			userUUID, update, trackers], true);

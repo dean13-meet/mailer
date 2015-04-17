@@ -368,7 +368,22 @@ function sendMessage(response, postData) {
 		}
 	});
 }
-exports.sendMessage = sendMessage
+//exports.sendMessage = sendMessage
+
+
+
+function arrived(socket, postdata, trackers)
+{
+	
+}
+exports.arrived = arrived;
+
+function left(socket, postdata, trackers)
+{
+	
+}
+exports.left = left;
+
 
 // Updates for user
 
@@ -882,6 +897,10 @@ function editGeofence(socket, postdata, trackers)
 				
 		function respond2(postdata, isRequestingNameForUser, trackers, user, ownerName, requesterName, response2)
 		{
+			if(!response2.rows[0])
+				{
+				console.log("No geofence matching, returning");return;
+				}
 			geofence = response2.rows[0].value;
 			console.log(JSON.stringify(geofence));
 			console.log(ownerName);

@@ -417,6 +417,9 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			isAnExlusiveUpdate = true;break;
 			}
 		}
+	
+	console.log("creating update named: " + update.upateName + ", which is " + 
+			isAnExclusiveUpdate?"exclusive":"not exclusive" + ".");
 
 	function retry(userObject, name, userUUID, update, trackers, response)
 	//if there was a doc-update conflict, then over here we can retry
@@ -970,7 +973,7 @@ function editGeofence(socket, postdata, trackers)
 					else{
 						if(a&&b&&c&&d&&e&&f&&g&&h&&j && postdata.status=="Completed")return;
 						//if the only thing that is different is turning off the fence, then no update should be sent!!
-
+						
 					createUpdate(0, ownerName, 0, {
 						"updateName" : "requesterChangedFence",
 						"changedBy" : requesterName,

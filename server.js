@@ -53,7 +53,7 @@ function start(route, handle) {
      
      
      //we are assuming that all iTrack methods accept socket, expect for those listed here:
-     itrackMethodsNotAcceptingSockets = ["sendMessage", "printTrackers", "runTrackerUpdate"]; //-- make this all lower case plz
+     itrackMethodsNotAcceptingSockets = ["sendMessage", "printTrackers", "runTrackerUpdate", "sendFenceMessage"]; //-- make this all lower case plz
      
 
      var handleCopy = extend({}, handle);//makes a copy

@@ -396,15 +396,15 @@ function sendFenceMessage(connection12, postdata, trackers)
 	 * mode //Mode: 1 = arrived, 0 = left.
 	 * 
 	 */
-	
+	/*
 	function badReturn(response3)
 	{
 		response3.end("Missing data");
 		console.log("Missing data");
-	}
+	}*/
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
 		{
-		badReturn(connection12);
+		//badReturn(connection12);
 		console.log("actually, we are missing data")
 		return;
 		}
@@ -413,7 +413,7 @@ function sendFenceMessage(connection12, postdata, trackers)
 	mode = postdata.mode;
 	
 	connection12.write("so?");
-	function respond(badReturn, connection12, postdata, trackers, mode, response2)
+	function respond(connection12, postdata, trackers, mode, response2)
 	{
 		if(!response2.rows[0]){//badReturn(connection12);
 			connection12.end()
@@ -457,13 +457,14 @@ function sendFenceMessage(connection12, postdata, trackers)
 			}
 		else
 			{
-			badReturn(connection12);console.log("failed passes")
+			//badReturn(connection12);
+			console.log("failed passes")
 			}
 		
 	}
 	
 	url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
-	getURL(url, respond, [badReturn, connection12, postdata, trackers, mode], false);
+	getURL(url, respond, [ connection12, postdata, trackers, mode], false);
 	
 }
 exports.sendFenceMessage = sendFenceMessage;

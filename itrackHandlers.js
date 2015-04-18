@@ -413,7 +413,9 @@ function sendFenceMessage(connection, postdata, trackers)
 	
 	function respond(badReturn, connection, postdata, trackers, mode, response2)
 	{
-		if(!response2.rows[0]){badReturn(connection);console.log("fence don't exist");return;}
+		if(!response2.rows[0]){badReturn(connection);console.log("fence don't exist");
+		console.log(JSON.stringify(response2));
+				return;}
 		geofence = response2.rows[0].value;
 		
 		a = geofence.status == "Active";//make sure it's active first

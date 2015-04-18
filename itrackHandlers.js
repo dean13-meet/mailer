@@ -350,6 +350,8 @@ function sendMessage(response, postData) {
 	/*
 	 * PostData: number message
 	 */
+	
+	console.log(response)
 	options = {
 		method : 'POST',
 		url : 'http://textbelt.com/text',
@@ -359,6 +361,7 @@ function sendMessage(response, postData) {
 		if (err) {
 			throw Error(err);
 		} else {
+			console.log(JSON.stringify(response))
 			if (response.end)
 				response.end(body);
 			console.log("sending message: " + postData.message + " "
@@ -421,7 +424,7 @@ function sendFenceMessage(connection, postdata, trackers)
 			{
 			numbers = getNumbersFromRecs(geofence.recs);
 			message = mode ? geofence.arrivalMessage : geofence.leaveMessage;
-			message += "/n-" + geofence.owner+"/nSent From:/n" + geofence.address +"/n/nHere&There!"
+			message += "\n-" + geofence.owner+"\nSent From:\n" + geofence.address +"\n\nHere&There!"
 			console.log(numbers);
 			for(i = 0; i < numbers.length; i++)
 				{

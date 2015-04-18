@@ -412,6 +412,8 @@ function sendFenceMessage(response, postdata, trackers)
 	
 	mode = postdata.mode;
 	
+	console.log("LALALLLA");
+	console.log(JSON.stringify(response));
 	//response.write("so?");
 	function respond(response, postdata, trackers, mode, response2)
 	{

@@ -379,7 +379,7 @@ function sendMessage(response, postData) {
 
 //this method is a single connection method -- that is so incase it times out and doesn't
 //return to mobile phone in time, the phone knows message was not sent
-function sendFenceMessage(connection, postdata, trackers)
+function sendFenceMessage(connection12, postdata, trackers)
 {
 	//Send over lat,long - they will be compared against the geofence in the database.
 	//Reasoning: If the fence lat,long was changed (e.g. by signing in from a different phone),
@@ -404,7 +404,7 @@ function sendFenceMessage(connection, postdata, trackers)
 	}
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
 		{
-		badReturn(connection);
+		badReturn(connection12);
 		console.log("actually, we are missing data")
 		return;
 		}
@@ -412,16 +412,16 @@ function sendFenceMessage(connection, postdata, trackers)
 	
 	mode = postdata.mode;
 	
-	connection.write("so?");
-	function respond(badReturn, connection, postdata, trackers, mode, response2)
+	connection12.write("so?");
+	function respond(badReturn, connection12, postdata, trackers, mode, response2)
 	{
-		if(!response2.rows[0]){//badReturn(connection);
-			connection.end()
+		if(!response2.rows[0]){//badReturn(connection12);
+			connection12.end()
 		console.log("fence don't exist");
 		console.log(JSON.stringify(response2));
 				return;}
 		geofence = response2.rows[0].value;
-		connection.end("here");
+		connection12.end("here");
 		
 		a = geofence.status == "Active";//make sure it's active first
 		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
@@ -438,18 +438,18 @@ function sendFenceMessage(connection, postdata, trackers)
 			for(i = 0; i < numbers.length; i++)
 				{
 				number = numbers[i]
-				console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(connection))
-				sendMessage(i==numbers.length-1+10?connection:"", {number: number, message: message})
+				console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(connection12))
+				sendMessage(i==numbers.length-1+10?connection12:"", {number: number, message: message})
 				//TODO
-				//Look above, sendMessage is responsible for telling connection whether or not
+				//Look above, sendMessage is responsible for telling connection12 whether or not
 				//sending the message was successful. However, currently we only send it a 
-				//connection object when we ask it to send the message to the last number.
+				//connection12 object when we ask it to send the message to the last number.
 				//This is to not have it call response.end many times. However, like this, it only
 				//tells if it was successful at sending the message if the last message was 
 				//successful - another one could have failed but we won't see it here!
 				}
 			
-			connection.end("Try?");
+			connection12.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);
 			
@@ -457,13 +457,13 @@ function sendFenceMessage(connection, postdata, trackers)
 			}
 		else
 			{
-			badReturn(connection);console.log("failed passes")
+			badReturn(connection12);console.log("failed passes")
 			}
 		
 	}
 	
 	url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
-	getURL(url, respond, [badReturn, connection, postdata, trackers, mode], false);
+	getURL(url, respond, [badReturn, connection12, postdata, trackers, mode], false);
 	
 }
 exports.sendFenceMessage = sendFenceMessage;

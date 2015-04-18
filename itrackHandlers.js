@@ -416,7 +416,7 @@ function sendFenceMessage(connection12, postdata, trackers)
 	function respond(connection12, postdata, trackers, mode, response2)
 	{
 		if(!response2.rows[0]){//badReturn(connection12);
-			connection12.end()
+			//connection12.end()
 		console.log("fence don't exist");
 		console.log(JSON.stringify(response2));
 				return;}

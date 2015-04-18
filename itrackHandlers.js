@@ -269,7 +269,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 					}
 				}
 
-				getURL(userFromNumber + postdata.number, respond2, [ user,
+				getURL(userFromNumber + "%22" +  postdata.number + "%22", respond2, [ user,
 						postdata, socket ], false);
 
 			}

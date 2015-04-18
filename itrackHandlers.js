@@ -341,6 +341,9 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				"success" : false
 			});
 		}
+		//Reset auth randomly so that old auth cant be used again
+		user.auth = createAuth(4);
+		saveObject(user, "user");
 	}
 	getObject(postdata.name, respond, [ postdata.auth ], false, "user");
 }

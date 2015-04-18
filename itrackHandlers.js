@@ -396,9 +396,9 @@ function sendFenceMessage(connection, postdata, trackers)
 	 * 
 	 */
 	
-	function badReturn(response)
+	function badReturn(response3)
 	{
-		response.end("Missing data");
+		response3.end("Missing data");
 		console.log("Missing data");
 	}
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)

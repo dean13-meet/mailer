@@ -440,7 +440,7 @@ function sendFenceMessage(response, postdata, trackers)
 			for(i = 0; i < numbers.length; i++)
 				{
 				number = numbers[i]
-				console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(response))
+				//console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(response))
 				sendMessage(i==numbers.length-1?response:"", {number: number, message: message})
 				//TODO
 				//Look above, sendMessage is responsible for telling response whether or not

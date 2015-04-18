@@ -468,6 +468,8 @@ function sendFenceMessage(response, postdata, trackers)
 	url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
 	getURL(url, respond, [response, postdata, trackers, mode], false);
 	
+	return true;//see "router"
+	
 }
 exports.sendFenceMessage = sendFenceMessage;
 

@@ -5,9 +5,9 @@ function route(handle, pathname, response, postData, trackers) {
 	console.log("About to route a request for " + pathname);
 	
 	if (typeof handle[pathname] === 'function') {
-		handle[pathname](response, postData, trackers);
-		//if(response.end)//if no response was given, just end response
-			//{response.end();}
+		shouldNotEnd = handle[pathname](response, postData, trackers);
+		if(shouldNotEnd===true && response.end)//if no response was given, just end response
+			{response.end();}
 		
 	} 
 	

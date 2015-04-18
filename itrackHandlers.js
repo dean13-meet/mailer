@@ -389,7 +389,7 @@ function sendFenceMessage(connection, postdata, trackers)
 	 * userKnownIdentifier
 	 * lat
 	 * long
-	 * mode //Mode: 0 = arrived, 1 = left.
+	 * mode //Mode: 1 = arrived, 0 = left.
 	 * 
 	 */
 	
@@ -425,6 +425,7 @@ function sendFenceMessage(connection, postdata, trackers)
 			for(i = 0; i < numbers.length; i++)
 				{
 				number = numbers[i]
+				console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(connection))
 				sendMessage(i==numbers.length-1?connection:"", {number: number, message: message})
 				//TODO
 				//Look above, sendMessage is responsible for telling connection whether or not

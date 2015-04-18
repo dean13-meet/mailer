@@ -399,7 +399,7 @@ function sendFenceMessage(connection, postdata, trackers)
 	function badReturn(response)
 	{
 		response.end("Missing data");
-		console.log("Mising data");
+		console.log("Missing data");
 	}
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
 		{
@@ -419,6 +419,7 @@ function sendFenceMessage(connection, postdata, trackers)
 		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
 		c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
 		d = mode ? geofence.onArrival : geofence.onLeave;
+		console.log("a: " + a + " b: " + b + " c: " + c + " d " + d);
 		
 		if(a&&b&&c&&d)
 			{

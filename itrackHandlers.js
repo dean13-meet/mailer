@@ -404,6 +404,7 @@ function sendFenceMessage(connection, postdata, trackers)
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
 		{
 		badReturn(connection);
+		console.log("actually, we are missing data")
 		return;
 		}
 		
@@ -412,7 +413,7 @@ function sendFenceMessage(connection, postdata, trackers)
 	
 	function respond(badReturn, connection, postdata, trackers, mode, response)
 	{
-		if(!response.rows[0]){badReturn(connection);return;}
+		if(!response.rows[0]){badReturn(connection);console.log("fence don't exist");return;}
 		geofence = response.rows[0].value;
 		
 		a = geofence.status == "Active";//make sure it's active first
@@ -447,7 +448,7 @@ function sendFenceMessage(connection, postdata, trackers)
 			}
 		else
 			{
-			badReturn(connection);
+			badReturn(connection);console.log("failed passes")
 			}
 		
 	}

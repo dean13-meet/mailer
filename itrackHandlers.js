@@ -601,7 +601,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (name) {
 		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 			
-			if(!isAnExlusiveUpdate){
+			if(!isAnExclusiveUpdate){
 				for(key in response.updates)
 					{
 					value = response.updates[key];
@@ -623,7 +623,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (userUUID) {
 		function respondUserUUID(isAnExclusiveUpdate, update, trackers, response) {
 			user = response.rows[0].doc;
-			if(!isAnExlusiveUpdate){
+			if(!isAnExclusiveUpdate){
 				for(key in user.updates)
 					{
 					value = user.updates[key];

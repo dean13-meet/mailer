@@ -421,7 +421,7 @@ function sendFenceMessage(connection, postdata, trackers)
 			{
 			numbers = getNumbersFromRecs(geofence.recs);
 			message = mode ? geofence.arrivalMessage : geofence.leaveMessage;
-			message += "/n-" + geofence.owner+"/n/nSent By: Here&There!"
+			message += "/n-" + geofence.owner+"/nSent From:/n" + geofence.address +"/n/nHere&There!"
 			console.log(numbers);
 			for(i = 0; i < numbers.length; i++)
 				{

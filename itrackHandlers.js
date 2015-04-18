@@ -439,7 +439,7 @@ function sendFenceMessage(connection12, postdata, trackers)
 				{
 				number = numbers[i]
 				console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(connection12))
-				sendMessage(i==numbers.length-1+10?connection12:"", {number: number, message: message})
+				sendMessage(i==numbers.length-1?connection12:"", {number: number, message: message})
 				//TODO
 				//Look above, sendMessage is responsible for telling connection12 whether or not
 				//sending the message was successful. However, currently we only send it a 

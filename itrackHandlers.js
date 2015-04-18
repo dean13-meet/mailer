@@ -599,7 +599,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		//instead, we send the name from the userObject
 	}
 	else if (name) {
-		function respondName(isAnExlusiveUpdate, update, trackers, response) {
+		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 			
 			if(!isAnExlusiveUpdate){
 				for(key in response.updates)
@@ -618,10 +618,10 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 					trackers, retry, [userObject, name, userUUID, update, trackers], true);
 
 		}
-		getObject(name, respondName, [ isAnExlusiveUpdate, update, trackers ], false, "user");
+		getObject(name, respondName, [ isAnExclusiveUpdate, update, trackers ], false, "user");
 	}
 	else if (userUUID) {
-		function respondUserUUID(isAnExlusiveUpdate, update, trackers, response) {
+		function respondUserUUID(isAnExclusiveUpdate, update, trackers, response) {
 			user = response.rows[0].doc;
 			if(!isAnExlusiveUpdate){
 				for(key in user.updates)
@@ -639,7 +639,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			userUUID, update, trackers], true);
 		}
 		url = userobjectFromUUIDURL + "%22" + userUUID + "%22";
-		getURL(url, respondUserUUID, [ isAnExlusiveUpdate, update, trackers ], false);
+		getURL(url, respondUserUUID, [ isAnExclusiveUpdate, update, trackers ], false);
 	}
 }
 

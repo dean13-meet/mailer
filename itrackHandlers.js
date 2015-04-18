@@ -423,7 +423,7 @@ function sendFenceMessage(response, postdata, trackers)
 		console.log(JSON.stringify(response2));
 				return;}
 		geofence = response2.rows[0].value;
-		response.end("here");
+		//response.end("here");
 		
 		a = geofence.status == "Active";//make sure it's active first
 		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
@@ -451,7 +451,7 @@ function sendFenceMessage(response, postdata, trackers)
 				//successful - another one could have failed but we won't see it here!
 				}
 			
-			response.end("Try?");
+			//response.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);
 			

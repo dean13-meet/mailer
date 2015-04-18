@@ -6,8 +6,8 @@ function route(handle, pathname, response, postData, trackers) {
 	
 	if (typeof handle[pathname] === 'function') {
 		handle[pathname](response, postData, trackers);
-		if(response.end)//if no response was given, just end response
-			{response.end();}
+		//if(response.end)//if no response was given, just end response
+			//{response.end();}
 		
 	} 
 	

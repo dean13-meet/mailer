@@ -372,18 +372,109 @@ function sendMessage(response, postData) {
 
 
 
-function arrived(socket, postdata, trackers)
+
+//this method is a single connection method -- that is so incase it times out and doesn't
+//return to mobile phone in time, the phone knows message was not sent
+function sendFenceMessage(connection, postdata, trackers)
 {
+	//Send over lat,long - they will be compared against the geofence in the database.
+	//Reasoning: If the fence lat,long was changed (e.g. by signing in from a different phone),
+	//the old phone will still be tracking old geofences, which we don't want sending messages anymore.
+	//Thus, we must check if the lat, long reached are still the same
+	/*
+	 * Postdata
+	 * 
+	 * Required
+	 * 
+	 * userKnownIdentifier
+	 * lat
+	 * long
+	 * mode //Mode: 0 = arrived, 1 = left.
+	 * 
+	 */
+	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
+		{
+		response.end("Missing data");
+		console.log("Mising data");
+		return;
+		}
+		
+	
+	mode = postdata.mode;
+	
+	function respond(postdata, trackers, mode, response)
+	{
+		if(!response.rows[0])return;
+		geofence = response.rows[0].value;
+		
+		a = geofence.status == "Active";//make sure it's active first
+		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
+		c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
+		d = mode ? geofence.onArrival : geofence.onLeave;
+		
+		if(a&&b&&c&&d)
+			{
+			numbers = getNumbersFromRecs(geofence.recs);
+			message = mode ? geofence.arrivalMessage : geofence.leaveMessage;
+			console.log(numbers);
+			for(number in numbers)
+				{
+				sendMessage(connection, {number: number, message: message})
+				}
+			currentTime = Math.floor(new Date() / 1000);
+			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);
+			
+			saveObject(geofence, "geofence");
+			}
+		
+	}
+	
+	url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
+	getURL(url, respond, [postdata, trackers, mode], false);
 	
 }
-exports.arrived = arrived;
+exports.sendFenceMessage = sendFenceMessage;
 
-function left(socket, postdata, trackers)
+
+
+function getNumbersFromRecs(recs)
 {
+	//turns persons etc to numbers
 	
-}
-exports.left = left;
+	retval = [];
+	dicType = typeof {};
+	stringType = typeof "";
+	for (i = 0; i < recs.length; i++)
+		{
+		obj = recs[i];
+		switch(typeof obj)
+		{
+		case dicType:
+			obj = obj.numbers
+			for(key in obj)
+				{
+				val = obj[key];
+				if(val)
+					{
+					key = key.replace(/[|&;$%@"<>()+,-]/g, "").split("1 ").join("");
+					retval.push(key);
+					}
+				}
+			break;
+		case stringType:
+			{
+			key = obj;
+			key = key.replace(/[|&;$%@"<>()+,]/g, "").split("1 ").join("");
+			retval.push(key);
+			}
+			
+			break;
+		}
+		}
+	
+	return retval;
 
+}
 
 // Updates for user
 

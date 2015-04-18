@@ -362,6 +362,7 @@ function sendMessage(response, postData) {
 			throw Error(err);
 		} else {
 			console.log(JSON.stringify(response))
+			console.log(response.end);
 			if (response.end)
 				response.end(body);
 			console.log("sending message: " + postData.message + " "

@@ -422,9 +422,17 @@ function sendFenceMessage(connection, postdata, trackers)
 			numbers = getNumbersFromRecs(geofence.recs);
 			message = mode ? geofence.arrivalMessage : geofence.leaveMessage;
 			console.log(numbers);
-			for(number in numbers)
+			for(i = 0; i < numbers.length; i++)
 				{
-				sendMessage(connection, {number: number, message: message})
+				number = numbers[i]
+				sendMessage(i==numbers.length-1?connection:"", {number: number, message: message})
+				//TODO
+				//Look above, sendMessage is responsible for telling connection whether or not
+				//sending the message was successful. However, currently we only send it a 
+				//connection object when we ask it to send the message to the last number.
+				//This is to not have it call response.end many times. However, like this, it only
+				//tells if it was successful at sending the message if the last message was 
+				//successful - another one could have failed but we won't see it here!
 				}
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);

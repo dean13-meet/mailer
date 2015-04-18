@@ -411,10 +411,10 @@ function sendFenceMessage(connection, postdata, trackers)
 	
 	mode = postdata.mode;
 	
-	function respond(badReturn, connection, postdata, trackers, mode, response)
+	function respond(badReturn, connection, postdata, trackers, mode, response2)
 	{
-		if(!response.rows[0]){badReturn(connection);console.log("fence don't exist");return;}
-		geofence = response.rows[0].value;
+		if(!response2.rows[0]){badReturn(connection);console.log("fence don't exist");return;}
+		geofence = response2.rows[0].value;
 		
 		a = geofence.status == "Active";//make sure it's active first
 		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);

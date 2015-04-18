@@ -412,7 +412,7 @@ function sendFenceMessage(connection12, postdata, trackers)
 	
 	mode = postdata.mode;
 	
-	connection12.write("so?");
+	//connection12.write("so?");
 	function respond(connection12, postdata, trackers, mode, response2)
 	{
 		if(!response2.rows[0]){//badReturn(connection12);

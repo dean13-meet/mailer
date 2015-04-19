@@ -830,25 +830,33 @@ function createGeofence(socket, postdata, trackers) {// currently only
 		}, [ isRequestingNameForUser, postdata, requesterName, geofence,
 				trackers ]);
 
-		function savingFunc(geofence, postdata, savingToOwner, trackers,
+		function savingFunc(socket, geofence, postdata, savingToOwner, trackers,
 				response2) {
 			if (savingToOwner) {
 				response2.geofences[postdata.userKnownIdentifier] = geofence._id;
 			} else {
 				response2.requestedGeofences[postdata.userKnownIdentifier] = geofence._id;
 			}
-			saveObject(response2, "user", [ response2.UUID
-					+ (savingToOwner ? "/geofences" : "/requestedGeofences") ],
+			tracker = response2.UUID
+			+ (savingToOwner ? "/geofences" : "/requestedGeofences");
+			socketIgnore = {};
+			socketIgnore[tracker] = true;
+			ignoreClients = {};
+			ignoreClients[socket.id] = socketIgnore;
+			
+			saveObject(response2, "user", [ tracker, ignoreClients ],
 					trackers);// sending updates based on userUUID
 
 		}
 		// save geofence to owner -- tracker update when saving
 		// console.log(ownerName);
+		
+		
 		getObject(ownerName, savingFunc,
-				[ geofence, postdata, true, trackers ], false, "user");
+				[ socket, geofence, postdata, true, trackers ], false, "user");
 		if (requesterName !== "") {
 			console.log("requesterName");
-			getObject(requesterName, savingFunc, [ geofence, postdata, false,
+			getObject(requesterName, savingFunc, [ socket, geofence, postdata, false,
 					trackers ], false, "user");
 		}
 	}

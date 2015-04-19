@@ -785,6 +785,7 @@ function createGeofence(socket, postdata, trackers) {// currently only
 	function respond(geofenceID, postdata, isRequestingNameForUser, trackers,
 			response) {
 
+		if(!response.rows[0])return;
 		user = response.rows[0].doc;
 		ownerName = isRequestingNameForUser ? user._id
 				: postdata.owner
@@ -861,7 +862,7 @@ function createGeofence(socket, postdata, trackers) {// currently only
 		}
 	}
 	// finding username
-	if (!postdata.requester)// then we must fetch owner username from userUUID
+	if (!postdata.requester || postdata.requester=="")// then we must fetch owner username from userUUID
 	{
 		url = userobjectFromUUIDURL + "%22" + postdata.owner + "%22";
 		// console.log(url);

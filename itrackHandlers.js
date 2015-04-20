@@ -922,8 +922,10 @@ function deleteGeofence(socket, postdata, trackers) {
 					function removeFenceFromUser(geofence, postdata,
 							removingFromOwner, user, trackers, socket, response2) {
 						if (removingFromOwner) {
+							if(response2.geofences[postdata.userKnownIdentifier])
 							delete response2.geofences[postdata.userKnownIdentifier];
 						} else {
+							if(response2.requestedGeofences[postdata.userKnownIdentifier])
 							delete response2.requestedGeofences[postdata.userKnownIdentifier];
 						}
 						

@@ -559,14 +559,14 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	isAnExclusiveUpdate = false;
 	for(i = 0; i < exclusiveUpdates.length;i++)
 		{
-		if(update.updateName==exclusiveUpdates[i])
+		if(update.updateName===exclusiveUpdates[i])
 			{
 			isAnExlusiveUpdate = true;break;
 			}
 		}
 	
 	console.log("creating update named: ")
-	console.log(update.upateName)
+	console.log(update.updateName)
 	console.log(", which is " + 
 			isAnExclusiveUpdate?"exclusive":"not exclusive" + ".");
 
@@ -576,6 +576,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		console.log("retry got: " + JSON.stringify(response));
 		if(response.error=='conflict')
 			{
+			console.log("retry lauched");
 			createUpdate(userObject, name, userUUID, update, trackers)
 			}
 	}

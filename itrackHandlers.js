@@ -559,7 +559,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	isAnExclusiveUpdate = false;
 	for(i = 0; i < exclusiveUpdates.length;i++)
 		{
-		console.log(i + " " + exclusiveUpdates[i]);
+		//console.log(i + " " + exclusiveUpdates[i]);
 		if(update.updateName==exclusiveUpdates[i])
 			{
 			isAnExclusiveUpdate = true;
@@ -606,6 +606,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (name) {
 		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 			
+			console.log(JSON.stringify(response));
 			if(isAnExclusiveUpdate){
 				for(key in response.updates)
 					{

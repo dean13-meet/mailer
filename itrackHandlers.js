@@ -560,14 +560,14 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	for(i = 0; i < exclusiveUpdates.length;i++)
 		{
 		console.log(i + " " + exclusiveUpdates[i]);
-		if(update.updateName===exclusiveUpdates[i])
+		if(update.updateName==exclusiveUpdates[i])
 			{
 			isAnExlusiveUpdate = true;break;
 			}
 		}
 	
 	console.log("creating update named: " + update.updateName + ", which is " +( 
-			isAnExclusiveUpdate?"exclusive":"not exclusive" + "."));
+			isAnExclusiveUpdate?"exclusive":"not exclusive") + ".");
 
 	function retry(userObject, name, userUUID, update, trackers, response)
 	//if there was a doc-update conflict, then over here we can retry

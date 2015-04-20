@@ -565,9 +565,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			}
 		}
 	
-	console.log("creating update named: ")
-	console.log(update.updateName)
-	console.log(", which is " + 
+	console.log("creating update named: " + update.updateName + ", which is " + 
 			isAnExclusiveUpdate?"exclusive":"not exclusive" + ".");
 
 	function retry(userObject, name, userUUID, update, trackers, response)

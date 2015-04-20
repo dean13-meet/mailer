@@ -562,7 +562,8 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		console.log(i + " " + exclusiveUpdates[i]);
 		if(update.updateName==exclusiveUpdates[i])
 			{
-			isAnExlusiveUpdate = true;break;
+			isAnExclusiveUpdate = true;
+			break;
 			}
 		}
 	

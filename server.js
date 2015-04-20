@@ -73,7 +73,7 @@ function start(route, handle) {
    		  }
    	  }
      //console.log(handlers);
-	var io = require('socket.io').listen(server)
+	var io = require('socket.io').listen(server, { log: false })
 	io.on('connection', function(socket){
 		  console.log('a user connected1');
 		  socket.isOn = true;

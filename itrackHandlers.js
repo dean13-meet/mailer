@@ -586,6 +586,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			value = userObject.updates[key];
 			if(value.updateName == update.updateName)
 				{
+				console.log("destorying update: " + JSON.stringify(value));
 				delete userObject.updates[key];
 				break;
 				}
@@ -1119,6 +1120,12 @@ function editGeofence(socket, postdata, trackers)
 					arrivalsSent : geofence.arrivalsSent,
 					leavesSent : geofence.leavesSent
 				}
+			
+			/* 
+			socketIgnore = {};
+			socketIgnore[tracker] = true;
+			ignoreClients = {};
+			ignoreClients[socket.id] = socketIgnore;*/
 			saveObject(geofence, "geofence", 0, 0, function(
 					isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
 					trackers) {

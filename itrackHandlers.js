@@ -586,17 +586,16 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		for(key in userObject.updates)
 			{
 			value = userObject.updates[key];
-			console.log("looking at: " + JSON.stringify(value));
+			//console.log("looking at: " + JSON.stringify(value));
 			if(value.updateName == update.updateName)
 				{
-				console.log("destorying update: " + JSON.stringify(value) + " " + key);
+				//console.log("destorying update: " + JSON.stringify(value) + " " + key);
 				delete userObject.updates[key];
-				break;
 				}
 			}
 		}
 		userObject.updates[updateID] = update;
-		console.log("updated userObject: " + JSON.stringify(userObject));
+		//console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
 				trackers,
 		retry, [0, userObject.name, userUUID, update, trackers], true		
@@ -606,16 +605,15 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (name) {
 		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 			
-			console.log(JSON.stringify(response));
+			//console.log(JSON.stringify(response));
 			if(isAnExclusiveUpdate){
 				for(key in response.updates)
 					{
 					value = response.updates[key];
-					console.log("looking at: " + JSON.stringify(value) + " " + key);
+					//console.log("looking at: " + JSON.stringify(value) + " " + key);
 					if(value.updateName == update.updateName)
 						{
 						delete response.updates[key];
-						break;
 						}
 					}
 				}
@@ -634,11 +632,10 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 				for(key in user.updates)
 					{
 					value = user.updates[key];
-					console.log("looking at: " + JSON.stringify(value) + " " + key);
+					//console.log("looking at: " + JSON.stringify(value) + " " + key);
 					if(value.updateName == update.updateName)
 						{
 						delete user.updates[key];
-						break;
 						}
 					}
 				}

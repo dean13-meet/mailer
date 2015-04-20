@@ -584,9 +584,10 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 		for(key in userObject.updates)
 			{
 			value = userObject.updates[key];
+			console.log("looking at: " + JSON.stringify(value));
 			if(value.updateName == update.updateName)
 				{
-				console.log("destorying update: " + JSON.stringify(value));
+				console.log("destorying update: " + JSON.stringify(value) + " " + key);
 				delete userObject.updates[key];
 				break;
 				}
@@ -607,6 +608,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 				for(key in response.updates)
 					{
 					value = response.updates[key];
+					console.log("looking at: " + JSON.stringify(value) + " " + key);
 					if(value.updateName == update.updateName)
 						{
 						delete response.updates[key];
@@ -629,6 +631,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 				for(key in user.updates)
 					{
 					value = user.updates[key];
+					console.log("looking at: " + JSON.stringify(value) + " " + key);
 					if(value.updateName == update.updateName)
 						{
 						delete user.updates[key];

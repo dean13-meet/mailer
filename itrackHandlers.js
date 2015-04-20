@@ -140,7 +140,7 @@ function createUser(socket, postdata, trackers)// sign up
 				requestedGeofences : {},
 				number : null,
 				type : "user",
-				updates : []
+				updates : {}
 			}, "user");
 		} else// username taken
 		{

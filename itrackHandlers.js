@@ -1685,8 +1685,8 @@ function runTrackers(trackerUpdates, trackers) {
 	if (trackerUpdates && trackers) {
 		idsSent = [];
 		Array.prototype.contains = function(arr) {
-			console.log(arr);
-			console.log(this.indexOf(arr));
+			//console.log(arr);
+			//console.log(this.indexOf(arr));
 			return this.indexOf(arr) !== -1;
 
 		}
@@ -1699,27 +1699,27 @@ function runTrackers(trackerUpdates, trackers) {
 			ignoreClients = lastTracker;
 			trackerUpdates.splice(trackerUpdates.length-1, 1);
 			}
-		console.log("ignore clients: " + JSON.stringify(ignoreClients));
+		//console.log("ignore clients: " + JSON.stringify(ignoreClients));
 		
 		for (i = 0; i < trackerUpdates.length; i++) {
 			// NOTE: field "TRACK_ANY_FIELD" will send track info on change for
 			// ANY field
 			tracker = trackerUpdates[i];
-			console.log("Tracker updated: " + tracker);
+			//console.log("Tracker updated: " + tracker);
 			clients = trackers[tracker];
-			console.log("With clients: " + clients)
+			//console.log("With clients: " + clients)
 			// console.log("all trackers: " + JSON.stringify(trackers));
 			if (clients) {
 				for ( var key in clients) {
 					if (clients.hasOwnProperty(key)) {
 						client = clients[key];
-						console.log("looking at client: " + client)
+						//console.log("looking at client: " + client)
 						if(ignoreClients && ignoreClients[client.id] && ignoreClients[client.id][tracker])continue;
 								
 						if (client.isOn) {
-							console.log("randomized key");
+							//console.log("randomized key");
 							client.send("Updated: " + tracker);
-							console.log("Updated: " + tracker)
+							//console.log("Updated: " + tracker)
 						} else
 							delete clients[key];
 					}
@@ -1739,9 +1739,9 @@ function runTrackers(trackerUpdates, trackers) {
 						if (clients.hasOwnProperty(key)) {
 							client = clients[key];
 							if (client.isOn) {
-								console.log("randomized key");
+								//console.log("randomized key");
 								client.send("Updated: " + trackerID);
-								console.log("Updated: " + trackerID)
+								//console.log("Updated: " + trackerID)
 							} else
 								delete clients[key];
 						}

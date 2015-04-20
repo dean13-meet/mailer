@@ -1666,7 +1666,7 @@ function saveURL(url, json, trackerUpdates, trackers, callAfter, args, getRespon
 
 			console.log("Saved url: " + url);
 			console.log(body);
-			console.log("trackers: " + trackerUpdates);
+			console.log("trackers: " + JSON.stringify(trackerUpdates));
 
 			runTrackers(trackerUpdates, trackers);
 			
@@ -1698,6 +1698,7 @@ function runTrackers(trackerUpdates, trackers) {
 			ignoreClients = lastTracker;
 			trackerUpdates.splice(trackerUpdates.length-1, 1);
 			}
+		console.log("ignore clients: " + JSON.stringify(ignoreClients));
 		
 		for (i = 0; i < trackerUpdates.length; i++) {
 			// NOTE: field "TRACK_ANY_FIELD" will send track info on change for
@@ -1705,12 +1706,14 @@ function runTrackers(trackerUpdates, trackers) {
 			tracker = trackerUpdates[i];
 			console.log("Tracker updated: " + tracker);
 			clients = trackers[tracker];
+			console.log("With clients: " + clients)
 			// console.log("all trackers: " + JSON.stringify(trackers));
 			if (clients) {
 				for ( var key in clients) {
 					if (clients.hasOwnProperty(key)) {
 						client = clients[key];
-						if(ignoreClients && ignoreClients[client.id] && ignoreClients[client.id][key])continue;
+						console.log("looking at client: " + client)
+						if(ignoreClients && ignoreClients[client.id] && ignoreClients[client.id][tracker])continue;
 								
 						if (client.isOn) {
 							console.log("randomized key");

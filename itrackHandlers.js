@@ -565,7 +565,9 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			}
 		}
 	
-	console.log("creating update named: " + update.upateName + ", which is " + 
+	console.log("creating update named: ")
+	console.log(update.upateName)
+	console.log(", which is " + 
 			isAnExclusiveUpdate?"exclusive":"not exclusive" + ".");
 
 	function retry(userObject, name, userUUID, update, trackers, response)
@@ -579,7 +581,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	}
 	
 	if (userObject) {
-		if(!isAnExlusiveUpdate){
+		if(isAnExlusiveUpdate){
 		for(key in userObject.updates)
 			{
 			value = userObject.updates[key];
@@ -601,7 +603,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (name) {
 		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 			
-			if(!isAnExclusiveUpdate){
+			if(isAnExclusiveUpdate){
 				for(key in response.updates)
 					{
 					value = response.updates[key];
@@ -623,7 +625,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	else if (userUUID) {
 		function respondUserUUID(isAnExclusiveUpdate, update, trackers, response) {
 			user = response.rows[0].doc;
-			if(!isAnExclusiveUpdate){
+			if(isAnExclusiveUpdate){
 				for(key in user.updates)
 					{
 					value = user.updates[key];

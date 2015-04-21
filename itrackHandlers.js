@@ -285,7 +285,7 @@ function sendMessageToValidateUser(name) {
 
 	randomNumber = createAuth(4, true);// true = numbers only
 	//TODO - remove apple admin login
-	if(name=="AppleAdminOne" || name == "AppleAdminTwo" || name == "Justin")randomNumber = "0000";
+	if(name=="AppleAdminOne" || name == "AppleAdminTwo" || name == "Sophie")randomNumber = "0000";
 	// get user object:
 	// how to respond:
 	function respond(randomNumber, user) {

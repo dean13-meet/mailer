@@ -284,7 +284,8 @@ exports.setPhoneNumberForUserName = setPhoneNumberForUserName;
 function sendMessageToValidateUser(name) {
 
 	randomNumber = createAuth(4, true);// true = numbers only
-	if(name=="AppleAdminOne" || name == "AppleAdminTwo")randomNumber = "0000";
+	//TODO - remove apple admin login
+	if(name=="AppleAdminOne" || name == "AppleAdminTwo" || name == "Justin")randomNumber = "0000";
 	// get user object:
 	// how to respond:
 	function respond(randomNumber, user) {
@@ -343,7 +344,8 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 		}
 		//Reset auth randomly so that old auth cant be used again
 		user.auth = createAuth(4);
-		if(user._id=="AppleAdminOne" || user._id=="AppleAdminTwo")user.auth="0000";
+		//TODO - remove apple admin login
+		if(user.adminStatus)user.auth="0000";
 		saveObject(user, "user");
 	}
 	getObject(postdata.name, respond, [ postdata.auth ], false, "user");

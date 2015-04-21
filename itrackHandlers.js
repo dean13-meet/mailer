@@ -1819,3 +1819,13 @@ function runTrackerUpdate(response, postdata, trackers) {
 	response.end("Completed");
 }
 exports.runTrackerUpdate = runTrackerUpdate;
+
+function credits(res, postdata, trackers)
+{
+	res.writeHead(200, {'content-type': 'text/html'});
+	res.write("Here-N-There<br>" +
+			"Mobile Application by: Dean Leitersdorf<br> " +
+			"Image Credits: <a href=\"http://icons8.com/web-app/\">Icons8</a>");
+	res.end();
+}
+exports.credits = credits;

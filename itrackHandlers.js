@@ -1538,11 +1538,11 @@ function createID(typeOfObject, callback, args) {
 	});
 }
 
-numbers = "0123456789";
+numbersPossible = "0123456789";
 allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 function createAuth(length, numbersOnly) {
 	var text = "";
-	var possible = numbersOnly ? numbers : allChars;
+	var possible = numbersOnly ? numbersPossible : allChars;
 
 	for (var i = 0; i < length; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));

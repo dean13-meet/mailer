@@ -72,7 +72,7 @@ handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;
 server.start(router.route, handle);
 
 /*
-json1 = {"userKnownIdentifier":"n0XM0YSjDYM1rUfVKyG9MOZAf7PeFO", "mode":0, "lat":37.43459, "long":-122.1542}
+json1 = {"userKnownIdentifier":"k01tEWfxpWaXGxJ4LctUsDENqVmUtG", "mode":1, "lat":42.36064, "long":-71.08974}
 requestHandlers.itrack.sendFenceMessage(0, json1);
 
 

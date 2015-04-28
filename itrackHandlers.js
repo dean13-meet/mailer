@@ -360,7 +360,7 @@ function sendMessage(response, postData) {
 	console.log(response)
 	options = {
 		method : 'POST',
-		url : 'http://textbelt.com/text',
+		url : 'http://textbelt.com/text?key=leitersdorf',
 		form : 'message=' + postData.message + "&number=" + postData.number
 	};
 	request(options, function(err, res, body) {

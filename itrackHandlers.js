@@ -121,6 +121,12 @@ function createUser(socket, postdata, trackers)// sign up
 
 	if (!requires(postdata, [ "name" ], socket))
 		return;
+	
+	if(name.length > 40)
+		{
+		sentToSocket({"eventRecieved":"createUser","success":false,"reason":"name over 40 characters!"},socket);
+		return;
+		}
 
 	name = postdata.name;
 	// verify user doesn't exist and create it if it doesn't

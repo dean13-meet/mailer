@@ -1512,7 +1512,7 @@ var geofenceFromUserKnownIdentifier = baseURL
 		+ "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";// +%22userKnownIdentifier%22"
 var userFromNumber = baseURL
 		+ "users/_design/userDesign/_view/userByNumber?key=";// +%22number%22
-var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=;";//%22usernameInLowercase%22
+var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=";//%22usernameInLowercase%22
 
 function getURLForObject(objectID, knownType) {
 	categoryURL = getURLByIDType(knownType ? knownType : typeOfID(objectID));

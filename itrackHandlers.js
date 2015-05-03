@@ -339,7 +339,7 @@ function sendMessageToValidateUser(name) {
 					{
 					//start trying to weed out tries that have timed out
 					
-					for(i = 0; i < lastest.length;i++)
+					for(i = 0; i < latest.length;i++)
 						{
 						timestamp = latest[i];
 						if(currentTime-authTryTimeout>timestamp)
@@ -413,7 +413,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 					//console.log("greater " + latest.length + " " + permittedAuthRetries)
 					//start trying to weed out tries that have timed out
 					
-					for(i = 0; i < lastest.length;i++)
+					for(i = 0; i < latest.length;i++)
 						{
 						timestamp = latest[i];
 						if(currentTime-authTryTimeout>timestamp)

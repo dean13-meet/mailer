@@ -164,7 +164,9 @@ function createUser(socket, postdata, trackers)// sign up
 				requestedGeofences : {},
 				number : null,
 				type : "user",
-				updates : {}
+				updates : {},
+				latestRequestAuthTimestamps:[],
+				latestAuthEnterTimestamps:[]
 			}, "user");
 		} else// username taken
 		{
@@ -307,6 +309,8 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 }
 exports.setPhoneNumberForUserName = setPhoneNumberForUserName;
 
+var permittedAuthRetries = 5;
+var authTryTimeout = 60;//1 min
 function sendMessageToValidateUser(name) {
 
 	randomNumber = createAuth(4, true);// true = numbers only
@@ -321,7 +325,40 @@ function sendMessageToValidateUser(name) {
 			return;
 			}
 		user = user.value;
+		currentTime = Math.floor(new Date() / 1000);
 		if (user.number) {
+			
+			if(!user.latestRequestsAuthTimestamps)
+				{
+				user.latestRequestsAuthTimestamps = [];
+				}
+			else
+				{
+				latest = user.latestRequestsAuthTimestamps;
+				if(latest.length>permittedAuthRetries)
+					{
+					//start trying to weed out tries that have timed out
+					
+					for(i = 0; i < lastest.length;i++)
+						{
+						timestamp = latest[i];
+						if(currentTime-authTryTimeout>timestamp)
+							{
+							delete latest[i];
+							i--;
+							}
+						}
+					}
+				
+					//now, check if there are still too many retries:
+					if(latest.length>permittedAuthRetries)
+						{
+						return;
+						}
+				}
+			
+			user.latestRequestsAuthTimestamps.push(currentTime);
+			
 			user.auth = randomNumber;
 			saveObject(user, "user");
 			sendMessage("", {
@@ -360,6 +397,44 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 		if(!user)
 			return;
 		user = user.value;
+		
+		currentTime = Math.floor(new Date() / 1000);
+		
+			if(!user.latestAuthEnterTimestampss)
+				{
+				user.latestAuthEnterTimestamps = [];
+				}
+			else
+				{
+				latest = user.latestAuthEnterTimestamps;
+				if(latest.length>permittedAuthRetries)
+					{
+					//start trying to weed out tries that have timed out
+					
+					for(i = 0; i < lastest.length;i++)
+						{
+						timestamp = latest[i];
+						if(currentTime-authTryTimeout>timestamp)
+							{
+							delete latest[i];
+							i--;
+							}
+						}
+					}
+				
+					//now, check if there are still too many retries:
+					if(latest.length>permittedAuthRetries)
+						{
+						sendToSocket({"eventRecieved":"verifyAuthForUserName", 
+										"success":false,
+										"reason":"too many tries"
+						},socket)
+						return;
+						}
+				}
+			
+			user.latestAuthEnterTimestamps.push(currentTime);
+		
 		if (user.auth && user.auth == auth || user._id=="AppleAdminOne" || user._id=="AppleAdminTwo")// check user.auth --- what someone
 		// might try doing is sending auth =
 		// nil so that if user.auth is nil

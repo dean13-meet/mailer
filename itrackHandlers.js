@@ -129,7 +129,7 @@ function createUser(socket, postdata, trackers)// sign up
 	function respond(response) {
 		
 		response = response.rows[0];
-		if (response)// username free
+		if (!response)// username free
 		{
 			if (socket)
 				socket.send(JSON.stringify({

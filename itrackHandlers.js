@@ -38,10 +38,11 @@ function usernameEntered(socket, postdata, trackers)// log in
 	 */
 	if (!requires(postdata, [ "name" ], socket))
 		return;
-	getObject(postdata.name, function(response) {// response = userObject
-
+	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", function(response) {
+		
+		response = response.rows[0];
 		// console.log(response);
-		if (!response._id)// Say that username aint good - if we get an error
+		if (response)// Say that username aint good - if we get an error
 		// (e.g. file not found), no _id is returned
 		{
 			if (socket)
@@ -60,45 +61,54 @@ function usernameEntered(socket, postdata, trackers)// log in
 				}));
 			return;
 
-		} else if (response.number) {
-			if (socket)
-				socket.send(JSON.stringify({
-					"eventRecieved" : "usernameEntered",
-					"nameExists" : true,
-					last4DigitsOfNumber : response.number % 10000
-				}));// must include id describing - many descriptors are
-			// listening on other side, need them to know who gets the
-			// description
-			else
-				console.log(JSON.stringify({
-					"eventRecieved" : "usernameEntered",
-					"nameExists" : true,
-					last4DigitsOfNumber : response.number % 10000
-				}));
+		} 
+		
+		else
+			{
+			response = response.value;
+			if (response.number) {
+				if (socket)
+					socket.send(JSON.stringify({
+						"eventRecieved" : "usernameEntered",
+						"nameExists" : true,
+						last4DigitsOfNumber : response.number % 10000
+					}));// must include id describing - many descriptors are
+				// listening on other side, need them to know who gets the
+				// description
+				else
+					console.log(JSON.stringify({
+						"eventRecieved" : "usernameEntered",
+						"nameExists" : true,
+						last4DigitsOfNumber : response.number % 10000
+					}));
 
-			sendMessageToValidateUser(postdata.name);
-			return;
-		}
+				sendMessageToValidateUser(postdata.name);
+				return;
+			}
 
-		else// user exists, but no number
-		{
-			if (socket)
-				socket.send(JSON.stringify({
-					"eventRecieved" : "usernameEntered",
-					"nameExists" : true,
-					last4DigitsOfNumber : false
-				}));// must include id describing - many descriptors are
-			// listening on other side, need them to know who gets the
-			// description
-			else
-				console.log(JSON.stringify({
-					"eventRecieved" : "usernameEntered",
-					"nameExists" : true,
-					last4DigitsOfNumber : false
-				}));
-		}
+			else// user exists, but no number
+			{
+				if (socket)
+					socket.send(JSON.stringify({
+						"eventRecieved" : "usernameEntered",
+						"nameExists" : true,
+						last4DigitsOfNumber : false
+					}));// must include id describing - many descriptors are
+				// listening on other side, need them to know who gets the
+				// description
+				else
+					console.log(JSON.stringify({
+						"eventRecieved" : "usernameEntered",
+						"nameExists" : true,
+						last4DigitsOfNumber : false
+					}));
+			}
+			}
+		
+		
+		
 
-	}, [], false, "user");
+	}, [], false);
 
 }
 exports.usernameEntered = usernameEntered;
@@ -117,7 +127,9 @@ function createUser(socket, postdata, trackers)// sign up
 
 	// how to respond
 	function respond(response) {
-		if (!response._id)// username free
+		
+		response = response.rows[0];
+		if (response)// username free
 		{
 			if (socket)
 				socket.send(JSON.stringify({
@@ -144,6 +156,7 @@ function createUser(socket, postdata, trackers)// sign up
 			}, "user");
 		} else// username taken
 		{
+			response = response.value;
 			if (socket)
 				socket.send(JSON.stringify({
 					"eventRecieved" : "createUser",
@@ -160,7 +173,7 @@ function createUser(socket, postdata, trackers)// sign up
 		}
 	}
 
-	getObject(name, respond, [], false, "user");
+	getURL(lowercaseUsername+"%22"+name.toLowerCase()+"%22", respond, [], false);
 }
 exports.createUser = createUser;
 
@@ -187,7 +200,8 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 
 	// how to respond
 	function respond(user) {
-		if (!user._id)// username doesn't exist
+		user = user.rows[0];
+		if (!user)// username doesn't exist
 		{
 			if (socket)
 				socket.send(JSON.stringify({
@@ -207,7 +221,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 			return;
 		} else// username exists
 		{
-
+			user = user.value;
 			if (user.number)// user already has a number set
 			{
 				if (socket)
@@ -276,7 +290,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 		}
 	}
 
-	getObject(postdata.name, respond, [], false, "user");
+	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", respond, [], false);
 
 }
 exports.setPhoneNumberForUserName = setPhoneNumberForUserName;
@@ -289,6 +303,12 @@ function sendMessageToValidateUser(name) {
 	// get user object:
 	// how to respond:
 	function respond(randomNumber, user) {
+		user = user.rows[0];
+		if(!user)
+			{
+			return;
+			}
+		user = user.value;
 		if (user.number) {
 			user.auth = randomNumber;
 			saveObject(user, "user");
@@ -299,7 +319,7 @@ function sendMessageToValidateUser(name) {
 		} else
 			return;
 	}
-	getObject(name, respond, [randomNumber], false, "user");
+	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", respond, [randomNumber], false);
 }
 
 function retryValidation(socket, postdata, trackers) {
@@ -324,6 +344,10 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 		return;
 
 	function respond(auth, user) {
+		user = user.rows[0];
+		if(!user)
+			return;
+		user = user.value;
 		if (user.auth && user.auth == auth || user._id=="AppleAdminOne" || user._id=="AppleAdminTwo")// check user.auth --- what someone
 		// might try doing is sending auth =
 		// nil so that if user.auth is nil
@@ -348,7 +372,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 		if(user.adminStatus)user.auth="0000";
 		saveObject(user, "user");
 	}
-	getObject(postdata.name, respond, [ postdata.auth ], false, "user");
+	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", respond, [ postdata.auth ], false);
 }
 exports.verifyAuthForUserName = verifyAuthForUserName;
 
@@ -1488,6 +1512,7 @@ var geofenceFromUserKnownIdentifier = baseURL
 		+ "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";// +%22userKnownIdentifier%22"
 var userFromNumber = baseURL
 		+ "users/_design/userDesign/_view/userByNumber?key=";// +%22number%22
+var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=;";//%22usernameInLowercase%22
 
 function getURLForObject(objectID, knownType) {
 	categoryURL = getURLByIDType(knownType ? knownType : typeOfID(objectID));

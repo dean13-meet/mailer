@@ -39,7 +39,7 @@ function usernameEntered(socket, postdata, trackers)// log in
 	if (!requires(postdata, [ "name" ], socket))
 		return;
 	
-	if(name.length > 40)
+	if(postdata.name.length > 40)
 	{
 	sentToSocket({"eventRecieved":"usernameEntered","success":false,last4DigitsOfNumber:false, "reason":"name over 40 characters!"},socket);
 	return;
@@ -128,7 +128,7 @@ function createUser(socket, postdata, trackers)// sign up
 	if (!requires(postdata, [ "name" ], socket))
 		return;
 	
-	if(name.length > 40)
+	if(postdata.name.length > 40)
 		{
 		sentToSocket({"eventRecieved":"createUser","success":false,"reason":"name over 40 characters!"},socket);
 		return;

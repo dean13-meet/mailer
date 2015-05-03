@@ -335,8 +335,11 @@ function sendMessageToValidateUser(name) {
 			else
 				{
 				latest = user.latestRequestsAuthTimestamps;
+				console.log("permittedAuthRetries " + permittedAuthRetries);
+				console.log(latest);
 				if(latest.length>permittedAuthRetries)
 					{
+					
 					//start trying to weed out tries that have timed out
 					
 					for(i = 0; i < latest.length;i++)
@@ -354,6 +357,8 @@ function sendMessageToValidateUser(name) {
 					if(latest.length>permittedAuthRetries)
 						{
 						console.log("Too many requests to reset auth came for user: " + user._id)
+						
+						saveObject(user,"user");//user with the removed auth retries from previous for loop
 						return;
 						}
 				}
@@ -410,6 +415,8 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				latest = user.latestAuthEnterTimestamps;
 				if(latest.length>permittedAuthRetries)
 					{
+					console.log("permittedAuthRetries " + permittedAuthRetries);
+					console.log(latest);
 					//console.log("greater " + latest.length + " " + permittedAuthRetries)
 					//start trying to weed out tries that have timed out
 					
@@ -431,6 +438,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 										"success":false,
 										"reason":"too many tries"
 						})
+						saveObject(user,"user");//user with the removed auth retries from previous for loop
 						return;
 						}
 				}

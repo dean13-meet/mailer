@@ -319,7 +319,7 @@ function sendMessageToValidateUser(name) {
 		} else
 			return;
 	}
-	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", respond, [randomNumber], false);
+	getURL(lowercaseUsername+"%22"+name.toLowerCase()+"%22", respond, [randomNumber], false);
 }
 
 function retryValidation(socket, postdata, trackers) {

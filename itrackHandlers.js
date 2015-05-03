@@ -41,7 +41,7 @@ function usernameEntered(socket, postdata, trackers)// log in
 	
 	if(postdata.name.length > 40)
 	{
-	sentToSocket({"eventRecieved":"usernameEntered","success":false,last4DigitsOfNumber:false, "reason":"name over 40 characters!"},socket);
+	sentToSocket(socket,{"eventRecieved":"usernameEntered","success":false,last4DigitsOfNumber:false, "reason":"name over 40 characters!"});
 	return;
 	}
 	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", function(response) {
@@ -130,7 +130,7 @@ function createUser(socket, postdata, trackers)// sign up
 	
 	if(postdata.name.length > 40)
 		{
-		sentToSocket({"eventRecieved":"createUser","success":false,"reason":"name over 40 characters!"},socket);
+		sentToSocket(socket,{"eventRecieved":"createUser","success":false,"reason":"name over 40 characters!"});
 		return;
 		}
 
@@ -427,10 +427,10 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 					//now, check if there are still too many retries:
 					if(latest.length>permittedAuthRetries)
 						{
-						sendToSocket({"eventRecieved":"verifyAuthForUserName", 
+						sendToSocket(socket,{"eventRecieved":"verifyAuthForUserName", 
 										"success":false,
 										"reason":"too many tries"
-						},socket)
+						})
 						return;
 						}
 				}

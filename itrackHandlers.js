@@ -344,7 +344,7 @@ function sendMessageToValidateUser(name) {
 						timestamp = latest[i];
 						if(currentTime-authTryTimeout>timestamp)
 							{
-							delete latest[i];
+							latest.splice(i, 1);
 							i--;
 							}
 						}
@@ -418,7 +418,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 						timestamp = latest[i];
 						if(currentTime-authTryTimeout>timestamp)
 							{
-							delete latest[i];
+							latest.splice(i, 1);
 							i--;
 							}
 						}

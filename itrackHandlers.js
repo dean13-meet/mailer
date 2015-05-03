@@ -38,6 +38,12 @@ function usernameEntered(socket, postdata, trackers)// log in
 	 */
 	if (!requires(postdata, [ "name" ], socket))
 		return;
+	
+	if(name.length > 40)
+	{
+	sentToSocket({"eventRecieved":"usernameEntered","success":false,last4DigitsOfNumber:false, "reason":"name over 40 characters!"},socket);
+	return;
+	}
 	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", function(response) {
 		
 		response = response.rows[0];

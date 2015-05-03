@@ -309,7 +309,7 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 }
 exports.setPhoneNumberForUserName = setPhoneNumberForUserName;
 
-var permittedAuthRetries = 5;
+var permittedAuthRetries = 4;//actual is 5 - this is set to 4 b/c there r just so many methods using > not >=
 var authTryTimeout = 60;//1 min
 function sendMessageToValidateUser(name) {
 

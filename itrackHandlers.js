@@ -409,6 +409,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				latest = user.latestAuthEnterTimestamps;
 				if(latest.length>permittedAuthRetries)
 					{
+					console.log("greater " + latest.length + " " + permittedAuthRetries)
 					//start trying to weed out tries that have timed out
 					
 					for(i = 0; i < lastest.length;i++)

@@ -353,6 +353,7 @@ function sendMessageToValidateUser(name) {
 					//now, check if there are still too many retries:
 					if(latest.length>permittedAuthRetries)
 						{
+						console.log("Too many requests to reset auth came for user: " + user._id)
 						return;
 						}
 				}

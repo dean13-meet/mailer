@@ -42,7 +42,7 @@ function usernameEntered(socket, postdata, trackers)// log in
 		
 		response = response.rows[0];
 		// console.log(response);
-		if (response)// Say that username aint good - if we get an error
+		if (!response)// Say that username aint good - if we get an error
 		// (e.g. file not found), no _id is returned
 		{
 			if (socket)

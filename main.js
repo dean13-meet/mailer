@@ -16,6 +16,7 @@ handle["/uploadfileacsl2"] = requestHandlers.uploadFileACSL2;
 handle["/acslanswers"] = requestHandlers.ACSLanswers;
 handle["/acslanswers2"] = requestHandlers.ACSLanswers2;
 handle["/sendmessage"]  = requestHandlers.itrack.sendMessage;
+handle["/mitvideo"] = requestHandlers.itrack.MITvideo;
 
 //resturant handlers:
 handle["/resturant/createorder"] = requestHandlers.resturantApp.createOrder;

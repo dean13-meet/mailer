@@ -1954,3 +1954,13 @@ function credits(res, postdata, trackers)
 	res.end();
 }
 exports.credits = credits;
+
+
+function MITvideo(response, postdata, trackers)
+{
+	response.writeHead(301,
+			  {Location: 'https://www.youtube.com/watch?v=MPVIGdgCob8'}
+			);
+			response.end();
+}
+exports.MITvideo = MITvideo;

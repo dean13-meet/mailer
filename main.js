@@ -17,6 +17,7 @@ handle["/acslanswers"] = requestHandlers.ACSLanswers;
 handle["/acslanswers2"] = requestHandlers.ACSLanswers2;
 handle["/sendmessage"]  = requestHandlers.itrack.sendMessage;
 handle["/mitvideo"] = requestHandlers.itrack.MITvideo;
+handle["/ontheappstore"] = requestHandlers.itrack.onTheAppStore;
 
 //resturant handlers:
 handle["/resturant/createorder"] = requestHandlers.resturantApp.createOrder;

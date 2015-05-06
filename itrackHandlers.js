@@ -1964,3 +1964,12 @@ function MITvideo(response, postdata, trackers)
 			response.end();
 }
 exports.MITvideo = MITvideo;
+
+function onTheAppStore(response, postdata, trackers)
+{
+	response.writeHead(301,
+			  {Location: 'https://itunes.apple.com/us/app/here-n-there/id987723784?ls=1&mt=8'}
+			);
+			response.end();
+}
+exports.onTheAppStore = onTheAppStore;

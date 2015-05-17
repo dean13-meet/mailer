@@ -26,9 +26,15 @@ function start(route, handle) {
 				console.log("Parsing postdata");
 				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}
 			}
-			console.log("request: " + JSON.stringify(request.connection));
+			req = request;
+			ip = req.headers['x-forwarded-for'] || 
+		     req.connection.remoteAddress || 
+		     req.socket.remoteAddress ||
+		     req.connection.socket.remoteAddress;
+			//console.log("request: " + JSON.stringify(request.connection));
 			
-			postData.requestIP = request.connection.remoteAddress;
+			console.log(ip);
+			postData.requestIP = ip;
 			route(handle, pathname, response, postData, trackers);
 		});
 	}

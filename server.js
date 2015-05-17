@@ -33,10 +33,8 @@ function start(route, handle) {
 		     req.connection.socket.remoteAddress;
 			//console.log("request: " + JSON.stringify(request.connection));
 			
-			console.log(ip);
-			console.log(JSON.stringify(postData));
-			postData.requestIP = ip;
-			console.log(JSON.stringify(postData));
+			if(!postData)postData = {}
+			postData.requestIP = ip
 			route(handle, pathname, response, postData, trackers);
 		});
 	}

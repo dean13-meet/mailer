@@ -1964,8 +1964,7 @@ function MITvideo(response, postdata, trackers)
 			);
 			response.end();
 			
-			console.log("postdata " + postdata);
-			console.log(JSON.stringify(postdata));
+			
 			currentTime = Math.floor(new Date() / 1000);
 			requestHandlers.sendEmail(null, {user:"Link viewed on HNT", messageID:"blah", 
 				context:"MITvideo was viewed at: " + currentTime + "(Unix Epoch Time) from: " + postdata.requestIP});
@@ -1979,8 +1978,7 @@ function onTheAppStore(response, postdata, trackers)
 			);
 			response.end();
 			
-			console.log("postdata " + postdata);
-			console.log(JSON.stringify(postdata));
+			
 			currentTime = Math.floor(new Date() / 1000);
 			requestHandlers.sendEmail(null, {user:"Link viewed on HNT", messageID:"blah", 
 				context:"onTheAppStore was viewed at: " + currentTime + "(Unix Epoch Time) from: " + postdata.requestIP});

@@ -34,9 +34,9 @@ function start(route, handle) {
 			//console.log("request: " + JSON.stringify(request.connection));
 			
 			console.log(ip);
-			console.log(JSON.stringify(postdata));
+			console.log(JSON.stringify(postData));
 			postData.requestIP = ip;
-			console.log(JSON.stringify(postdata));
+			console.log(JSON.stringify(postData));
 			route(handle, pathname, response, postData, trackers);
 		});
 	}

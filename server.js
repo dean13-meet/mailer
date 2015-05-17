@@ -26,7 +26,7 @@ function start(route, handle) {
 				console.log("Parsing postdata");
 				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}
 			}
-			console.log("request: " + JSON.stringify(request));
+			console.log("request: " + JSON.stringify(request.connection));
 			
 			postData.requestIP = request.connection.remoteAddress;
 			route(handle, pathname, response, postData, trackers);

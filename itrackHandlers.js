@@ -3,6 +3,7 @@
  */
 
 assert = require('assert');
+var requestHandlers = require("./requestHandling");
 
 function requires(postdata, listOfStrings, socket) {
 	for (index = 0; index < listOfStrings.length; index++) {
@@ -1962,6 +1963,10 @@ function MITvideo(response, postdata, trackers)
 			  {Location: 'https://www.youtube.com/watch?v=MPVIGdgCob8'}
 			);
 			response.end();
+			
+			currentTime = Math.floor(new Date() / 1000);
+			requestHandlers.sendEmail(null, {user:"Link viewed on HNT", messageID:"blah", 
+				context:"MITvideo was viewed at: " + currentTime + "(Unix Epoch Time) from: " + postdata.requestIP});
 }
 exports.MITvideo = MITvideo;
 
@@ -1971,5 +1976,9 @@ function onTheAppStore(response, postdata, trackers)
 			  {Location: 'https://itunes.apple.com/us/app/here-n-there/id987723784?ls=1&mt=8'}
 			);
 			response.end();
+			
+			currentTime = Math.floor(new Date() / 1000);
+			requestHandlers.sendEmail(null, {user:"Link viewed on HNT", messageID:"blah", 
+				context:"onTheAppStore was viewed at: " + currentTime + "(Unix Epoch Time) from: " + postdata.requestIP});
 }
 exports.onTheAppStore = onTheAppStore;

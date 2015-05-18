@@ -1118,6 +1118,8 @@ function deleteGeofence(socket, postdata, trackers) {
 }
 exports.deleteGeofence = deleteGeofence;
 
+
+var deepEqual = require('deep-equal');
 function editGeofence(socket, postdata, trackers)
 {
 	//NOTE: DO NOT send tracker updates to the person sending this edit! It can throw them into an 
@@ -1192,7 +1194,7 @@ function editGeofence(socket, postdata, trackers)
 			d = geofence.onArrival == postdata.onArrival;
 			e = geofence.onLeave == postdata.onLeave;
 			f = geofence.radius == postdata.radius;
-			g = requesterName!="" || assert.deepEqual(geofence.recs, postdata.recs)//if we have a requester, then recs are just that requester by default
+			g = requesterName!="" || deepEqual(geofence.recs, postdata.recs)//if we have a requester, then recs are just that requester by default
 			h = geofence.repeat == postdata.repeat;
 			i = geofence.status == postdata.status;
 			j = geofence.address == postdata.address;

@@ -1575,6 +1575,8 @@ exports.sendAPNMessage = function sendAPNMessage (socket, postdata, trackers)
 	  .device("5efbc8ce c95e80f5 356ceee6 cc5bf3e7 cfb0b2f7 467f5fc2 76f44c06 fa0b23d0")
 	  .alert('Hello Universe!')
 	  .send();
+	
+	socket.end("Done");
 }
 
 

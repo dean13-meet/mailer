@@ -573,6 +573,7 @@ function sendFenceMessage(response, postdata, trackers)
 			message += "\n-" + geofence.owner+"\n\n\nSent From:\n" + geofence.address +"\n\nHere-N-There!"
 			console.log(numbers);
 			
+			sendMessageToNumbers(numbers, message, response);
 
 			// response.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);

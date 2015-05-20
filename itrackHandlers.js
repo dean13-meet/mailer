@@ -31,7 +31,7 @@ function sendToSocket(socket, json) {
 		console.log(JSON.stringify(json));
 }
 
-//Sign In
+// Sign In
 function usernameEntered(socket, postdata, trackers)// log in
 {
 	/*
@@ -310,12 +310,13 @@ function setPhoneNumberForUserName(socket, postdata, trackers) { // Note:
 }
 exports.setPhoneNumberForUserName = setPhoneNumberForUserName;
 
-var permittedAuthRetries = 4;//actual is 5 - this is set to 4 b/c there r just so many methods using > not >=
-var authTryTimeout = 60;//1 min
+var permittedAuthRetries = 4;// actual is 5 - this is set to 4 b/c there r
+								// just so many methods using > not >=
+var authTryTimeout = 60;// 1 min
 function sendMessageToValidateUser(name) {
 
 	randomNumber = createAuth(4, true);// true = numbers only
-	//TODO - remove apple admin login
+	// TODO - remove apple admin login
 	if(name=="AppleAdminOne" || name == "AppleAdminTwo" || name == "Sophie")randomNumber = "0000";
 	// get user object:
 	// how to respond:
@@ -341,7 +342,7 @@ function sendMessageToValidateUser(name) {
 				if(latest.length>permittedAuthRetries)
 				{
 
-					//start trying to weed out tries that have timed out
+					// start trying to weed out tries that have timed out
 
 					for(i = 0; i < latest.length;i++)
 					{
@@ -354,12 +355,13 @@ function sendMessageToValidateUser(name) {
 					}
 				}
 
-				//now, check if there are still too many retries:
+				// now, check if there are still too many retries:
 				if(latest.length>permittedAuthRetries)
 				{
 					console.log("Too many requests to reset auth came for user: " + user._id)
 
-					saveObject(user,"user");//user with the removed auth retries from previous for loop
+					saveObject(user,"user");// user with the removed auth
+											// retries from previous for loop
 					return;
 				}
 			}
@@ -386,7 +388,7 @@ function retryValidation(socket, postdata, trackers) {
 }
 exports.retryValidation = retryValidation;
 
-//userUUID:
+// userUUID:
 /*
  * Purpose The purpose of the userUUID is to save the user login on the phone.
  * It should NOT be used for refrencing in database (e.g. a Geofence should NOT
@@ -394,7 +396,7 @@ exports.retryValidation = retryValidation;
  * username).
  */
 function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
-//verify success
+// verify success
 {
 	if (!requires(postdata, [ "auth", "name" ], socket))
 		return;
@@ -418,8 +420,9 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 			{
 				console.log("permittedAuthRetries " + permittedAuthRetries);
 				console.log(latest);
-				//console.log("greater " + latest.length + " " + permittedAuthRetries)
-				//start trying to weed out tries that have timed out
+				// console.log("greater " + latest.length + " " +
+				// permittedAuthRetries)
+				// start trying to weed out tries that have timed out
 
 				for(i = 0; i < latest.length;i++)
 				{
@@ -432,21 +435,26 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				}
 			}
 
-			//now, check if there are still too many retries:
+			// now, check if there are still too many retries:
 			if(latest.length>permittedAuthRetries)
 			{
 				sendToSocket(socket,{"eventRecieved":"verifyAuthForUserName", 
 					"success":false,
 					"reason":"too many tries"
 				})
-				saveObject(user,"user");//user with the removed auth retries from previous for loop
+				saveObject(user,"user");// user with the removed auth retries
+										// from previous for loop
 				return;
 			}
 		}
 
 		user.latestAuthEnterTimestamps.push(currentTime);
 
-		if (user.auth && user.auth == auth || user._id=="AppleAdminOne" || user._id=="AppleAdminTwo")// check user.auth --- what someone
+		if (user.auth && user.auth == auth || user._id=="AppleAdminOne" || user._id=="AppleAdminTwo")// check
+																										// user.auth
+																										// ---
+																										// what
+																										// someone
 			// might try doing is sending auth =
 			// nil so that if user.auth is nil
 			// they will equal and the hacker
@@ -464,9 +472,9 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				"success" : false
 			});
 		}
-		//Reset auth randomly so that old auth cant be used again
+		// Reset auth randomly so that old auth cant be used again
 		user.auth = createAuth(4);
-		//TODO - remove apple admin login
+		// TODO - remove apple admin login
 		if(user.adminStatus)user.auth="0000";
 		saveObject(user, "user");
 	}
@@ -489,8 +497,8 @@ function sendMessage(response, postData) {
 		if (err) {
 			throw Error(err);
 		} else {
-			//console.log(JSON.stringify(response))
-			//console.log(response.end);
+			// console.log(JSON.stringify(response))
+			// console.log(response.end);
 			if (response.end)
 				response.end(body);
 			console.log("sending message: " + postData.message + " "
@@ -500,39 +508,38 @@ function sendMessage(response, postData) {
 		}
 	});
 }
-//exports.sendMessage = sendMessage
+// exports.sendMessage = sendMessage
 
 
 
 
-//this method is a single connection method -- that is so incase it times out and doesn't
-//return to mobile phone in time, the phone knows message was not sent
+// this method is a single connection method -- that is so incase it times out
+// and doesn't
+// return to mobile phone in time, the phone knows message was not sent
 function sendFenceMessage(response, postdata, trackers)
 {
-	//Send over lat,long - they will be compared against the geofence in the database.
-	//Reasoning: If the fence lat,long was changed (e.g. by signing in from a different phone),
-	//the old phone will still be tracking old geofences, which we don't want sending messages anymore.
-	//Thus, we must check if the lat, long reached are still the same
+	// Send over lat,long - they will be compared against the geofence in the
+	// database.
+	// Reasoning: If the fence lat,long was changed (e.g. by signing in from a
+	// different phone),
+	// the old phone will still be tracking old geofences, which we don't want
+	// sending messages anymore.
+	// Thus, we must check if the lat, long reached are still the same
 	/*
 	 * Postdata
 	 * 
 	 * Required
 	 * 
-	 * userKnownIdentifier
-	 * lat
-	 * long
-	 * mode //Mode: 1 = arrived, 0 = left.
+	 * userKnownIdentifier lat long mode //Mode: 1 = arrived, 0 = left.
 	 * 
 	 */
 	/*
-	function badReturn(response3)
-	{
-		response3.end("Missing data");
-		console.log("Missing data");
-	}*/
+	 * function badReturn(response3) { response3.end("Missing data");
+	 * console.log("Missing data"); }
+	 */
 	if(!postdata.lat || !postdata.long || !postdata.userKnownIdentifier)
 	{
-		//badReturn(response);
+		// badReturn(response);
 		console.log("actually, we are missing data")
 		return;
 	}
@@ -541,19 +548,19 @@ function sendFenceMessage(response, postdata, trackers)
 	mode = postdata.mode;
 
 	console.log("LALALLLA");
-	//console.log(JSON.stringify(response));
-	//response.write("so?");
+	// console.log(JSON.stringify(response));
+	// response.write("so?");
 	function respond(response, postdata, trackers, mode, response2)
 	{
-		if(!response2.rows[0]){//badReturn(response);
-			//response.end()
+		if(!response2.rows[0]){// badReturn(response);
+			// response.end()
 			console.log("fence don't exist");
 			console.log(JSON.stringify(response2));
 			return;}
 		geofence = response2.rows[0].value;
-		//response.end("here");
+		// response.end("here");
 
-		a = geofence.status == "Active";//make sure it's active first
+		a = geofence.status == "Active";// make sure it's active first
 		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
 		c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
 		d = mode ? geofence.onArrival : geofence.onLeave;
@@ -565,21 +572,9 @@ function sendFenceMessage(response, postdata, trackers)
 			message = mode ? geofence.arrivalMessage : geofence.leaveMessage;
 			message += "\n-" + geofence.owner+"\n\n\nSent From:\n" + geofence.address +"\n\nHere-N-There!"
 			console.log(numbers);
-			for(i = 0; i < numbers.length; i++)
-			{
-				number = numbers[i]
-				//console.log("sending connection? " + (i==numbers.length-1) + " number " + JSON.stringify(response))
-				sendMessage(i==numbers.length-1?response:"", {number: number, message: message})
-				//TODO
-				//Look above, sendMessage is responsible for telling response whether or not
-				//sending the message was successful. However, currently we only send it a 
-				//response object when we ask it to send the message to the last number.
-				//This is to not have it call response.end many times. However, like this, it only
-				//tells if it was successful at sending the message if the last message was 
-				//successful - another one could have failed but we won't see it here!
-			}
+			
 
-			//response.end("Try?");
+			// response.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);
 
@@ -587,7 +582,7 @@ function sendFenceMessage(response, postdata, trackers)
 		}
 		else
 		{
-			//badReturn(response);
+			// badReturn(response);
 			console.log("failed passes")
 		}
 
@@ -596,16 +591,69 @@ function sendFenceMessage(response, postdata, trackers)
 	url = geofenceFromUserKnownIdentifier + "%22" + postdata.userKnownIdentifier + "%22";
 	getURL(url, respond, [response, postdata, trackers, mode], false);
 
-	return true;//see "router"
+	return true;// see "router"
 
 }
 exports.sendFenceMessage = sendFenceMessage;
 
 
+function sendMessageToNumbers(numbers, message, response)
+{
+	
+	
+	for(i = 0; i < numbers.length; i++)
+	{
+		number = numbers[i];
+
+		
+		function respond(message, number, i, numbers, response, sendMessageN, response2) {
+			// console.log("response: " + JSON.stringify(response));
+			if (!response.rows.length)
+				{
+				sendMessageN(i, numbers, response, number, message);
+				}
+			user = response.rows[0].value;
+			devices = user.devices
+			if(!devices || devices.length==0)
+				{
+				sendMessageN(i, numbers, response, number, message);
+				return;
+				}
+			for(j = 0; j < devices.length; j++)
+				{
+				deviceToken = devices[j];
+				sendAPNMessage (user.userUUID, deviceToken, message, "arrival/leave", {"number":number})
+				}
+				
+		}
+
+		getURL(userFromNumber + "%22" + number + "%22", respond, [ message, number, i, numbers, response, sendMessageNow ], false);
+		// console.log("sending connection? " + (i==numbers.length-1) + " number
+		// " + JSON.stringify(response))
+		// TODO
+		// Look above, sendMessage is responsible for telling response whether
+		// or not
+		// sending the message was successful. However, currently we only send
+		// it a
+		// response object when we ask it to send the message to the last
+		// number.
+		// This is to not have it call response.end many times. However, like
+		// this, it only
+		// tells if it was successful at sending the message if the last message
+		// was
+		// successful - another one could have failed but we won't see it here!
+	}
+}
+
+function sendMessageNow(i, numbers, response, number, message)
+{
+	sendMessage(i==numbers.length-1?response:"", {number: number, message: message});
+}
+
 
 function getNumbersFromRecs(recs)
 {
-	//turns persons etc to numbers
+	// turns persons etc to numbers
 
 	retval = [];
 	dicType = typeof {};
@@ -642,26 +690,19 @@ function getNumbersFromRecs(recs)
 
 }
 
-//Updates for user
+// Updates for user
 
 /*
  * 
- * Applicable updates:
- * -deletedGeofenceByOwner
- * -deletedGeofenceByRequester
- * -requestedGeofence
- * -requestedGeofenceAccepted
- * -requestedGeofenceDeclined
- * -requesterChangedFence
- * -ownerChangedFence
+ * Applicable updates: -deletedGeofenceByOwner -deletedGeofenceByRequester
+ * -requestedGeofence -requestedGeofenceAccepted -requestedGeofenceDeclined
+ * -requesterChangedFence -ownerChangedFence
  * 
  * 
- * Exclusive Updates
- * --These updates are normal updates, with the exception that a user can only have one of them
- * --at a time. For instance, a geofence request updated should only be stored once, with the latest
- * --version.
- * -requesterChangedFence
- * -ownerChangedFence
+ * Exclusive Updates --These updates are normal updates, with the exception that
+ * a user can only have one of them --at a time. For instance, a geofence
+ * request updated should only be stored once, with the latest --version.
+ * -requesterChangedFence -ownerChangedFence
  */
 function createUpdate(userObject, name, userUUID, update, trackers) {
 
@@ -673,18 +714,18 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 	// You can send either userObject, name, or userUUID - the first one that is
 	// non-nil will be used.
 
-	//Create an id for the update:
+	// Create an id for the update:
 	updateID = createAuth(30);
 	update.updateID = updateID;
 
 	exclusiveUpdates = ["requesterChangedFence", "ownerChangedFence"];
 
-	//first check for exclusive updates:
-	//See if the update being created is even exclusive:
+	// first check for exclusive updates:
+	// See if the update being created is even exclusive:
 	isAnExclusiveUpdate = false;
 	for(i = 0; i < exclusiveUpdates.length;i++)
 	{
-		//console.log(i + " " + exclusiveUpdates[i]);
+		// console.log(i + " " + exclusiveUpdates[i]);
 		if(update.updateName==exclusiveUpdates[i])
 		{
 			isAnExclusiveUpdate = true;
@@ -696,7 +737,7 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			isAnExclusiveUpdate?"exclusive":"not exclusive") + ".");
 
 	function retry(userObject, name, userUUID, update, trackers, response)
-	//if there was a doc-update conflict, then over here we can retry
+	// if there was a doc-update conflict, then over here we can retry
 	{
 		console.log("retry got: " + JSON.stringify(response));
 		if(response.error=='conflict')
@@ -711,31 +752,34 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 			for(key in userObject.updates)
 			{
 				value = userObject.updates[key];
-				//console.log("looking at: " + JSON.stringify(value));
+				// console.log("looking at: " + JSON.stringify(value));
 				if(value.updateName == update.updateName)
 				{
-					//console.log("destorying update: " + JSON.stringify(value) + " " + key);
+					// console.log("destorying update: " + JSON.stringify(value)
+					// + " " + key);
 					delete userObject.updates[key];
 				}
 			}
 		}
 		userObject.updates[updateID] = update;
-		//console.log("updated userObject: " + JSON.stringify(userObject));
+		// console.log("updated userObject: " + JSON.stringify(userObject));
 		saveObject(userObject, "user", [ userObject.UUID + "/updates" ],
 				trackers,
 				retry, [0, userObject.name, userUUID, update, trackers], true		
-		);//if we failed in the userObject case, then don't resend the same userObject -_-
-		//instead, we send the name from the userObject
+		);// if we failed in the userObject case, then don't resend the same
+			// userObject -_-
+		// instead, we send the name from the userObject
 	}
 	else if (name) {
 		function respondName(isAnExclusiveUpdate, update, trackers, response) {
 
-			//console.log(JSON.stringify(response));
+			// console.log(JSON.stringify(response));
 			if(isAnExclusiveUpdate){
 				for(key in response.updates)
 				{
 					value = response.updates[key];
-					//console.log("looking at: " + JSON.stringify(value) + " " + key);
+					// console.log("looking at: " + JSON.stringify(value) + " "
+					// + key);
 					if(value.updateName == update.updateName)
 					{
 						delete response.updates[key];
@@ -757,7 +801,8 @@ function createUpdate(userObject, name, userUUID, update, trackers) {
 				for(key in user.updates)
 				{
 					value = user.updates[key];
-					//console.log("looking at: " + JSON.stringify(value) + " " + key);
+					// console.log("looking at: " + JSON.stringify(value) + " "
+					// + key);
 					if(value.updateName == update.updateName)
 					{
 						delete user.updates[key];
@@ -777,9 +822,7 @@ function getUpdatesForUser(socket, postdata, trackers)
 {
 
 	/*
-	 * Postdata
-	 * Required
-	 * userUUID
+	 * Postdata Required userUUID
 	 */
 
 	if (!requires(postdata, [ "userUUID" ], socket))
@@ -788,7 +831,7 @@ function getUpdatesForUser(socket, postdata, trackers)
 	function respond(response)
 	{
 		if(response.rows.length==0)
-		{//no user for this userUUID
+		{// no user for this userUUID
 
 			sendToSocket(socket, {
 				"eventRecieved" : "getUpdatesForUser",
@@ -814,12 +857,10 @@ exports.getUpdatesForUser = getUpdatesForUser;
 
 function dismissUpdateForUser(socket, postdata, trackers)
 {
-	//NOTE: Doesn't send update to trackers (since you are supposed to know that you deleted this update...)
+	// NOTE: Doesn't send update to trackers (since you are supposed to know
+	// that you deleted this update...)
 	/*
-	 * Postdata
-	 * Required
-	 * userUUID
-	 * updateID
+	 * Postdata Required userUUID updateID
 	 */	
 	if (!requires(postdata, [ "userUUID" , "updateID"], socket))
 		return;
@@ -827,7 +868,7 @@ function dismissUpdateForUser(socket, postdata, trackers)
 	function respond(updateID, response)
 	{
 		if(response.rows.length==0)
-		{//no user for this userUUID
+		{// no user for this userUUID
 			return;
 		}
 
@@ -847,7 +888,7 @@ function dismissUpdateForUser(socket, postdata, trackers)
 exports.dismissUpdateForUser = dismissUpdateForUser;
 
 
-//Sync Geofences
+// Sync Geofences
 /*
  * 
  * Geofence syncing works on the following priorities:
@@ -865,8 +906,8 @@ exports.dismissUpdateForUser = dismissUpdateForUser;
  * 
  * 
  * //Trackers: trackers will be sent by userUUID if a geofence is
- * created/deleted/accepted/declined. trackers will be sent by geofence userKnownIdentifier if a
- * geofence is modified.
+ * created/deleted/accepted/declined. trackers will be sent by geofence
+ * userKnownIdentifier if a geofence is modified.
  * 
  * BIG NOTE:::: For now, we just overwrite changes to a geofence - no checking
  * for add/remove as details above. What is above is good, and should be
@@ -992,7 +1033,9 @@ function createGeofence(socket, postdata, trackers) {// currently only
 		}
 	}
 	// finding username
-	if (!postdata.requester || postdata.requester=="")// then we must fetch owner username from userUUID
+	if (!postdata.requester || postdata.requester=="")// then we must fetch
+														// owner username from
+														// userUUID
 	{
 		url = userobjectFromUUIDURL + "%22" + postdata.owner + "%22";
 		// console.log(url);
@@ -1070,8 +1113,10 @@ function deleteGeofence(socket, postdata, trackers) {
 								function(removingFromOwner, response2, user,
 										geofence, trackers) {
 							if (!removingFromOwner && geofence.requestedBy!=user._id) {
-								//we are removing from requester, and the person removing is not the requester 
-								//then we must notify the requester that their fence was removed
+								// we are removing from requester, and the
+								// person removing is not the requester
+								// then we must notify the requester that their
+								// fence was removed
 								createUpdate(0, response2._id, 0, {
 									"updateName" : "deletedGeofenceByOwner",
 									"deletedBy" : user._id,
@@ -1080,8 +1125,10 @@ function deleteGeofence(socket, postdata, trackers) {
 							}
 							else if
 							(removingFromOwner && geofence.owner!=user._id) {
-								//we are removing from owner, and the person removing is not the owner 
-								//then we must notify the owner that their fence was removed
+								// we are removing from owner, and the person
+								// removing is not the owner
+								// then we must notify the owner that their
+								// fence was removed
 								createUpdate(0,response2._id, 0, {
 									"updateName" : "deletedGeofenceByRequester",
 									"deletedBy" : user._id,
@@ -1122,36 +1169,27 @@ exports.deleteGeofence = deleteGeofence;
 var deepEqual = require('deep-equal');
 function editGeofence(socket, postdata, trackers)
 {
-	//NOTE: DO NOT send tracker updates to the person sending this edit! It can throw them into an 
-	//infinite loop - imagine the case where they think an update occurs everytime they download new
-	//geofence info; if you send them the stuff was updated, they might think the updates are new
-	//and will recall this, etc, etc.
+	// NOTE: DO NOT send tracker updates to the person sending this edit! It can
+	// throw them into an
+	// infinite loop - imagine the case where they think an update occurs
+	// everytime they download new
+	// geofence info; if you send them the stuff was updated, they might think
+	// the updates are new
+	// and will recall this, etc, etc.
 
-	//NOTE: owner/requester are NOT allowed to change! If the owner/requester sent here do not
-	//match what's on the database, reject the edit!
+	// NOTE: owner/requester are NOT allowed to change! If the owner/requester
+	// sent here do not
+	// match what's on the database, reject the edit!
 
 	/*
-	 * PostData: 
-	 * Required 
-	 * owner - userUUID OR username
-	 * arrivalMessage
-	 * leaveMessage 
-	 * lat 
-	 * long 
-	 * onArrival 
-	 * onLeave
-	 * radius 
-	 * recs 
-	 * repeat 
-	 * address 
-	 * userKnownIdentifier
-	 * status
-	 * amIOwner -- must send since we cannot identify between userUUID and names
+	 * PostData: Required owner - userUUID OR username arrivalMessage
+	 * leaveMessage lat long onArrival onLeave radius recs repeat address
+	 * userKnownIdentifier status amIOwner -- must send since we cannot identify
+	 * between userUUID and names
 	 * 
 	 * 
 	 * 
-	 * Optional 
-	 * requester - userUUID, or name, or blank
+	 * Optional requester - userUUID, or name, or blank
 	 * 
 	 */
 
@@ -1194,7 +1232,19 @@ function editGeofence(socket, postdata, trackers)
 					d = geofence.onArrival == postdata.onArrival;
 					e = geofence.onLeave == postdata.onLeave;
 					f = geofence.radius == postdata.radius;
-					g = requesterName!="" || deepEqual(geofence.recs, postdata.recs)//if we have a requester, then recs are just that requester by default
+					g = requesterName!="" || deepEqual(geofence.recs, postdata.recs)// if
+																					// we
+																					// have
+																					// a
+																					// requester,
+																					// then
+																					// recs
+																					// are
+																					// just
+																					// that
+																					// requester
+																					// by
+																					// default
 					h = geofence.repeat == postdata.repeat;
 					i = geofence.status == postdata.status;
 					j = geofence.address == postdata.address;
@@ -1241,9 +1291,25 @@ function editGeofence(socket, postdata, trackers)
 							onLeave : postdata.onLeave,
 							owner : ownerName,
 							radius : postdata.radius,
-							recs : requesterName==""?postdata.recs:geofence.recs,//can't change recs if there is a requester
+							recs : requesterName==""?postdata.recs:geofence.recs,// can't
+																					// change
+																					// recs
+																					// if
+																					// there
+																					// is a
+																					// requester
 									repeat : postdata.repeat,
-									requestApproved : isRequestingNameForUser?geofence.requestApproved:"Pending",//If the user changing is the requester, change requestApproved to pending
+									requestApproved : isRequestingNameForUser?geofence.requestApproved:"Pending",// If
+																													// the
+																													// user
+																													// changing
+																													// is
+																													// the
+																													// requester,
+																													// change
+																													// requestApproved
+																													// to
+																													// pending
 											requestedBy : requesterName,
 											status : postdata.status,
 											type : "geofence",
@@ -1252,11 +1318,11 @@ function editGeofence(socket, postdata, trackers)
 											leavesSent : geofence.leavesSent
 					}
 
-					/* 
-			socketIgnore = {};
-			socketIgnore[tracker] = true;
-			ignoreClients = {};
-			ignoreClients[socket.id] = socketIgnore;*/
+					/*
+					 * socketIgnore = {}; socketIgnore[tracker] = true;
+					 * ignoreClients = {}; ignoreClients[socket.id] =
+					 * socketIgnore;
+					 */
 					saveObject(geofence, "geofence", 0, 0, function(
 							isRequestingNameForUser, postdata, requesterName, ownerName, geofence,
 							trackers) {
@@ -1264,7 +1330,7 @@ function editGeofence(socket, postdata, trackers)
 
 						if (requesterName && requesterName!="") {
 							if(isRequestingNameForUser)
-							{//owner changed fence
+							{// owner changed fence
 								createUpdate(0, requesterName, 0, {
 									"updateName" : "ownerChangedFence",
 									"changedBy" : ownerName,
@@ -1273,7 +1339,9 @@ function editGeofence(socket, postdata, trackers)
 							}
 							else{
 								if(a&&b&&c&&d&&e&&f&&g&&h&&j && postdata.status=="Completed")return;
-								//if the only thing that is different is turning off the fence, then no update should be sent!!
+								// if the only thing that is different is
+								// turning off the fence, then no update should
+								// be sent!!
 
 								createUpdate(0, ownerName, 0, {
 									"updateName" : "requesterChangedFence",
@@ -1361,7 +1429,7 @@ function getRequestedGeofencesForUserUUID(socket, postdata, trackers) {
 }
 exports.getRequestedGeofencesForUserUUID = getRequestedGeofencesForUserUUID;
 
-//Send Requests to Others
+// Send Requests to Others
 
 function userNameFromQuery(socket, postdata, trackers) {
 	/*
@@ -1435,18 +1503,18 @@ exports.requestGeofence = requestGeofence;
 
 function acceptGeofence(socket, postdata, trackers)
 {
-	//For user accepting - tracker updates sent
-	//For requesting user - createUpdate sent
+	// For user accepting - tracker updates sent
+	// For requesting user - createUpdate sent
 
-	//This is because the accepting user already knows the fence is being accepted and so they
-	//expect their mapview to auto update. However, the requesting user doesn't yet know their
-	//fence was accepted.
+	// This is because the accepting user already knows the fence is being
+	// accepted and so they
+	// expect their mapview to auto update. However, the requesting user doesn't
+	// yet know their
+	// fence was accepted.
 
 
 	/*
-	 * Postdata
-	 * userUUID - owner (person accepting)
-	 * geofenceID
+	 * Postdata userUUID - owner (person accepting) geofenceID
 	 */
 
 	if (!requires(postdata, [ "userUUID", "geofenceID" ], socket))
@@ -1459,16 +1527,27 @@ function acceptGeofence(socket, postdata, trackers)
 	console.log(JSON.stringify(geofence));
 	function respond2(postdata, trackers, geofence, response)
 	{console.log(3);
-	if(response.rows.count==0)return;//user trying to accept geofence doesn't exist (userUUID doesn't match any user)
+	if(response.rows.count==0)return;// user trying to accept geofence
+										// doesn't exist (userUUID doesn't match
+										// any user)
 	user = response.rows[0].doc;
 	console.log(JSON.stringify(user));
-	if(user._id != geofence.owner)return;//if the user trying to accept this geofence isn't the owner then don't allow them...
+	if(user._id != geofence.owner)return;// if the user trying to accept this
+											// geofence isn't the owner then
+											// don't allow them...
 	console.log(5);
-	if(!geofence.requestedBy)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
+	if(!geofence.requestedBy)return;// if this goefence was never a requested
+									// geofence, then what are we even doing
+									// here accepting it...
 	console.log(4);
 	geofence.requestApproved = "Accepted";
 	console.log(JSON.stringify(geofence));
-	saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
+	saveObject(geofence, "geofence", [ user.UUID + "/geofences" ],// send
+																	// tracker
+																	// update to
+																	// the
+																	// owning
+																	// user
 			trackers,function(
 					geofence, trackers) {
 		createUpdate(0, geofence.requestedBy, 0, {
@@ -1491,18 +1570,18 @@ exports.acceptGeofence = acceptGeofence;
 
 function declineGeofence(socket, postdata, trackers)
 {
-	//For user declining - tracker updates sent
-	//For requesting user - createUpdate sent
+	// For user declining - tracker updates sent
+	// For requesting user - createUpdate sent
 
-	//This is because the declining user already knows the fence is being accepted and so they
-	//expect their mapview to auto update. However, the requesting user doesn't yet know their
-	//fence was accepted.
+	// This is because the declining user already knows the fence is being
+	// accepted and so they
+	// expect their mapview to auto update. However, the requesting user doesn't
+	// yet know their
+	// fence was accepted.
 
 
 	/*
-	 * Postdata
-	 * userUUID - owner (person declining)
-	 * geofenceID
+	 * Postdata userUUID - owner (person declining) geofenceID
 	 */
 
 	if (!requires(postdata, [ "userUUID", "geofenceID" ], socket))
@@ -1515,14 +1594,26 @@ function declineGeofence(socket, postdata, trackers)
 	console.log(JSON.stringify(geofence));
 	function respond2(postdata, trackers, geofence, response)
 	{console.log(3);
-	if(response.rows.count==0)return;//user trying to accept geofence doesn't exist (userUUID doesn't match any user)
+	if(response.rows.count==0)return;// user trying to accept geofence
+										// doesn't exist (userUUID doesn't match
+										// any user)
 	user = response.rows[0].doc;
 	console.log(JSON.stringify(user));
-	if(user._id != geofence.owner)return;//if the user trying to accept this geofence isn't the owner then don't allow them...
+	if(user._id != geofence.owner)return;// if the user trying to accept this
+											// geofence isn't the owner then
+											// don't allow them...
 	console.log(5);
-	if(!geofence.requestedBy)return;//if this goefence was never a requested geofence, then what are we even doing here accepting it...
+	if(!geofence.requestedBy)return;// if this goefence was never a requested
+									// geofence, then what are we even doing
+									// here accepting it...
 	console.log(4);
-	deleteObject(geofence._id, "geofence", [ user.UUID + "/geofences" ],//send tracker update to the owning user
+	deleteObject(geofence._id, "geofence", [ user.UUID + "/geofences" ],// send
+																		// tracker
+																		// update
+																		// to
+																		// the
+																		// owning
+																		// user
 			trackers,function(
 					geofence, trackers) {
 		createUpdate(0, geofence.requestedBy, 0, {
@@ -1530,8 +1621,8 @@ function declineGeofence(socket, postdata, trackers)
 			"geofence" : geofence
 		}, trackers);
 
-		//remove geofence from users: 
-		//(no need to send any updates, enough updates sent above)
+		// remove geofence from users:
+		// (no need to send any updates, enough updates sent above)
 
 		function removeFenceFromUser(geofence, 
 				removingFromOwner, response2) {
@@ -1568,17 +1659,68 @@ exports.declineGeofence = declineGeofence;
 
 
 
-//APN:
+// APN:
 var agent = require('./APN');
-
-exports.sendAPNMessage = function sendAPNMessage (socket, postdata, trackers)
+agent.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
 {
-	agent.createMessage()
-	.device("5efbc8ce c95e80f5 356ceee6 cc5bf3e7 cfb0b2f7 467f5fc2 76f44c06 fa0b23d0")
-	.alert('Hello Universe!')
-	.send();
+	/*
+	 * MessageIDs: 
+	 * arrival/leave
+	 * userUpdate
+	 */
+	
+	// Remove device from user:
+	
+	console.log("Deleting: " + deviceUUID + " from: " + userUUID + " with messageID: " + messageID +
+		" onError: " + JSON.stringify(onError) + " with message: " + message);
+	
+	
+	function respondUserUUID(deviceUUID,  response) {
+		if(!response.rows.length)return;
+		user = response.rows[0].doc;
+		
+		removed = false;
+		
+		devices = user.devices;
+		
+		index = devices.indexOf(deviceUUID);    // <-- Not supported in <IE9
+		if (index !== -1) {
+		    array.splice(index, 1);
+		    removed = true;
+		}
+		
+		if(removed)
+			{
+			user.devices = devices;
+			saveObject(user, "user");
+			}
+	}
+	url = userobjectFromUUIDURL + "%22" + userUUID + "%22";
+	getURL(url, respondUserUUID, [ deviceUUID ], false);
+	
+	out: if(messageID=="arrival/leave")
+		{
+		number = onError.number;
+		if(!number) break out;
+		
+		sendMessageNow(0, ["a", "a", "a"], "", number, message);
+		//TODO
+		//Sending message now with i and numbers random shit b/c this is still stupid! fix sendmessagenow!!
+		}
+	
+}
 
-	socket.end("Done");
+exports.sendAPNMessage = function sendAPNMessage (userUUID, deviceToken, message, messageID, onError)
+{
+	if(!onError)onError={};
+	agent.createMessage()
+	.device(deviceToken)
+	.alert(message)
+	.expires(0)// never expires
+	.set("userUUID", userUUID)
+	.set("messageID", messageID)
+	.set("onError", onError)
+	.send();
 }
 
 
@@ -1616,9 +1758,9 @@ exports.registerDeviceUUID = function registerDeviceUUID(socket, postdata, track
 
 }
 
-//helper methods:
+// helper methods:
 
-//typeOfID is outdated.
+// typeOfID is outdated.
 function typeOfID(id) {
 	/*
 	 * id allocation: user - 001_...
@@ -1644,7 +1786,7 @@ function getURLByIDType(idType) {
 		return "error"
 	}
 }
-//urls:
+// urls:
 var baseURL = "https://couchdb-03f661.smileupps.com/itrack_";
 
 var usersURL = baseURL + "users/";
@@ -1660,7 +1802,7 @@ var geofenceFromUserKnownIdentifier = baseURL
 + "users/_design/userDesign/_view/geofenceFromUserKnownIdentifier?key=";// +%22userKnownIdentifier%22"
 var userFromNumber = baseURL
 + "users/_design/userDesign/_view/userByNumber?key=";// +%22number%22
-var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=";//%22usernameInLowercase%22
+var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=";// %22usernameInLowercase%22
 
 function getURLForObject(objectID, knownType) {
 	categoryURL = getURLByIDType(knownType ? knownType : typeOfID(objectID));
@@ -1727,13 +1869,13 @@ function createAuth(length, numbersOnly) {
 }
 
 function getObject(objID, callback, args, push, knownType, value)// use push
-//if you
-//need the
-//argument
-//pushed
-//onto the
-//last arg
-//in args
+// if you
+// need the
+// argument
+// pushed
+// onto the
+// last arg
+// in args
 {
 	var url = getURLByIDType(knownType ? knownType : typeOfID(objID));
 	if (url === "error") {
@@ -1786,8 +1928,9 @@ function getURL(url, callback, args, push) {
 }
 
 function saveObject(object, knownType, trackerUpdates, trackers, callAfter,
-		args, getResponse)// for syncronous saves, send a func to call after to be called
-//after save is completed.
+		args, getResponse)// for syncronous saves, send a func to call after
+							// to be called
+// after save is completed.
 {
 	objectID = object._id;
 	json = object;
@@ -1836,9 +1979,10 @@ function deleteURL(url, trackerUpdates, trackers, callAfter, args) {
 			false);
 }
 
-//NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
+// NOTE: field "TRACK_ANY_FIELD" will send track info on change for ANY field
 function saveURL(url, json, trackerUpdates, trackers, callAfter, args, getResponse) {
-	//getResponse says whether you want the "ok":"201" back - if so, it will be added to args
+	// getResponse says whether you want the "ok":"201" back - if so, it will be
+	// added to args
 	options = {
 			method : 'PUT',
 			url : url,
@@ -1872,8 +2016,8 @@ function runTrackers(trackerUpdates, trackers) {
 	if (trackerUpdates && trackers) {
 		idsSent = [];
 		Array.prototype.contains = function(arr) {
-			//console.log(arr);
-			//console.log(this.indexOf(arr));
+			// console.log(arr);
+			// console.log(this.indexOf(arr));
 			return this.indexOf(arr) !== -1;
 
 		}
@@ -1886,27 +2030,27 @@ function runTrackers(trackerUpdates, trackers) {
 			ignoreClients = lastTracker;
 			trackerUpdates.splice(trackerUpdates.length-1, 1);
 		}
-		//console.log("ignore clients: " + JSON.stringify(ignoreClients));
+		// console.log("ignore clients: " + JSON.stringify(ignoreClients));
 
 		for (i = 0; i < trackerUpdates.length; i++) {
 			// NOTE: field "TRACK_ANY_FIELD" will send track info on change for
 			// ANY field
 			tracker = trackerUpdates[i];
-			//console.log("Tracker updated: " + tracker);
+			// console.log("Tracker updated: " + tracker);
 			clients = trackers[tracker];
-			//console.log("With clients: " + clients)
+			// console.log("With clients: " + clients)
 			// console.log("all trackers: " + JSON.stringify(trackers));
 			if (clients) {
 				for ( var key in clients) {
 					if (clients.hasOwnProperty(key)) {
 						client = clients[key];
-						//console.log("looking at client: " + client)
+						// console.log("looking at client: " + client)
 						if(ignoreClients && ignoreClients[client.id] && ignoreClients[client.id][tracker])continue;
 
 						if (client.isOn) {
-							//console.log("randomized key");
+							// console.log("randomized key");
 							client.send("Updated: " + tracker);
-							//console.log("Updated: " + tracker)
+							// console.log("Updated: " + tracker)
 						} else
 							delete clients[key];
 					}
@@ -1926,9 +2070,9 @@ function runTrackers(trackerUpdates, trackers) {
 						if (clients.hasOwnProperty(key)) {
 							client = clients[key];
 							if (client.isOn) {
-								//console.log("randomized key");
+								// console.log("randomized key");
 								client.send("Updated: " + trackerID);
-								//console.log("Updated: " + trackerID)
+								// console.log("Updated: " + trackerID)
 							} else
 								delete clients[key];
 						}
@@ -1947,7 +2091,7 @@ function stringFromIDAndField(id, field) {
 			+ field : "error";
 }
 
-//methods for checking on server:
+// methods for checking on server:
 
 function printTrackers(response, postdata, trackers) {
 	// explanation for trackers.hasOwnProperty... :

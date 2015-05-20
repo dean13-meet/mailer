@@ -1,6 +1,7 @@
 /**
  * New node file
  */
+
 var join = require('path').join
   , pfx = join(__dirname, '../_Certs/key.p12');
 
@@ -25,6 +26,9 @@ agent
  * Error Mitigation
  */
 
+var delegateDeviceNotRegistered;
+//deviceNotRegistered(deviceUUID, userUUID, messageID, onError, message)
+
 agent.on('message:error', function (err, msg) {
   switch (err.name) {
     // This error occurs when Apple reports an issue parsing the message.
@@ -35,7 +39,9 @@ agent.on('message:error', function (err, msg) {
       // Example: 8 means the token supplied is invalid or not subscribed
       // to notifications for your application.
       if (err.code === 8) {
-        console.log('    > %s', msg.device().toString());
+    	  
+    	  delegateDeviceNotRegistered(msg.device().toString(), msg.userUUID, msg.messageID, msg.onError, msg.alert);
+    	  
         // In production you should flag this token as invalid and not
         // send any futher messages to it until you confirm validity
       }

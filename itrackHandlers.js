@@ -610,11 +610,11 @@ function sendMessageToNumbers(numbers, message, response)
 		
 		function respond(message, number, i, numbers, response, sendMessageN, response2) {
 			// console.log("response: " + JSON.stringify(response));
-			if (!response.rows.length)
+			if (!response2.rows.length)
 				{
 				sendMessageN(i, numbers, response, number, message);
 				}
-			user = response.rows[0].value;
+			user = response2.rows[0].value;
 			devices = user.devices
 			if(!devices || devices.length==0)
 				{

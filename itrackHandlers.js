@@ -605,6 +605,7 @@ function sendMessageToNumbers(numbers, message, response)
 	{
 		number = numbers[i];
 
+		console.log("sending message to: " + number);
 		
 		function respond(message, number, i, numbers, response, sendMessageN, response2) {
 			// console.log("response: " + JSON.stringify(response));
@@ -622,6 +623,7 @@ function sendMessageToNumbers(numbers, message, response)
 			for(j = 0; j < devices.length; j++)
 				{
 				deviceToken = devices[j];
+				console.log("sendingAPN to: " + deviceToken);
 				sendAPNMessage (user.userUUID, deviceToken, message, "arrival/leave", {"number":number})
 				}
 				

@@ -625,7 +625,7 @@ function sendMessageToNumbers(numbers, message, response)
 				{
 				deviceToken = devices[j];
 				console.log("sendingAPN to: " + deviceToken);
-				sendAPNMessage (user.userUUID, deviceToken, message, "arrival/leave", {"number":number})
+				sendAPNMessage(user.userUUID, deviceToken, message, "arrival/leave", {"number":number})
 				}
 				
 		}
@@ -1713,7 +1713,7 @@ agent.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (device
 	
 }
 
-exports.sendAPNMessage = function sendAPNMessage (userUUID, deviceToken, message, messageID, onError)
+function sendAPNMessage (userUUID, deviceToken, message, messageID, onError)
 {
 	if(!onError)onError={};
 	agent.createMessage()
@@ -1726,8 +1726,9 @@ exports.sendAPNMessage = function sendAPNMessage (userUUID, deviceToken, message
 	.send();
 }
 
+exports.sendAPNMessage = sendAPNMessage;
 
-exports.registerDeviceUUID = function registerDeviceUUID(socket, postdata, trackers)
+function registerDeviceUUID(socket, postdata, trackers)
 {
 	if (!requires(postdata, [ "userUUID", "deviceUUID" ], socket))
 		return;
@@ -1760,6 +1761,7 @@ exports.registerDeviceUUID = function registerDeviceUUID(socket, postdata, track
 	getURL(url, respond, [ postdata.deviceUUID ], false);
 
 }
+exports.registerDeviceUUID = registerDeviceUUID
 
 // helper methods:
 

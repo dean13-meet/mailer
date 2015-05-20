@@ -1612,7 +1612,7 @@ exports.registerDeviceUUID = function registerDeviceUUID(socket, postdata, track
 	}
 
 	url = userobjectFromUUIDURL + "%22" + postdata.userUUID + "%22";
-	getURL(url, respondUserUUID, [ postdata.deviceUUID ], false);
+	getURL(url, respond, [ postdata.deviceUUID ], false);
 
 }
 

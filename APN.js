@@ -10,7 +10,8 @@ var join = require('path').join
  */
 
 var apnagent = require('apnagent')
-  , agent = module.exports = new apnagent.Agent();
+  , agent = module.exports = new apnagent.Agent(),
+  feedback = new apnagent.Feedback();
 
 /*!
  * Configure agent
@@ -40,6 +41,7 @@ agent.on('message:error', function (err, msg) {
       // to notifications for your application.
       if (err.code === 8) {
     	  
+    	  console.log('    > %s', msg.device().toString());
     	  delegateDeviceNotRegistered(msg.device().toString(), msg.userUUID, msg.messageID, msg.onError, msg.alert);
     	  
         // In production you should flag this token as invalid and not
@@ -84,3 +86,15 @@ agent.connect(function (err) {
 
   console.log('apnagent [%s] gateway connected', env);
 });
+
+
+var delegateForRemoveDevice;
+feedback.connect();
+feedback.use(function (device, timestamp, done) {
+	  var token = device.toString()
+	    , ts = timestamp.getTime();
+
+	  console.log("removing: " + token);
+	 delegateForRemoveDevice(token);
+	  done();
+	});

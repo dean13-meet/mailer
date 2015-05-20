@@ -1663,8 +1663,8 @@ exports.declineGeofence = declineGeofence;
 
 
 // APN:
-var agent = require('./APN');
-agent.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
+var apn = require('./APN');
+apn.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
 {
 	/*
 	 * MessageIDs: 
@@ -1681,22 +1681,8 @@ agent.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (device
 	function respondUserUUID(deviceUUID,  response) {
 		if(!response.rows.length)return;
 		user = response.rows[0].doc;
+		destroyDeviceFromUser(user, deviceUUID);
 		
-		removed = false;
-		
-		devices = user.devices;
-		
-		index = devices.indexOf(deviceUUID);    // <-- Not supported in <IE9
-		if (index !== -1) {
-		    array.splice(index, 1);
-		    removed = true;
-		}
-		
-		if(removed)
-			{
-			user.devices = devices;
-			saveObject(user, "user");
-			}
 	}
 	url = userobjectFromUUIDURL + "%22" + userUUID + "%22";
 	getURL(url, respondUserUUID, [ deviceUUID ], false);
@@ -1710,23 +1696,66 @@ agent.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (device
 		//TODO
 		//Sending message now with i and numbers random shit b/c this is still stupid! fix sendmessagenow!!
 		}
+}
+
+apn.delegateForRemoveDevice = function delegateForRemoveDevice(deviceUUID)
+{
 	
+	function respond(deviceUUID, response)
+	{
+		
+		if(response.rows.length)
+			{
+			user = respons.rows[0].value;
+			
+			destroyDeviceFromUser(user, deviceUUID);
+			
+			}
+		
+		
+	}
+	url = userobjectFromDeviceToken + "%22" + deviceUUID + "%22";
+	getURL(url, respond, [ deviceUUID ], false);
+}
+
+function destroyDeviceFromUser(user, deviceUUID)
+{
+	removed = false;
+	devices = user.devices;
+	
+	index = devices.indexOf(deviceUUID);    // <-- Not supported in <IE9
+	if (index !== -1) {
+	    array.splice(index, 1);
+	    removed = true;
+	}
+	
+	if(removed)
+		{
+		user.devices = devices;
+		saveObject(user, "user");
+		}
 }
 
 function sendAPNMessage (userUUID, deviceToken, message, messageID, onError)
 {
 	if(!onError)onError={};
-	agent.createMessage()
+	timestamp =  Math.floor(new Date() / 1000);
+	apn.createMessage()
 	.device(deviceToken)
 	.alert(message)
 	.expires(0)// never expires
 	.set("userUUID", userUUID)
 	.set("messageID", messageID)
 	.set("onError", onError)
-	.send();
+	.set("timestamp", timestamp)
+	.send(apnConfirm);
 }
-
 exports.sendAPNMessage = sendAPNMessage;
+
+function apnConfirm(anything)
+{
+console.log("apnConfirm: " + anything);	
+}
 
 function registerDeviceUUID(socket, postdata, trackers)
 {
@@ -1808,6 +1837,8 @@ var geofenceFromUserKnownIdentifier = baseURL
 var userFromNumber = baseURL
 + "users/_design/userDesign/_view/userByNumber?key=";// +%22number%22
 var lowercaseUsername = baseURL + "users/_design/userDesign/_view/lowercaseUsernames?key=";// %22usernameInLowercase%22
+var userobjectFromDeviceToken = baseURL + "users/_design/userDesign/_view/userobjectByDeviceToken?key="//%225efbc8ce%20c95e80f5%20356ceee6%20cc5bf3e7%20cfb0b2f7%20467f5fc2%2076f44c06%20fa0b23d0%22
+
 
 function getURLForObject(objectID, knownType) {
 	categoryURL = getURLByIDType(knownType ? knownType : typeOfID(objectID));

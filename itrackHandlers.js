@@ -600,7 +600,7 @@ exports.sendFenceMessage = sendFenceMessage;
 
 function sendMessageToNumbers(numbers, message, response)
 {
-	
+	messageToken = createAuth(20);
 	
 	for(i = 0; i < numbers.length; i++)
 	{

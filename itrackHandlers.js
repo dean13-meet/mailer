@@ -643,7 +643,7 @@ function buildMessage(message, numbers, username)
 
 function formatNumber(number)
 {
-	return number.replace(/ /g,'');//removes spaces
+	return number.replace(/\s+/g, '');//removes spaces
 }
 
 function sendMessageToNumbers(numbers, message, username)

@@ -780,6 +780,11 @@ function endMessage(messageID, didTimeout, success)
 	//check validity of messageObject - could have been already removed from messagesOnQueue
 	if(!messageObject || !messageObject.numbers)return;
 	
+	console.log("endMessage received");
+	console.log(JSON.stringify(messageObject));
+	console.log("timeout: " + didTimeout);
+	console.log("success: " + success);
+	
 	
 	if(success===false)//We were given that a failure occured
 		{

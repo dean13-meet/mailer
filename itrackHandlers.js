@@ -370,10 +370,8 @@ function sendMessageToValidateUser(name) {
 
 			user.auth = randomNumber;
 			saveObject(user, "user");
-			sendMessage("", {
-				message : "Your verification number is: " + user.auth,
-				number : user.number
-			});
+			sendMessage("Your verification number is: " + user.auth,
+				user.number);
 		} else
 			return;
 	}
@@ -482,33 +480,7 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 }
 exports.verifyAuthForUserName = verifyAuthForUserName;
 
-function sendMessage(response, postData) {
-	/*
-	 * PostData: number message
-	 */
 
-	console.log(response)
-	options = {
-		method : 'POST',
-		url : 'http://textbelt.com/text?key=leitersdorf',
-		form : 'message=' + postData.message + "&number=" + postData.number
-	};
-	request(options, function(err, res, body) {
-		if (err) {
-			throw Error(err);
-		} else {
-			// console.log(JSON.stringify(response))
-			// console.log(response.end);
-			if (response.end)
-				response.end(body);
-			console.log("sending message: " + postData.message + " "
-					+ postData.number)
-					console.log("message sent");
-			console.log(body);
-		}
-	});
-}
-// exports.sendMessage = sendMessage
 
 
 
@@ -573,8 +545,10 @@ function sendFenceMessage(response, postdata, trackers)
 			message += "\n-" + geofence.owner+"\n\n\nSent From:\n" + geofence.address +"\n\nHere-N-There!"
 			console.log(numbers);
 			
-			sendMessageToNumbers(numbers, message, response);
-
+			sendMessageToNumbers(numbers, message, geofence.owner);
+			
+			
+			response.end({showMessage : "Sending message" + numbers.length>1?"s":"" + " for location " + geofence.address.split("\n")[0]});
 			// response.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);
@@ -598,9 +572,85 @@ function sendFenceMessage(response, postdata, trackers)
 exports.sendFenceMessage = sendFenceMessage;
 
 
-function sendMessageToNumbers(numbers, message, response)
+var messagesOnQueue = {};
+var defTimeout = 1000*60;//1 min
+/*
+ * Key:
+ * str messageID
+ * 
+ * Value:
+ * Message Build
+ * 
+ * Message Build:
+ * 
+ * str messageID - to use for finding again
+ * str message - the text
+ * dic numbers - numbers to send to
+ * str timeoutID - used to invalidate if all numbers = true
+ * user username - who to reply to when done (typically owner of geofence)
+ * 
+ * 
+ * Methods:
+ * 
+ * buildMessage(message, numbers, socket) -- creates and returns the Message Build object
+ * numberValid(messageID, number) -- sets the number from numbers to true
+ * numberInValid(messageID, number) -- ensures that the number is from "numbers", and if so, then cancel timeout and tell socket that we failed
+ * endMessage(messageID, didTimeout, success) -- if this is called, 
+ * 										success is defined as all numbers being done || success
+ * 										if success -> tellUserMessageSuccess is run with true
+ * 											also if !didTimeout, clearTimeout is called
+ * 										if !success -> if didTimeout -> tellUserMessageSuccess run with false
+ * 					
+ * tellUserMessageSuccess(messageID, success) -- user notified of success/failure, message is deleted from messagesOnQueue
+ */
+
+
+function buildMessage(message, numbers, username)
 {
-	messageToken = createAuth(20);
+	messageBuild = {};
+	
+	//Check valid:
+	if(typeof message != typeof"")return null;
+	messageBuild.message = message;
+	
+	if(typeof numbers != typeof[])return null;
+	formattedNumbers = {};
+	for(i = 0; i < numbers.length; i++)
+		{
+		formattedNumbers[numbers[i]] = false;
+		}
+	messageBuild.numbers = formattedNumbers;
+	
+	if(!username)return null;
+	messageBuild.username = username;
+	
+	messageID = createAuth(20);
+	
+	//Ensure no collisions
+	while(messagesOnQueue[messageID])
+		{
+		messageID = createAuth(20);
+		}
+	
+	messageBuild.messageID = messageID;
+	
+	messageBuild.timeoutID = setTimeout(endMessage, defTimeout, messageID, true);
+	
+	messagesOnQueue[messageID] = messageBuild;
+	
+	return messageBuild;
+}
+
+
+
+function sendMessageToNumbers(numbers, message, username)
+{
+	
+	messageBuild = buildMessage(message, numbers, username);
+	
+	if(!messageBuild)return;//something was wrong
+	
+	messageID = messageBuild.messageID;
 	
 	for(i = 0; i < numbers.length; i++)
 	{
@@ -608,29 +658,31 @@ function sendMessageToNumbers(numbers, message, response)
 
 		console.log("sending message to: " + number);
 		
-		function respond(message, number, i, numbers, response, sendMessageN, response2) {
+		function respond(messageBuild, response2) {
 			// console.log("response: " + JSON.stringify(response));
 			if (!response2.rows.length)
 				{
-				sendMessageN(i, numbers, response, number, message);
+				sendMessageN(messageBuild, number);
+				return;
 				}
 			user = response2.rows[0].value;
 			devices = user.devices
 			if(!devices || devices.length==0)
 				{
-				sendMessageN(i, numbers, response, number, message);
+				sendMessageN(messageBuild, number);
 				return;
 				}
 			for(j = 0; j < devices.length; j++)
 				{
 				deviceToken = devices[j];
 				console.log("sendingAPN to: " + deviceToken);
-				sendAPNMessage(user.userUUID, deviceToken, message, "arrival/leave", {"number":number})
+				sendAPNMessage(deviceToken, "New message from " + messageBuild.username, 
+						{"number":number, "messageID":messageBuild.messageID, "message":messageBuild.message});
 				}
 				
 		}
 
-		getURL(userFromNumber + "%22" + number + "%22", respond, [ message, number, i, numbers, response, sendMessageNow ], false);
+		getURL(userFromNumber + "%22" + number + "%22", respond, [ messageBuild ], false);
 		// console.log("sending connection? " + (i==numbers.length-1) + " number
 		// " + JSON.stringify(response))
 		// TODO
@@ -648,9 +700,147 @@ function sendMessageToNumbers(numbers, message, response)
 	}
 }
 
-function sendMessageNow(i, numbers, response, number, message)
+function sendMessageNow(messageBuild, number)
 {
-	sendMessage(i==numbers.length-1?response:"", {number: number, message: message});
+	sendMessage(messageBuild.message, number, messageBuild.messageID);
+}
+
+function sendMessage(message, number, messageID) {
+	/*
+	 * PostData: number message
+	 */
+
+	options = {
+		method : 'POST',
+		url : 'http://textbelt.com/text?key=leitersdorf',
+		form : 'message=' + message + "&number=" + number
+	};
+	request(options, function(err, res, body) {
+		if (err) {
+			throw Error(err);
+		} else {
+			// console.log(JSON.stringify(response))
+			// console.log(response.end);
+			if(messageID)
+				{
+				success = body.success;
+				if(success===true)
+					{
+					numberValid(messageID, number);
+					}
+				else
+					{
+					numberInValid(messageID, number);
+					}
+				}
+			console.log("sending message: " + message + " "
+					+ number)
+					console.log("message sent");
+			console.log(body);
+		}
+	});
+}
+// exports.sendMessage = sendMessage
+
+function numberValid(messageID, number)
+{
+
+	messageObject = messagesOnQueue[messageID];
+	//check validity of messageObject - could have been already removed from messagesOnQueue
+	if(!messageObject || !messageObject.numbers)return;
+	
+	//make suer the number we are validating actually belongs to this messageObject
+	if(!messageObject.numbers.hasOwnKey(number))return;
+	
+	messageObject.numbers[number] = true;
+	
+	endMessage(messageID, false);
+}
+
+function numberInValid(messageID, number)
+{
+	messageObject = messagesOnQueue[messageID];
+	//check validity of messageObject - could have been already removed from messagesOnQueue
+	if(!messageObject || !messageObject.numbers)return;
+	
+	//make suer the number we are validating actually belongs to this messageObject
+	if(!messageObject.numbers.hasOwnKey(number))return;
+	
+	endMessage(messageID, false, false);
+}
+
+function endMessage(messageID, didTimeout, success)
+{
+	messageObject = messagesOnQueue[messageID];
+	//check validity of messageObject - could have been already removed from messagesOnQueue
+	if(!messageObject || !messageObject.numbers)return;
+	
+	
+	if(success===false)//We were given that a failure occured
+		{
+		
+		tellUserMessageSuccess(messageID, false);
+		
+		if(!didTimeout)
+			{
+				clearTimeout(messageObject.timeoutID);
+			}
+		
+		return;
+		}
+	
+	
+	if(success!==true && success!==false)//we're not given a success
+		{
+		success = true;
+		for (key in messageObject.numbers) {
+			  if (messageObjects.numbers.hasOwnProperty(key)) {
+			    value = messageObject.numbers[key];
+			    if(!value)
+			    	{
+			    	success = false;
+			    	break;
+			    	}
+			  }
+			}
+		}
+	
+	if(success)
+		{
+		tellUserMessageSuccess(messageID, true)
+			if(!didTimeout)
+				clearTimeout(messageObject.timeoutID);
+		}
+	else
+		{
+		if(didTimeout)
+			{
+			tellUserMessageSuccess(messageID, false);
+			}
+		}
+	
+}
+
+function tellUserMessageSuccess(messageID, success)
+{
+	messageObject = messagesOnQueue[messageID];
+	if(!messageObject || !messageObject.username)return;
+	
+	
+	function respondName(messageObject, success, user) {
+		
+		if(!user || !user.devices || !user.devices.length)return;//something bad happened
+		
+		for(i = 0 ; i < user.devices.length; i++)
+			{
+			deviceToken = user.devices[i];
+			sendAPNMessage(deviceToken, success ? "Sent message successfully." : "Failed to send message.");
+			}
+
+	}
+	getObject(messageObject.username, respondName, [ messageObject, success ], false, "user");
+	
+	
 }
 
 
@@ -1736,26 +1926,30 @@ function destroyDeviceFromUser(user, deviceUUID)
 		}
 }
 
-function sendAPNMessage (userUUID, deviceToken, message, messageID, onError)
+
+/*
+ * extraData for arrival/leave:
+ * 
+ * mode = "arrival/leave"
+ * messageID -- the messageID
+ * number -- the number this was supposed to be sent to
+ * message -- the text of the message to be sent (e.g. ".... has arrived at....")
+ */
+
+function sendAPNMessage (deviceToken, message, extraData)
 {
-	if(!onError)onError={};
-	timestamp =  Math.floor(new Date() / 1000);
+	if(!extraData)extraData = {};
+	//timestamp =  Math.floor(new Date() / 1000);
 	apn.createMessage()
 	.device(deviceToken)
 	.alert(message)
 	.expires(0)// never expires
-	.set("userUUID", userUUID)
-	.set("messageID", messageID)
-	.set("onError", onError)
-	.set("timestamp", timestamp)
-	.send(apnConfirm);
+	.set("extraData", extraData)
+	//.set("timestamp", timestamp)
+	.send();
 }
 exports.sendAPNMessage = sendAPNMessage;
 
-function apnConfirm(anything)
-{
-console.log("apnConfirm: " + anything);	
-}
 
 function registerDeviceUUID(socket, postdata, trackers)
 {

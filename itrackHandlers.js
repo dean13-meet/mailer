@@ -641,7 +641,10 @@ function buildMessage(message, numbers, username)
 	return messageBuild;
 }
 
-
+function formatNumber(number)
+{
+	return number.replace(/ /g,'');//removes spaces
+}
 
 function sendMessageToNumbers(numbers, message, username)
 {
@@ -656,6 +659,8 @@ function sendMessageToNumbers(numbers, message, username)
 	{
 		number = numbers[i];
 
+		number = formatNumber(number);//removes spaces, etc
+		
 		console.log("sending message to: " + number);
 		
 		function respond(messageBuild, response2) {

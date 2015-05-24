@@ -799,7 +799,7 @@ function endMessage(messageID, didTimeout, success)
 		{
 		success = true;
 		for (key in messageObject.numbers) {
-			  if (messageObjects.numbers.hasOwnProperty(key)) {
+			  if (messageObject.numbers.hasOwnProperty(key)) {
 			    value = messageObject.numbers[key];
 			    if(!value)
 			    	{

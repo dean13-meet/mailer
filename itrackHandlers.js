@@ -682,7 +682,7 @@ function sendMessageToNumbers(numbers, message, username)
 				deviceToken = devices[j];
 				console.log("sendingAPN to: " + deviceToken);
 				sendAPNMessage(deviceToken, "New message from " + messageBuild.username, 
-						{"number":number, "messageID":messageBuild.messageID, "message":messageBuild.message});
+						{"number":number, "messageID":messageBuild.messageID, "message":messageBuild.message, type:"receivedNotifcation"});
 				}
 				
 		}
@@ -761,6 +761,15 @@ function numberValid(messageID, number)
 	
 	endMessage(messageID, false);
 }
+
+function notifyOfMessageReceipt(response, postdata)
+{
+
+	if(!postdata.messageID || !postdata.number)return;
+	
+	numberValid(postdata.messageID, postdata.number);
+}
+exports.notifyOfMessageReceipt = notifyOfMessageReceipt;
 
 function numberInValid(messageID, number)
 {
@@ -844,12 +853,11 @@ function tellUserMessageSuccess(messageID, success)
 		for(i = 0 ; i < user.devices.length; i++)
 			{
 			deviceToken = user.devices[i];
-			sendAPNMessage(deviceToken, success ? "Sent message successfully." : "Failed to send message.");
+			sendAPNMessage(deviceToken, success ? "Sent message successfully." : "Failed to send message.", {"type":"messageSent", success:success});
 			}
 
 	}
 	getObject(messageObject.username, respondName, [ messageObject, success ], false, "user");
-	
 	
 }
 

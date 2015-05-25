@@ -755,7 +755,7 @@ function numberValid(messageID, number)
 	if(!messageObject || !messageObject.numbers)return;
 	
 	//make suer the number we are validating actually belongs to this messageObject
-	if(!messageObject.numbers.hasOwnKey(number))return;
+	if(!messageObject.numbers.hasOwnProperty(number))return;
 	
 	messageObject.numbers[number] = true;
 	
@@ -778,7 +778,7 @@ function numberInValid(messageID, number)
 	if(!messageObject || !messageObject.numbers)return;
 	
 	//make suer the number we are validating actually belongs to this messageObject
-	if(!messageObject.numbers.hasOwnKey(number))return;
+	if(!messageObject.numbers.hasOwnProperty(number))return;
 	
 	endMessage(messageID, false, false);
 }

@@ -573,9 +573,9 @@ function sendFenceMessage(response, postdata, trackers)
 }
 exports.sendFenceMessage = sendFenceMessage;
 
-
-var messagesOnQueue = {};
-var defTimeout = 1000*60;//1 min
+//Old Code
+//var messagesOnQueue = {};
+//var defTimeout = 1000*60;//1 min
 /*
  * Key:
  * str messageID
@@ -606,7 +606,7 @@ var defTimeout = 1000*60;//1 min
  * tellUserMessageSuccess(messageID, success) -- user notified of success/failure, message is deleted from messagesOnQueue
  */
 
-
+/*
 function buildMessage(message, numbers, username)
 {
 	messageBuild = {};
@@ -641,7 +641,7 @@ function buildMessage(message, numbers, username)
 	messagesOnQueue[messageID] = messageBuild;
 	
 	return messageBuild;
-}
+}*/
 
 function formatNumber(number)
 {
@@ -651,12 +651,6 @@ function formatNumber(number)
 function sendMessageToNumbers(numbers, message, username)
 {
 	
-	messageBuild = buildMessage(message, numbers, username);
-	
-	if(!messageBuild)return;//something was wrong
-	
-	messageID = messageBuild.messageID;
-	
 	for(i = 0; i < numbers.length; i++)
 	{
 		number = numbers[i];
@@ -665,31 +659,31 @@ function sendMessageToNumbers(numbers, message, username)
 		
 		console.log("sending message to: " + number);
 		
-		function respond(messageBuild, response2) {
+		function respond(message, number, response2) {
 			// console.log("response: " + JSON.stringify(response));
 			if (!response2.rows.length)
 				{
-				sendMessageN(messageBuild, number);
+				sendMessageNow(message, number);
 				return;
 				}
 			user = response2.rows[0].value;
 			devices = user.devices
 			if(!devices || devices.length==0)
 				{
-				sendMessageN(messageBuild, number);
+				sendMessageNow(message, number);
 				return;
 				}
 			for(j = 0; j < devices.length; j++)
 				{
 				deviceToken = devices[j];
 				console.log("sendingAPN to: " + deviceToken);
-				sendAPNMessage(deviceToken, "New message from " + messageBuild.username, 
-						{"number":number, "messageID":messageBuild.messageID, "message":messageBuild.message, type:"receivedNotifcation"});
+				sendAPNMessage(deviceToken, "New message from " + username, 
+						{"number":number, /*"messageID":messageBuild.messageID,*/ "message":message, type:"receivedNotifcation"});
 				}
 				
 		}
 
-		getURL(userFromNumber + "%22" + number + "%22", respond, [ messageBuild ], false);
+		getURL(userFromNumber + "%22" + number + "%22", respond, [ message, number ], false);
 		// console.log("sending connection? " + (i==numbers.length-1) + " number
 		// " + JSON.stringify(response))
 		// TODO
@@ -707,12 +701,12 @@ function sendMessageToNumbers(numbers, message, username)
 	}
 }
 
-function sendMessageNow(messageBuild, number)
+function sendMessageNow(message, number)
 {
-	sendMessage(messageBuild.message, number, messageBuild.messageID);
+	sendMessage(message, number);
 }
 
-function sendMessage(message, number, messageID) {
+function sendMessage(message, number/*, messageID*/) {
 	/*
 	 * PostData: number message
 	 */
@@ -728,6 +722,7 @@ function sendMessage(message, number, messageID) {
 		} else {
 			// console.log(JSON.stringify(response))
 			// console.log(response.end);
+			/*
 			if(messageID)
 				{
 				success = body.success;
@@ -739,7 +734,7 @@ function sendMessage(message, number, messageID) {
 					{
 					numberInValid(messageID, number);
 					}
-				}
+				}*/
 			console.log("sending message: " + message + " "
 					+ number)
 					console.log("message sent");
@@ -749,6 +744,8 @@ function sendMessage(message, number, messageID) {
 }
 // exports.sendMessage = sendMessage
 
+//Old Code
+/*
 function numberValid(messageID, number)
 {
 
@@ -862,7 +859,7 @@ function tellUserMessageSuccess(messageID, success)
 	getObject(messageObject.username, respondName, [ messageObject, success ], false, "user");
 	
 }
-
+*/
 
 function getNumbersFromRecs(recs)
 {

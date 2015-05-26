@@ -1873,7 +1873,7 @@ exports.declineGeofence = declineGeofence;
 var APN = require('./APN');
 var apn = APN.apn;
 var apnConnection = APN.apnConnection;
-apn.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
+APN.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
 {
 	/*
 	 * MessageIDs: 
@@ -1907,7 +1907,7 @@ apn.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUU
 		}
 }
 
-apn.delegateForRemoveDevice = function delegateForRemoveDevice(deviceUUID)
+APN.delegateForRemoveDevice = function delegateForRemoveDevice(deviceUUID)
 {
 	
 	function respond(deviceUUID, response)

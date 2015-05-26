@@ -2,20 +2,33 @@
  * New node file
  */
 
+
+var apn = require('apn');
+
+
+var options = {
+		"cert":join(__dirname, './_Certs/cert.pem'),
+		"key":join(__dirname, './_Certs/key.pem'),
+		"production":false
+};
+
+var apnConnection = new apn.Connection(options);
+
+/*
 var join = require('path').join
   , pfx = join(__dirname, '../_Certs/key.p12');
 
-/*!
+/*
  * Create a new gateway agent
- */
+ 
 
 var apnagent = require('apnagent')
   , agent = module.exports = new apnagent.Agent(),
   feedback = new apnagent.Feedback();
 
-/*!
+/*
  * Configure agent
- */
+ 
 
 agent
 	.set('cert file', join(__dirname, './_Certs/cert.pem'))
@@ -23,13 +36,15 @@ agent
 	.set('passphrase', "mcsweetface")
   .enable('sandbox');
 
+*/
+
 /*!
  * Error Mitigation
  */
 
 var delegateDeviceNotRegistered;
 //deviceNotRegistered(deviceUUID, userUUID, messageID, onError, message)
-
+/*
 agent.on('message:error', function (err, msg) {
   switch (err.name) {
     // This error occurs when Apple reports an issue parsing the message.
@@ -60,12 +75,13 @@ agent.on('message:error', function (err, msg) {
       console.log('[message:error] other error: %s', err.message);
       break;
   }
-});
+});*/
 
 /*!
  * Make the connection
  */
 
+/*
 agent.connect(function (err) {
   // gracefully handle auth problems
 	//console.log(agent);
@@ -86,9 +102,10 @@ agent.connect(function (err) {
 
   console.log('apnagent [%s] gateway connected', env);
 });
-
+*/
 
 var delegateForRemoveDevice;
+/*
 feedback.connect();
 feedback.use(function (device, timestamp, done) {
 	  var token = device.toString()
@@ -97,4 +114,21 @@ feedback.use(function (device, timestamp, done) {
 	  console.log("removing: " + token);
 	 delegateForRemoveDevice(token);
 	  done();
+	});*/
+
+
+var options2 = {
+		"cert":join(__dirname, './_Certs/cert.pem'),
+		"key":join(__dirname, './_Certs/key.pem'),
+	    "batchFeedback": true,
+	    "interval": 30,
+	    "production":false
+	};
+
+	var feedback = new apn.Feedback(options2);
+	feedback.on("feedback", function(devices) {
+	    devices.forEach(function(item) {
+	        console.log("removing: " + item.device);
+	        delegateForRemoveDevice(item.device);
+	    });
 	});

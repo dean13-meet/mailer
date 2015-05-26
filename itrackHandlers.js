@@ -1873,7 +1873,9 @@ exports.declineGeofence = declineGeofence;
 
 
 // APN:
-var apn = require('./APN');
+var APN = require('./APN');
+var apn = APN.apn;
+var apnConnection = APN.apnConnection;
 apn.delegateDeviceNotRegistered = function delegateDeviceNotRegistered (deviceUUID, userUUID, messageID, onError, message)
 {
 	/*
@@ -1960,13 +1962,18 @@ function sendAPNMessage (deviceToken, message, extraData)
 {
 	if(!extraData)extraData = {};
 	//timestamp =  Math.floor(new Date() / 1000);
-	apn.createMessage()
-	.device(deviceToken)
-	.alert(message)
-	.expires(0)// never expires
-	.set("extraData", extraData)
-	//.set("timestamp", timestamp)
-	.send();
+	device = new apn.Device(deviceToken)
+	
+	
+	var notif = new apn.Notification();
+
+	notif.expiry = Math.floor(Date.now() / 1000) + 3600*24*7; // Expires 1 week from now.
+	/*notif.badge = 3;
+	notif.sound = "ping.aiff";*/
+	notif.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+	notif.payload = extraData;
+
+	apnConnection.pushNotification(note, myDevice);
 }
 exports.sendAPNMessage = sendAPNMessage;
 

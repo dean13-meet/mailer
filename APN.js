@@ -5,6 +5,7 @@
 
 var apn = require('apn');
 
+var join = require('path').join
 
 var options = {
 		"cert":join(__dirname, './_Certs/cert.pem'),

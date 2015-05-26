@@ -548,7 +548,9 @@ function sendFenceMessage(response, postdata, trackers)
 			sendMessageToNumbers(numbers, message, geofence.owner);
 			
 			
-			response.end(JSON.stringify({showMessage : "Sending message" + (numbers.length>1?"s":"") + " for " + geofence.address.split("\n")[0]}));
+			response.end(JSON.stringify({showMessage : "Sending message" + (numbers.length>1?"s":"") + " for " + geofence.address.split("\n")[0],
+			geofence:geofence
+			}));
 			// response.end("Try?");
 			currentTime = Math.floor(new Date() / 1000);
 			mode ? geofence.arrivalsSent.push(currentTime):geofence.leavesSent.push(currentTime);

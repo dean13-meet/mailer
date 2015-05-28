@@ -1970,7 +1970,7 @@ function sendAPNMessage (deviceToken, message, extraData)
 	notif.alert = "\uD83D\uDCE7 \u2709 You have a new message";
 	notif.payload = extraData;
 
-	apnConnection.pushNotification(notif, myDevice);
+	apnConnection.pushNotification(notif, device);
 }
 exports.sendAPNMessage = sendAPNMessage;
 

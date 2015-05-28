@@ -10,8 +10,8 @@ var join = require('path').join
 
 
 var options = {
-		"cert":join(__dirname, './_Certs/cert.pem'),
-		"key":join(__dirname, './_Certs/key.pem'),
+		"cert":join(__dirname, './_Certs/certProduction.pem'),
+		"key":join(__dirname, './_Certs/keyProduction.pem'),
 		"passphrase": "mcsweetface",
 		"production":false
 };
@@ -125,8 +125,8 @@ feedback.use(function (device, timestamp, done) {
 
 
 var options2 = {
-		"cert":join(__dirname, './_Certs/cert.pem'),
-		"key":join(__dirname, './_Certs/key.pem'),
+		"cert":join(__dirname, './_Certs/certProduction.pem'),
+		"key":join(__dirname, './_Certs/keyProduction.pem'),
 		"passphrase":"mcsweetface",
 	    "batchFeedback": true,
 	    "interval": 30,

@@ -4,6 +4,7 @@
 
 
 var apn = require('apn');
+exports.apn = apn;
 
 var join = require('path').join
 
@@ -17,6 +18,7 @@ var options = {
 
 
 var apnConnection = new apn.Connection(options);
+exports.apnConnection = apnConnection;
 
 
 /*

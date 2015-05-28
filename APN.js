@@ -135,6 +135,9 @@ var options2 = {
 
 	var feedback = new apn.Feedback(options2);
 	feedback.on("feedback", function(devices) {
+		
+		console.log("feedback");
+		console.log(JSON.stringify(devices));
 	    devices.forEach(function(item) {
 	        console.log("removing: " + item.device);
 	        delegateForRemoveDevice(item.device);

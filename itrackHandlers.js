@@ -1967,7 +1967,7 @@ function sendAPNMessage (deviceToken, message, extraData)
 	notif.expiry = Math.floor(Date.now() / 1000) + 3600*24*7; // Expires 1 week from now.
 	/*notif.badge = 3;
 	notif.sound = "ping.aiff";*/
-	notif.alert = "\uD83D\uDCE7 \u2709 You have a new message";
+	notif.alert = message;
 	notif.payload = extraData;
 
 	apnConnection.pushNotification(notif, device);

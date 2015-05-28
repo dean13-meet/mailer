@@ -7,14 +7,17 @@ var apn = require('apn');
 
 var join = require('path').join
 
+
 var options = {
 		"cert":join(__dirname, './_Certs/cert.pem'),
-		"key":join(__dirname, './_Certs/newkey.pem'),
+		"key":join(__dirname, './_Certs/key.pem'),
 		"passphrase": "mcsweetface",
 		"production":false
 };
 
+
 var apnConnection = new apn.Connection(options);
+
 
 /*
 var join = require('path').join
@@ -122,6 +125,7 @@ feedback.use(function (device, timestamp, done) {
 var options2 = {
 		"cert":join(__dirname, './_Certs/cert.pem'),
 		"key":join(__dirname, './_Certs/key.pem'),
+		"passphrase":"mcsweetface",
 	    "batchFeedback": true,
 	    "interval": 30,
 	    "production":false

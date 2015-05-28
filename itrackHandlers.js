@@ -464,17 +464,21 @@ function verifyAuthForUserName(socket, postdata, trackers)// gives userUUID if
 				userUUID : user.UUID,
 				username : user._id
 			});
+			
+			// Reset auth randomly so that old auth cant be used again
+			user.auth = createAuth(4);
+			// TODO - remove apple admin login
+			if(user.adminStatus)user.auth="0000";
+			saveObject(user, "user");
+			
+			
 		} else {
 			sendToSocket(socket, {
 				"eventRecieved" : "verifyAuthForUserName",
 				"success" : false
 			});
 		}
-		// Reset auth randomly so that old auth cant be used again
-		user.auth = createAuth(4);
 		// TODO - remove apple admin login
-		if(user.adminStatus)user.auth="0000";
-		saveObject(user, "user");
 	}
 	getURL(lowercaseUsername+"%22"+postdata.name.toLowerCase()+"%22", respond, [ postdata.auth ], false);
 }

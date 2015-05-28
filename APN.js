@@ -13,7 +13,7 @@ var options = {
 		"cert":join(__dirname, './_Certs/certProduction.pem'),
 		"key":join(__dirname, './_Certs/keyProduction.pem'),
 		"passphrase": "mcsweetface",
-		"production":false
+		"production":true
 };
 
 
@@ -130,7 +130,7 @@ var options2 = {
 		"passphrase":"mcsweetface",
 	    "batchFeedback": true,
 	    "interval": 30,
-	    "production":false
+	    "production":true
 	};
 
 	var feedback = new apn.Feedback(options2);

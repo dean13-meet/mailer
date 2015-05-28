@@ -112,6 +112,7 @@ agent.connect(function (err) {
 */
 
 var delegateForRemoveDevice;
+exports.delegateForRemoveDevice = delegateForRemoveDevice;
 /*
 feedback.connect();
 feedback.use(function (device, timestamp, done) {

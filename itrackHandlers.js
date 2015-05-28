@@ -517,6 +517,7 @@ function sendFenceMessage(response, postdata, trackers)
 	{
 		// badReturn(response);
 		console.log("actually, we are missing data")
+		response.end();
 		return;
 	}
 

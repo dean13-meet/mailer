@@ -9,7 +9,7 @@ var join = require('path').join
 
 var options = {
 		"cert":join(__dirname, './_Certs/cert.pem'),
-		"key":join(__dirname, './_Certs/key.pem'),
+		"key":join(__dirname, './_Certs/newkey.pem'),
 		"passphrase": "mcsweetface",
 		"production":false
 };

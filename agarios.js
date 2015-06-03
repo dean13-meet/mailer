@@ -141,11 +141,12 @@ function createAuth(length, numbersOnly) {
 
 function showGrids(response, postdata)
 {
-	response.write("Grids: ");
+	response.write("Grids: \n\n");
 	for(key in grids)
 		{
-		response.write(key + ":");
+		response.write(key + ":\n");
 		response.write(JSON.stringify(grids[key]));
+		response.write("\n");
 		}
 	response.end();
 }

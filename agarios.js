@@ -81,7 +81,7 @@ exports.startGameWithName = startGameWithName;
 
 function signForGrid(player, playerID)
 {
-	gridID;
+	gridID = null;
 	for(key in grids)
 		{
 		if(Object.keys(grids[key].players).length<100)

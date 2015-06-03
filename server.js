@@ -61,22 +61,32 @@ function start(route, handle) {
      handlers["socketGetImageFromID"] = "/resturant/socketGetImageFromID";
      
      
+    
+
+     var handleCopy = extend({}, handle);//makes a copy
+     
+     
      //we are assuming that all iTrack methods accept socket, expect for those listed here:
      itrackMethodsNotAcceptingSockets = ["MITvideo", "onTheAppStore","sendMessage", "printTrackers", "runTrackerUpdate", "sendFenceMessage", "credits"]; //-- make this all lower case plz
      
-
-     var handleCopy = extend({}, handle);//makes a copy
      for(index in itrackMethodsNotAcceptingSockets)
    	  {
    	  delete handleCopy["/itrack/" + itrackMethodsNotAcceptingSockets[index]];
    	  }
      
      
+     agariosMethodsNotAcceptingSockets = [];
+     
+     for(index in agariosMethodsNotAcceptingSockets)
+  	  {
+  	  delete handleCopy["/agarios/" + agariosMethodsNotAcceptingSockets[index]];
+  	  }
+     
      //console.log(handleCopy);
      
-     for(string in handleCopy)//handle came from main
+     for(string in handleCopy)//handle came from main, handle copy is editted here
    	  {
-   	  if(string.indexOf("/itrack/")!=-1)//means this is an itrack method
+   	  if(string.indexOf("/itrack/")!=-1 || string.indexOf("/agarios/")!=-1)//means this is an itrack or agarios method
    		  {
    		  handlers[string]=string;
    		  }

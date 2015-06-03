@@ -66,6 +66,11 @@ handle["/itrack/"+funcName.toLowerCase()] = requestHandlers.itrack[funcName];
 //handle["/itrack/createuser"] = requestHandlers.itrack.createUser;
 
 
+for(funcName in requestHandlers.agarios)
+{
+handle["/agarios/"+funcName.toLowerCase()] = requestHandlers.agarios[funcName];
+}
+
 //testing server:
 handle["/resturant/printtrackers"] = requestHandlers.resturantApp.printTrackers;
 handle["/resturant/addmessage"] = requestHandlers.resturantApp.addMessage;

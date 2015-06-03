@@ -538,8 +538,8 @@ function sendFenceMessage(response, postdata, trackers)
 		// response.end("here");
 
 		a = geofence.status == "Active";// make sure it's active first
-		b =  ((geofence.lat - postdata.lat)*100000 < 1 || -(geofence.lat - postdata.lat)*100000 < 1);
-		c = ((geofence.long - postdata.long)*100000 < 1 || -(geofence.long - postdata.long)*100000 < 1);
+		b =  ((geofence.lat - postdata.lat)*100000 < 1 && -(geofence.lat - postdata.lat)*100000 < 1);
+		c = ((geofence.long - postdata.long)*100000 < 1 && -(geofence.long - postdata.long)*100000 < 1);
 		d = mode ? geofence.onArrival : geofence.onLeave;
 		console.log("a: " + a + " b: " + b + " c: " + c + " d " + d);
 

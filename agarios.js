@@ -10,25 +10,28 @@ var gridSize = 5000;
 //Grid:
 /*
  * 
- * Players = {}  ---- playerID to player, player contains socket
- * Food = []
+ * players = {}  ---- playerID to player, player contains socket
+ * food = []
  * 
  */
 
 //Player
 /*
  * 
- * Location = {"x":..., "y":...}
- * Mass
+ * location = {"x":..., "y":...}
+ * mass
  * socket
  * name
+ * dirx
+ * diry
+ * dampening 0 <= damp <= 1 -- this slows down 
  * 
  */ 
 
 //Food
 /*
  * 
- * Location = {"x":..., "y":...}
+ * location = {"x":..., "y":...}
  * 
  */
 
@@ -70,6 +73,9 @@ function startGameWithName(socket, postdata)
 	player.mass = 10;
 	player.name = postdata.name;
 	player.location = randomLocation();
+	player.dirx = .707;
+	player.diry = .707;
+	player.dampening = 0;
 	
 	playerID = createAuth(20)
 	gridID = signForGrid(player, playerID);
@@ -151,3 +157,50 @@ function showGrids(response, postdata)
 	response.end();
 }
 exports.showGrids = showGrids;
+
+startGameWithName(0, {name:"Deanster"});
+runGridUpdates();
+
+
+function runGridUpdates()
+{
+	for(key in grids)
+		{
+		updateGrid(key);
+		}
+	
+}
+
+function updateGrid(gridID)
+{
+	currentTime = new Date();//millisec
+	grid = grids[gridID];
+	updatePlayerPositions(grid.players);
+	
+}
+
+function updatePlayerPositions(players)
+{
+	console.log("players");
+	for(playerID in players)
+		{
+		
+		player = players[playerID];
+		console.log(verifyDirs(player.dirx, player.diry));
+		console.log("damp ok: " + (player.dampening >=0 && player.dampening<=1))
+		
+		}
+}
+
+function verifyDirs(dirx, diry)
+{
+	console.log("dir1");
+	if(dirx<-1 || dirx>1)return false;console.log("dir2");
+	if(diry<-1 || diry>1)return false;console.log("dir3");
+	
+	distanceSquared = dirx*dirx + diry*diry;
+	console.log("double: " + distanceSquared);
+	
+	return ((distanceSquared-1)*100 < 1 && -(distanceSquared-1)*100 < 1);
+	
+}

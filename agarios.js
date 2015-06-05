@@ -168,7 +168,7 @@ exports.showGrids = showGrids;
 maxFPS = 20;
 fps = 0;
 lastUpdate = new Date();
-startGameWithName(0, {name:"Deanster"});
+//startGameWithName(0, {name:"Deanster"});
 countDownToSendSocketInfo = 5;//send the updates to clients only 1/5 of the time as the physics engine runs
 currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
 updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
@@ -182,6 +182,7 @@ function runGridUpdates()
 	deltaTime = endTime-lastUpdate;
 	lastUpdate = endTime;
 	fps = 1000/deltaTime;
+	totalPlayersUpdated = 
 	for(key in grids)
 		{
 		updateGrid(key, fps)

@@ -252,18 +252,18 @@ function updatePlayerPositions(players, fps)
 		{
 		totalPlayersUpdated++;
 		var player = players[playerID];
-		console.log("Player in updating: " + JSON.stringify(player));
+		//console.log("Player in updating: " + JSON.stringify(player));
 		if(!verifyDirs(player.dirx, player.diry))continue;
 		if(!(player.dampening >=0 && player.dampening<=1))continue;
 		var x = (1/fps)*player.dampening*player.dirx*defVeloc + player.location.x;
 		var y = (1/fps)*player.dampening*player.diry*defVeloc + player.location.y;
-		console.log("x,y " + x + "," + y);
-		console.log("Fps: " + fps);
+		//console.log("x,y " + x + "," + y);
+		//console.log("Fps: " + fps);
 		x = Math.min(gridSize/2, Math.max(x, -gridSize/2));
 		y = Math.min(gridSize/2, Math.max(y, -gridSize/2));
 		player.location.x = x;
 		player.location.y = y;
-		console.log("Player after updating: " + JSON.stringify(player));
+		//console.log("Player after updating: " + JSON.stringify(player));
 		}
 }
 

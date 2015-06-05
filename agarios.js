@@ -168,11 +168,11 @@ function showGrids(response, postdata)
 }
 exports.showGrids = showGrids;
 
-maxFPS = 20;
+maxFPS = 80;
 fps = 0;
 lastUpdate = new Date();
 //startGameWithName(0, {name:"Deanster"});
-countDownToSendSocketInfo = 5;//send the updates to clients only 1/5 of the time as the physics engine runs
+countDownToSendSocketInfo = 4;//send the updates to clients only 1/5 of the time as the physics engine runs
 currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
 updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
 

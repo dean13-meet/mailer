@@ -87,6 +87,8 @@ function startGameWithName(socket, postdata)
 	playerID = createAuth(20);
 	gridID = signForGrid(player, playerID);
 	sendToSocket(socket, {"playerID":playerID, "gridID": gridID, playerObject:player});
+	
+	startUpdates();
 
 }
 exports.startGameWithName = startGameWithName;
@@ -173,8 +175,24 @@ countDownToSendSocketInfo = 5;//send the updates to clients only 1/5 of the time
 currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
 updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
 
+isUpdating = false;
+startUpdates();
+function startUpdates()
+{
+	console.log("Starting updates");
+	if(isUpdating)return;
+	isUpdating = true;
+	runGridUpdates();
+}
 
-runGridUpdates();
+function stopUpdates()
+{
+	console.log("Stopping updates");
+	if(!isUpdating)return;
+	isUpdating = false;
+}
+
+totalPlayersUpdated = 0;
 function runGridUpdates()
 {
 	updateSeq++;
@@ -182,12 +200,16 @@ function runGridUpdates()
 	deltaTime = endTime-lastUpdate;
 	lastUpdate = endTime;
 	fps = 1000/deltaTime;
-	totalPlayersUpdated = 
+	totalPlayersUpdated = 0;
 	for(key in grids)
 		{
 		updateGrid(key, fps)
 		}
-	
+	if(totalPlayersUpdated==0)
+		{
+		stopUpdates();
+		return;
+		}
 	
 	if(currentCountdownToSocket==1)
 		{

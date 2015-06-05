@@ -243,6 +243,7 @@ function updatePlayerPositions(players, fps)
 	//console.log("players");
 	for(playerID in players)
 		{
+		totalPlayersUpdated++;
 		player = players[playerID];
 		if(!verifyDirs(player.dirx, player.diry))continue;
 		if(!(player.dampening >=0 && player.dampening<=1))continue;

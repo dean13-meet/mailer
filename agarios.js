@@ -13,11 +13,11 @@ var gridSize = 5000;
 
 var defVeloc = 500
 
+sockets = {}  //---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets
 //Grid:
 /*
  * 
  * players = {}  ---- playerID to player
- * sockets = {}  ---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets
  * food = []
  * 
  */

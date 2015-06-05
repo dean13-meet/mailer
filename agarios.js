@@ -178,20 +178,27 @@ updateSeq = 0;//use this to track update#, client should only accept updates hig
 
 isUpdating = false;
 startUpdates();
-function startUpdates()
+function startUpdates(response)
 {
 	console.log("Starting updates");
 	if(isUpdating)return;
 	isUpdating = true;
+	
+	if(response)
+		response.end("Started");
+	
 	runGridUpdates();
 }
 exports.startUpdates = startUpdates;
 
-function stopUpdates()
+function stopUpdates(response)
 {
 	console.log("Stopping updates");
 	if(!isUpdating)return;
 	isUpdating = false;
+	
+	if(response)
+		response.end("Stopped");
 }
 exports.stopUpdates = stopUpdates;
 

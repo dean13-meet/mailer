@@ -206,7 +206,7 @@ function runGridUpdates()
 	updateSeq++;
 	var endTime = new Date();//millisec
 	var deltaTime = endTime-lastUpdate;
-	var lastUpdate = endTime;
+	lastUpdate = endTime;
 	var fps = 1000/deltaTime;
 	totalPlayersUpdated = 0;
 	for(var key in grids)

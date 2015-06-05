@@ -13,7 +13,7 @@ var gridSize = 5000;
 
 var defVeloc = 500
 
-sockets = {}  //---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets
+sockets = {}  //---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets)
 //Grid:
 /*
  * 
@@ -180,12 +180,11 @@ isUpdating = false;
 startUpdates();
 function startUpdates(response)
 {
-	console.log("Starting updates");
-	if(isUpdating)return;
-	isUpdating = true;
-	
 	if(response)
 		response.end("Started");
+	if(isUpdating)return;
+	console.log("Starting updates");
+	isUpdating = true;
 	
 	runGridUpdates();
 }
@@ -193,12 +192,11 @@ exports.startUpdates = startUpdates;
 
 function stopUpdates(response)
 {
-	console.log("Stopping updates");
-	if(!isUpdating)return;
-	isUpdating = false;
-	
 	if(response)
 		response.end("Stopped");
+	if(!isUpdating)return;
+	console.log("Stopping updates");
+	isUpdating = false;
 }
 exports.stopUpdates = stopUpdates;
 
@@ -293,6 +291,24 @@ function updateClients()
 			}
 		}
 }
+
+
+function setPlayerMovement(socket, postdata)
+{
+	if (!requires(postdata, [ "gridID", "playerID", "dirx", "diry", "dampening" ], socket))
+		return;
+	
+	grid = grids[gridID];
+	if(!grid)return;
+	player = grid.players[playerID];
+	if(!player)return;
+	if(!verifyDirs(postdata.dirx, postdata.diry))return;
+	if(!(postdata.dampening>=0 && postdata.dampening<=1))return;
+	player.dirx = postdata.dirx;
+	player.diry = postdata.diry;
+	player.dampening = postdata.dampening;
+}
+exports.setPlayerMovement = setPlayerMovement;
 
 
 

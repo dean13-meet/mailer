@@ -185,6 +185,7 @@ function startUpdates()
 	isUpdating = true;
 	runGridUpdates();
 }
+exports.startUpdates = startUpdates;
 
 function stopUpdates()
 {
@@ -192,6 +193,7 @@ function stopUpdates()
 	if(!isUpdating)return;
 	isUpdating = false;
 }
+exports.stopUpdates = stopUpdates;
 
 totalPlayersUpdated = 0;
 function runGridUpdates()

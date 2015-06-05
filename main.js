@@ -58,7 +58,7 @@ handle["/resturant/setentitytohaveimage"] = requestHandlers.resturantApp.setEnti
 handle["/resturant/socketgetimagefromid"] = requestHandlers.resturantApp.socketGetImageFromID;
 
 //console.log(requestHandlers.itrack);
-for(funcName in requestHandlers.itrack)
+for(var funcName in requestHandlers.itrack)
 {
 //console.log(requestHandlers.itrack[funcName]);
 handle["/itrack/"+funcName.toLowerCase()] = requestHandlers.itrack[funcName];
@@ -66,7 +66,7 @@ handle["/itrack/"+funcName.toLowerCase()] = requestHandlers.itrack[funcName];
 //handle["/itrack/createuser"] = requestHandlers.itrack.createUser;
 
 
-for(funcName in requestHandlers.agarios)
+for(var funcName in requestHandlers.agarios)
 {
 handle["/agarios/"+funcName.toLowerCase()] = requestHandlers.agarios[funcName];
 }

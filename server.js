@@ -26,8 +26,8 @@ function start(route, handle) {
 				console.log("Parsing postdata");
 				try{postData = JSON.parse(postData);}catch(e){console.log("Error parsing: " +e)}
 			}
-			req = request;
-			ip = req.headers['x-forwarded-for'] || 
+			var req = request;
+			var ip = req.headers['x-forwarded-for'] || 
 		     req.connection.remoteAddress || 
 		     req.socket.remoteAddress ||
 		     req.connection.socket.remoteAddress;
@@ -38,12 +38,12 @@ function start(route, handle) {
 			route(handle, pathname, response, postData, trackers);
 		});
 	}
-	server = http.createServer(onRequest);
+	var server = http.createServer(onRequest);
 	server.listen(process.env.PORT || 5000);
 	console.log("Server has started.");
 	
 	
-	 handlers = {};
+	 var handlers = {};
      handlers["postMessage"] = "/resturant/postmessage";
      handlers["getMessagesFromChatObject"] = "/resturant/getmessagesfromchatobject";
      handlers["getAllResturantMenu"] = "/resturant/getallresturantmenu";
@@ -67,24 +67,24 @@ function start(route, handle) {
      
      
      //we are assuming that all iTrack methods accept socket, expect for those listed here:
-     itrackMethodsNotAcceptingSockets = ["MITvideo", "onTheAppStore","sendMessage", "printTrackers", "runTrackerUpdate", "sendFenceMessage", "credits"]; //-- make this all lower case plz
+     var itrackMethodsNotAcceptingSockets = ["MITvideo", "onTheAppStore","sendMessage", "printTrackers", "runTrackerUpdate", "sendFenceMessage", "credits"]; //-- make this all lower case plz
      
-     for(index in itrackMethodsNotAcceptingSockets)
+     for(var index in itrackMethodsNotAcceptingSockets)
    	  {
    	  delete handleCopy["/itrack/" + itrackMethodsNotAcceptingSockets[index]];
    	  }
      
      
-     agariosMethodsNotAcceptingSockets = ["credits"];
+     var agariosMethodsNotAcceptingSockets = ["credits"];
      
-     for(index in agariosMethodsNotAcceptingSockets)
+     for(var index in agariosMethodsNotAcceptingSockets)
   	  {
   	  delete handleCopy["/agarios/" + agariosMethodsNotAcceptingSockets[index]];
   	  }
      
      //console.log(handleCopy);
      
-     for(string in handleCopy)//handle came from main, handle copy is editted here
+     for(var string in handleCopy)//handle came from main, handle copy is editted here
    	  {
    	  if(string.indexOf("/itrack/")!=-1 || string.indexOf("/agarios/")!=-1)//means this is an itrack or agarios method
    		  {
@@ -163,14 +163,14 @@ function start(route, handle) {
 			  for(i = 0; i < info.length; i++)
 			  {
 			  
-				  trackInfo = info[i];//string form
-				  array = trackInfo.split("/");
+				  var trackInfo = info[i];//string form
+				  var array = trackInfo.split("/");
 				  if(array.length!=2)
 					  {
 					  socket.send("error socketing: string not appropriate in register all at index: " + i);
 						break;
 					  }
-				  dictionary = {"id":array[0], "field":array[1]}
+				  var dictionary = {"id":array[0], "field":array[1]}
 				  registerInfo(dictionary);
 				  
 			  }
@@ -184,14 +184,14 @@ function start(route, handle) {
 		  for(i = 0; i < info.length; i++)
 			  {
 			  
-				  trackInfo = info[i];//string form
-				  array = trackInfo.split("/");
+				  var trackInfo = info[i];//string form
+				  var array = trackInfo.split("/");
 				  if(array.length!=2)
 					  {
 					  socket.send("error socketing: string not appropriate in resign all at index: " + i);
 						break;
 					  }
-				  dictionary = {"id":array[0], "field":array[1]}
+				  var dictionary = {"id":array[0], "field":array[1]}
 				  resignInfo(dictionary);
 				  
 			  }
@@ -216,7 +216,7 @@ function start(route, handle) {
 		 
 		  socket.on('default',function(event, data) {
 			  
-			  handler = handlers[event];
+			  var handler = handlers[event];
 			  if(handler)
 				  {
 				  route(handle, handler, socket, data, trackers);

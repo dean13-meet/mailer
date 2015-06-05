@@ -13,7 +13,7 @@ var gridSize = 5000;
 
 var defVeloc = 500
 
-sockets = {}  //---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets)
+var sockets = {}  //---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets)
 //Grid:
 /*
  * 
@@ -43,8 +43,8 @@ sockets = {}  //---- playerID to socket (keep sockets seperate from players, sin
 
 
 function requires(postdata, listOfStrings, socket) {
-	for (index = 0; index < listOfStrings.length; index++) {
-		stringToCheck = listOfStrings[index];
+	for (var index = 0; index < listOfStrings.length; index++) {
+		var stringToCheck = listOfStrings[index];
 		if (!postdata.hasOwnProperty(stringToCheck))// so that we can take
 			// things like "0" or
 			// "false"
@@ -74,7 +74,7 @@ function startGameWithName(socket, postdata)
 	if (!requires(postdata, [ "name" ], socket))
 		return;
 	
-	player = {};
+	var player = {};
 	player.trackingID = createAuth(20);
 	player.mass = 10;
 	player.name = postdata.name;
@@ -83,9 +83,9 @@ function startGameWithName(socket, postdata)
 	player.diry = .707;
 	player.dampening = 1;
 	
-	playerID = createAuth(20);
+	var playerID = createAuth(20);
 	sockets[playerID] = socket;
-	gridID = signForGrid(player, playerID);
+	var gridID = signForGrid(player, playerID);
 	sendToSocket(socket, {"eventRecieved":"playerRegistered","playerID":playerID, "gridID": gridID, 
 		playerObject:player});
 	
@@ -97,8 +97,8 @@ exports.startGameWithName = startGameWithName;
 
 function signForGrid(player, playerID)
 {
-	gridID = null;
-	for(key in grids)
+	var gridID = null;
+	for(var key in grids)
 		{
 		if(Object.keys(grids[key].players).length<100)
 			gridID = key;
@@ -115,9 +115,9 @@ function signForGrid(player, playerID)
 
 function randomLocation(gridsize)
 {
-	gridsize = gridsize ? gridsize : gridSize;//gridSize is the class variable
-	x = random(-gridsize/2 + 20, gridsize/2 - 20);
-	y = random(-gridsize/2 + 20, gridsize/2 - 20);
+	var gridsize = gridsize ? gridsize : gridSize;//gridSize is the class variable
+	var x = random(-gridsize/2 + 20, gridsize/2 - 20);
+	var y = random(-gridsize/2 + 20, gridsize/2 - 20);
 	return {"x":x, "y":y};
 }
 
@@ -127,13 +127,13 @@ function random(min, max) {
 
 function createGrid()
 {
-	gridID = createAuth(20);
+	var gridID = createAuth(20);
 	while(grids[gridID])
 		{
 		gridID = createAuth(20);
 		}
 	
-	grid = {};
+	var grid = {};
 	grid.players = {};
 	grid.food = [];
 	grids[gridID] = grid;
@@ -142,8 +142,8 @@ function createGrid()
 
 
 
-numbersPossible = "0123456789";
-allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+var numbersPossible = "0123456789";
+var allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 function createAuth(length, numbersOnly) {
 	var text = "";
 	var possible = numbersOnly ? numbersPossible : allChars;
@@ -158,7 +158,7 @@ function createAuth(length, numbersOnly) {
 function showGrids(response, postdata)
 {
 	response.write("Grids: \n\n");
-	for(key in grids)
+	for(var key in grids)
 		{
 		response.write(key + ":\n");
 		response.write(JSON.stringify(grids[key]));
@@ -168,15 +168,15 @@ function showGrids(response, postdata)
 }
 exports.showGrids = showGrids;
 
-maxFPS = 80;
-fps = 0;
-lastUpdate = new Date();
+var maxFPS = 80;
+var fps = 0;
+var lastUpdate = new Date();
 //startGameWithName(0, {name:"Deanster"});
-countDownToSendSocketInfo = 4;//send the updates to clients only 1/5 of the time as the physics engine runs
-currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
-updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
+var countDownToSendSocketInfo = 4;//send the updates to clients only 1/5 of the time as the physics engine runs
+var currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
+var updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
 
-isUpdating = false;
+var isUpdating = false;
 startUpdates();
 function startUpdates(response)
 {
@@ -200,16 +200,16 @@ function stopUpdates(response)
 }
 exports.stopUpdates = stopUpdates;
 
-totalPlayersUpdated = 0;
+var totalPlayersUpdated = 0;
 function runGridUpdates()
 {
 	updateSeq++;
-	endTime = new Date();//millisec
-	deltaTime = endTime-lastUpdate;
-	lastUpdate = endTime;
-	fps = 1000/deltaTime;
-	totalPlayersUpdated = 0;
-	for(key in grids)
+	var endTime = new Date();//millisec
+	var deltaTime = endTime-lastUpdate;
+	var lastUpdate = endTime;
+	var fps = 1000/deltaTime;
+	var totalPlayersUpdated = 0;
+	for(var key in grids)
 		{
 		updateGrid(key, fps)
 		}
@@ -238,7 +238,7 @@ function runGridUpdates()
 function updateGrid(gridID, fps)
 {
 	
-	grid = grids[gridID];
+	var grid = grids[gridID];
 	//console.log("Updating gridID: " + gridID);
 	//console.log(JSON.stringify(grid));
 	
@@ -248,14 +248,14 @@ function updateGrid(gridID, fps)
 function updatePlayerPositions(players, fps)
 {
 	//console.log("players");
-	for(playerID in players)
+	for(var playerID in players)
 		{
 		totalPlayersUpdated++;
-		player = players[playerID];
+		var player = players[playerID];
 		if(!verifyDirs(player.dirx, player.diry))continue;
 		if(!(player.dampening >=0 && player.dampening<=1))continue;
-		x = (1/fps)*player.dampening*player.dirx*defVeloc + player.location.x;
-		y = (1/fps)*player.dampening*player.diry*defVeloc + player.location.y;
+		var x = (1/fps)*player.dampening*player.dirx*defVeloc + player.location.x;
+		var y = (1/fps)*player.dampening*player.diry*defVeloc + player.location.y;
 		x = Math.min(gridSize/2, Math.max(x, -gridSize/2));
 		y = Math.min(gridSize/2, Math.max(y, -gridSize/2));
 		player.location.x = x;
@@ -269,7 +269,7 @@ function verifyDirs(dirx, diry)
 	if(dirx<-1 || dirx>1)return false;//console.log("dir2");
 	if(diry<-1 || diry>1)return false;//console.log("dir3");
 	
-	distanceSquared = dirx*dirx + diry*diry;
+	var distanceSquared = dirx*dirx + diry*diry;
 	//console.log("double: " + distanceSquared);
 	
 	return ((distanceSquared-1)*100 < 1 && -(distanceSquared-1)*100 < 1);
@@ -277,15 +277,15 @@ function verifyDirs(dirx, diry)
 
 function updateClients()
 {
-	for(key in grids)
+	for(var key in grids)
 		{
-		grid = grids[key];
-		playersDic = grid.players;
-		players = [];
-		for(o in playersDic) {
+		var grid = grids[key];
+		var playersDic = grid.players;
+		var players = [];
+		for(var o in playersDic) {
 		    players.push(playersDic[o]);
 		}
-		for(key2 in playersDic)
+		for(var key2 in playersDic)
 			{
 			sendToSocket(sockets[key2], {"eventRecieved":"gridUpdate", "players":players, "updateSeq":updateSeq});
 			}
@@ -298,9 +298,9 @@ function setPlayerMovement(socket, postdata)
 	if (!requires(postdata, [ "gridID", "playerID", "dirx", "diry", "dampening" ], socket))
 		return;
 	
-	grid = grids[gridID];
+	var grid = grids[gridID];
 	if(!grid)return;
-	player = grid.players[playerID];
+	var player = grid.players[playerID];
 	if(!player)return;
 	if(!verifyDirs(postdata.dirx, postdata.diry))return;
 	if(!(postdata.dampening>=0 && postdata.dampening<=1))return;

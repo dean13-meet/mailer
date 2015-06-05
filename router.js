@@ -1,12 +1,12 @@
 
 
 function route(handle, pathname, response, postData, trackers) {
-	pathname = pathname.toLowerCase();
+	var pathname = pathname.toLowerCase();
 	console.log("About to route a request for " + pathname + " with data: " + postData);
 	console.log(JSON.stringify(postData));
 	
 	if (typeof handle[pathname] === 'function') {
-		shouldNotEnd = handle[pathname](response, postData, trackers);
+		var shouldNotEnd = handle[pathname](response, postData, trackers);
 		//if(shouldNotEnd===true && response.end)//if no response was given, just end response
 			//{response.end();}
 		

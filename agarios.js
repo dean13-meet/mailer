@@ -16,7 +16,8 @@ var defVeloc = 500
 //Grid:
 /*
  * 
- * players = {}  ---- playerID to player, player contains socket
+ * players = {}  ---- playerID to player
+ * sockets = {}  ---- playerID to socket (keep sockets seperate from players, since JSON.stringify can't take sockets
  * food = []
  * 
  */
@@ -26,7 +27,6 @@ var defVeloc = 500
  * trackingID - used for client to keep track of which player is which, THIS IS NOT THE SAME ID USED BY THE CLIENT TO UPDATE THE PLAYER SPEED!
  * location = {"x":..., "y":...}
  * mass
- * socket
  * name
  * dirx
  * diry
@@ -76,7 +76,6 @@ function startGameWithName(socket, postdata)
 	
 	player = {};
 	player.trackingID = createAuth(20);
-	player.socket = socket;
 	player.mass = 10;
 	player.name = postdata.name;
 	player.location = randomLocation();
@@ -85,8 +84,10 @@ function startGameWithName(socket, postdata)
 	player.dampening = 1;
 	
 	playerID = createAuth(20);
+	sockets[playerID] = socket;
 	gridID = signForGrid(player, playerID);
-	sendToSocket(socket, {"playerID":playerID, "gridID": gridID, playerObject:player});
+	sendToSocket(socket, {"eventRecieved":"playerRegistered","playerID":playerID, "gridID": gridID, 
+		playerObject:player});
 	
 	startUpdates();
 
@@ -276,10 +277,9 @@ function updateClients()
 		for(o in playersDic) {
 		    players.push(playersDic[o]);
 		}
-		for(i = 0; i < players.length; i++)
+		for(key2 in playersDic)
 			{
-			player = players[i];
-			sendToSocket(player.socket, {"eventRecieved":"gridUpdate", "players":players, "updateSeq":updateSeq});
+			sendToSocket(sockets[key2], {"eventRecieved":"gridUpdate", "players":players, "updateSeq":updateSeq});
 			}
 		}
 }

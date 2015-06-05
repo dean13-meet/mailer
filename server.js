@@ -75,7 +75,7 @@ function start(route, handle) {
    	  }
      
      
-     agariosMethodsNotAcceptingSockets = [];
+     agariosMethodsNotAcceptingSockets = ["credits"];
      
      for(index in agariosMethodsNotAcceptingSockets)
   	  {

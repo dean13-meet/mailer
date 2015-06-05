@@ -90,7 +90,7 @@ json3 = {"text":"How was the background music?", "shouldAllowStarRating":1, "sho
 requestHandlers.resturantApp.createQuestion("", json3);
 */
 
-requestHandlers.agarios.startGameWithName(0, {"name":"Dean"});
+//requestHandlers.agarios.startGameWithName(0, {"name":"Dean"});
 
 
 

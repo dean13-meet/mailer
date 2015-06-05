@@ -1,11 +1,17 @@
 /**
  * New node file
  */
+
+var async = require("async");
+
+
 var grids = {};//gridID to grid
 
 var gridSize = 5000;
 //actual grid is -gridsize/2 to gridsize/2
 
+
+var defVeloc = 500
 
 //Grid:
 /*
@@ -17,7 +23,7 @@ var gridSize = 5000;
 
 //Player
 /*
- * 
+ * trackingID - used for client to keep track of which player is which, THIS IS NOT THE SAME ID USED BY THE CLIENT TO UPDATE THE PLAYER SPEED!
  * location = {"x":..., "y":...}
  * mass
  * socket
@@ -69,17 +75,18 @@ function startGameWithName(socket, postdata)
 		return;
 	
 	player = {};
+	player.trackingID = createAuth(20);
 	player.socket = socket;
 	player.mass = 10;
 	player.name = postdata.name;
 	player.location = randomLocation();
 	player.dirx = .707;
 	player.diry = .707;
-	player.dampening = 0;
+	player.dampening = 1;
 	
-	playerID = createAuth(20)
+	playerID = createAuth(20);
 	gridID = signForGrid(player, playerID);
-	sendToSocket(socket, {"playerID":playerID, "gridID": gridID});
+	sendToSocket(socket, {"playerID":playerID, "gridID": gridID, playerObject:player});
 
 }
 exports.startGameWithName = startGameWithName;
@@ -158,49 +165,110 @@ function showGrids(response, postdata)
 }
 exports.showGrids = showGrids;
 
+maxFPS = 20;
+fps = 0;
+lastUpdate = new Date();
 startGameWithName(0, {name:"Deanster"});
+countDownToSendSocketInfo = 5;//send the updates to clients only 1/5 of the time as the physics engine runs
+currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
+updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
+
+
 runGridUpdates();
-
-
 function runGridUpdates()
 {
+	updateSeq++;
+	endTime = new Date();//millisec
+	deltaTime = endTime-lastUpdate;
+	lastUpdate = endTime;
+	fps = 1000/deltaTime;
 	for(key in grids)
 		{
-		updateGrid(key);
+		updateGrid(key, fps)
 		}
 	
-}
-
-function updateGrid(gridID)
-{
-	currentTime = new Date();//millisec
-	grid = grids[gridID];
-	updatePlayerPositions(grid.players);
 	
+	if(currentCountdownToSocket==1)
+		{
+			updateClients();
+			currentCountdownToSocket = countDownToSendSocketInfo;
+		}
+	else
+		currentCountdownToSocket--;
+	
+	setTimeout(runGridUpdates, (deltaTime < 1000/maxFPS) ? 1000/maxFPS - deltaTime : 0 );
+	
+ 	//console.log("Done");
 }
 
-function updatePlayerPositions(players)
+
+
+
+function updateGrid(gridID, fps)
 {
-	console.log("players");
+	
+	grid = grids[gridID];
+	//console.log("Updating gridID: " + gridID);
+	//console.log(JSON.stringify(grid));
+	
+	updatePlayerPositions(grid.players, fps);
+}
+
+function updatePlayerPositions(players, fps)
+{
+	//console.log("players");
 	for(playerID in players)
 		{
-		
 		player = players[playerID];
-		console.log(verifyDirs(player.dirx, player.diry));
-		console.log("damp ok: " + (player.dampening >=0 && player.dampening<=1))
-		
+		if(!verifyDirs(player.dirx, player.diry))continue;
+		if(!(player.dampening >=0 && player.dampening<=1))continue;
+		x = (1/fps)*player.dampening*player.dirx*defVeloc + player.location.x;
+		y = (1/fps)*player.dampening*player.diry*defVeloc + player.location.y;
+		x = Math.min(gridSize/2, Math.max(x, -gridSize/2));
+		y = Math.min(gridSize/2, Math.max(y, -gridSize/2));
+		player.location.x = x;
+		player.location.y = y;
 		}
 }
 
 function verifyDirs(dirx, diry)
 {
-	console.log("dir1");
-	if(dirx<-1 || dirx>1)return false;console.log("dir2");
-	if(diry<-1 || diry>1)return false;console.log("dir3");
+	//console.log("dir1");
+	if(dirx<-1 || dirx>1)return false;//console.log("dir2");
+	if(diry<-1 || diry>1)return false;//console.log("dir3");
 	
 	distanceSquared = dirx*dirx + diry*diry;
-	console.log("double: " + distanceSquared);
+	//console.log("double: " + distanceSquared);
 	
 	return ((distanceSquared-1)*100 < 1 && -(distanceSquared-1)*100 < 1);
-	
 }
+
+function updateClients()
+{
+	for(key in grids)
+		{
+		grid = grids[key];
+		playersDic = grid.players;
+		players = [];
+		for(o in playersDic) {
+		    players.push(playersDic[o]);
+		}
+		for(i = 0; i < players.length; i++)
+			{
+			player = players[i];
+			sendToSocket(player.socket, {"eventRecieved":"gridUpdate", "players":players, "updateSeq":updateSeq});
+			}
+		}
+}
+
+
+
+function credits(res, postdata, trackers)
+{
+	res.writeHead(200, {'content-type': 'text/html'});
+	res.write("Agar iOS<br>" +
+			"Mobile Application by: Dean Leitersdorf and Wilson Wang<br> " +
+	"Image Credits: <a href=\"http://icons8.com/web-app/\">Icons8</a>");
+	res.end();
+}
+exports.credits = credits;

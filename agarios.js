@@ -298,9 +298,9 @@ function setPlayerMovement(socket, postdata)
 	if (!requires(postdata, [ "gridID", "playerID", "dirx", "diry", "dampening" ], socket))
 		return;
 	
-	var grid = grids[gridID];
+	var grid = grids[postdata.gridID];
 	if(!grid)return;
-	var player = grid.players[playerID];
+	var player = grid.players[postdata.playerID];
 	if(!player)return;
 	if(!verifyDirs(postdata.dirx, postdata.diry))return;
 	if(!(postdata.dampening>=0 && postdata.dampening<=1))return;

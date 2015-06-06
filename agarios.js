@@ -222,15 +222,15 @@ function runGridUpdates() {
 	//console.log("now " + nowTime);
 	//console.log(lastUpdateToClients);
 	//console.log(updateClientsOnlyEvery);
-	if (currentCountdownToSocket <= 1
-			&& nowTime >= lastUpdateToClients - updateClientsOnlyEvery) {
+	if ((currentCountdownToSocket <= 1)
+			&& (nowTime >= (lastUpdateToClients - updateClientsOnlyEvery))) {
 		updateClients();
 		currentCountdownToSocket = countDownToSendSocketInfo;
 	} else
 		currentCountdownToSocket--;
 
-	setTimeout(runGridUpdates, (deltaTime < 1000 / maxFPS) ? 1000 / maxFPS
-			- deltaTime : 0);
+	setTimeout(runGridUpdates, (deltaTime < 1000 / maxFPS) ? ((1000 / maxFPS)
+			- deltaTime ): 0);
 
 	// console.log("Done");
 }

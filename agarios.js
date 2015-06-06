@@ -297,6 +297,7 @@ function updateClients()
 			}
 		}
 	lastUpdateToClients = new Date();
+	console.log("updated clients");
 }
 
 

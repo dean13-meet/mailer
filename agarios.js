@@ -301,6 +301,7 @@ function requestFoods(socket, postdata)
 		"eventRecieved" : "requestFoods",
 		"foods":grids[postdata.gridID].foods
 	});
+	console.log("SENT FOODS!!");
 	
 }
 exports.requestFoods = requestFoods;

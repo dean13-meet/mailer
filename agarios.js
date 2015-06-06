@@ -219,9 +219,9 @@ function runGridUpdates() {
 		return;
 	}
 	var nowTime = Date.now();
-	console.log("now " + nowTime);
-	console.log(lastUpdateToClients);
-	console.log(updateClientsOnlyEvery);
+	//console.log("now " + nowTime);
+	//console.log(lastUpdateToClients);
+	//console.log(updateClientsOnlyEvery);
 	if (currentCountdownToSocket <= 1
 			&& nowTime >= lastUpdateToClients - updateClientsOnlyEvery) {
 		updateClients();

@@ -9,7 +9,7 @@ var grids = {};// gridID to grid
 var gridSize = 5000;
 // actual grid is -gridsize/2 to gridsize/2
 
-var defVeloc = 500
+var defVeloc = 200
 
 var sockets = {} // ---- playerID to socket (keep sockets seperate from
 					// players, since JSON.stringify can't take sockets)
@@ -175,7 +175,7 @@ var updateSeq = 0;// use this to track update#, client should only accept
 					// updates higher than their current updateSeq, incase 2
 					// updates were sent and the first arrived last
 var lastUpdateToClients = 0;// don't update clients more than every 200ms
-var updateClientsOnlyEvery = 40;// ms
+var updateClientsOnlyEvery = 20;// ms
 
 var isUpdating = false;
 startUpdates();

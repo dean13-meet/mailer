@@ -175,6 +175,8 @@ var lastUpdate = new Date();
 var countDownToSendSocketInfo = 4;//send the updates to clients only 1/5 of the time as the physics engine runs
 var currentCountdownToSocket = countDownToSendSocketInfo;//this is the variable that will be decrimented
 var updateSeq = 0;//use this to track update#, client should only accept updates higher than their current updateSeq, incase 2 updates were sent and the first arrived last
+var lastUpdateToClients = 0;//don't update clients more than every 200ms
+var updateClientsOnlyEvery = 200;//ms
 
 var isUpdating = false;
 startUpdates();
@@ -218,8 +220,8 @@ function runGridUpdates()
 		stopUpdates();
 		return;
 		}
-	
-	if(currentCountdownToSocket==1)
+	var nowTime = new Date();
+	if(currentCountdownToSocket<=1 && nowTime>=lastUpdateToClients-updateClientsOnlyEvery)
 		{
 			updateClients();
 			currentCountdownToSocket = countDownToSendSocketInfo;
@@ -294,6 +296,7 @@ function updateClients()
 			sendToSocket(sockets[key2], {"eventRecieved":"gridUpdate", "players":players, "updateSeq":updateSeq});
 			}
 		}
+	lastUpdateToClients = new Date();
 }
 
 

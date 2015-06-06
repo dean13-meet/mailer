@@ -219,9 +219,9 @@ function runGridUpdates() {
 		return;
 	}
 	var nowTime = Date.now();
-	//console.log(nowTime);
-	//console.log(lastUpdateToClients);
-	//console.log(updateClientsOnlyEvery);
+	console.log("now " + nowTime);
+	console.log(lastUpdateToClients);
+	console.log(updateClientsOnlyEvery);
 	if (currentCountdownToSocket <= 1
 			&& nowTime >= lastUpdateToClients - updateClientsOnlyEvery) {
 		updateClients();
@@ -322,7 +322,7 @@ function verifyDirs(dirx, diry) {
 function updateClients() {
 	if (!isUpdating)
 		return;
-	for ( var key in grids) {
+	for (var key in grids) {
 		var grid = grids[key];
 		var playersDic = grid.players;
 		var players = [];

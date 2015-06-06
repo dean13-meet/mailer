@@ -16,7 +16,10 @@ var sockets = {} // ---- playerID to socket (keep sockets seperate from
 // Grid:
 /*
  * 
- * players = {} ---- playerID to player food = []
+ * players = {} ---- playerID to player 
+ * foods = []
+ * foodsAdded = [] //used to update sockets
+ * foodsDeleted []
  * 
  */
 
@@ -33,6 +36,7 @@ var sockets = {} // ---- playerID to socket (keep sockets seperate from
 /*
  * 
  * location = {"x":..., "y":...}
+ * trackingID
  * 
  */
 
@@ -127,7 +131,9 @@ function createGrid() {
 
 	var grid = {};
 	grid.players = {};
-	grid.food = [];
+	grid.foods = [];
+	grid.foodsAdded = [];
+	grid.foodsRemoved = [];
 	grids[gridID] = grid;
 	return gridID;
 }
@@ -236,6 +242,7 @@ function updateGrid(gridID, fps) {
 	// console.log(JSON.stringify(grid));
 
 	updatePlayerPositions(grid.players, fps);
+	updateFoods(grid);
 }
 
 function updatePlayerPositions(players, fps) {
@@ -260,6 +267,35 @@ function updatePlayerPositions(players, fps) {
 		player.location.y = y;
 		// console.log("Player after updating: " + JSON.stringify(player));
 	}
+}
+
+static var final numFoods = 300;//max foods
+function updateFoods(grid)
+{
+	if (!isUpdating)
+		return;
+	
+	var foods = grid.foods;
+	if(foods.length>=numFoods)return;
+	
+	var maxToSpawnThisTime = numFoods-foods.length;
+	maxToSpawnThisTime = Math.min(7, maxToSpawnThisTime);
+	var toSpawn = Math.random()*maxToSpawnThisTime;
+	
+	for(var i = 0; i < toSpawn; i++)
+		{
+		var food = {};
+		food.location = randomLocation();
+		food.trackingID = createAuth(7);
+		grid.foods.push(food);
+		grid.foodsAdded.push(food);
+		}
+}
+
+//if you realize you don't have an accurate food count, then make sure to refetch foods
+function requestFoods(socket, postdata)
+{
+	
 }
 
 function verifyDirs(dirx, diry) {
@@ -289,9 +325,14 @@ function updateClients() {
 			sendToSocket(sockets[key2], {
 				"eventRecieved" : "gridUpdate",
 				"players" : players,
+				"foodsAdded":grid.foodsAdded,
+				"foodsRemoved":grid.foodsRemoved,
+				"actualFoodCount":grid.foods.length,
 				"updateSeq" : updateSeq
 			});
 		}
+		grid.foodsAdded = [];
+		grid.foodsRemoved = [];
 	}
 	lastUpdateToClients = Date.now();
 	console.log("updated clients");

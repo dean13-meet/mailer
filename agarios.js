@@ -205,6 +205,7 @@ exports.stopUpdates = stopUpdates;
 var totalPlayersUpdated = 0;
 function runGridUpdates()
 {
+	if(!isUpdating)return;
 	updateSeq++;
 	var endTime = new Date();//millisec
 	var deltaTime = endTime-lastUpdate;

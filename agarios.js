@@ -175,7 +175,7 @@ var updateSeq = 0;// use this to track update#, client should only accept
 					// updates higher than their current updateSeq, incase 2
 					// updates were sent and the first arrived last
 var lastUpdateToClients = 0;// don't update clients more than every 200ms
-var updateClientsOnlyEvery = 200;// ms
+var updateClientsOnlyEvery = 2000;// ms
 
 var isUpdating = false;
 startUpdates();

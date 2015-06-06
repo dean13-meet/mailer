@@ -269,7 +269,7 @@ function updatePlayerPositions(players, fps) {
 	}
 }
 
-var numFoods = 300;//max foods
+const numFoods = 300;//max foods
 function updateFoods(grid)
 {
 	if (!isUpdating)

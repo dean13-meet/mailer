@@ -295,8 +295,15 @@ function updateFoods(grid)
 //if you realize you don't have an accurate food count, then make sure to refetch foods
 function requestFoods(socket, postdata)
 {
+	if (!requires(postdata, [ "gridID" ], socket))
+		return;
+	sendToSocket(socket, {
+		"eventRecieved" : "requestFoods",
+		"foods":grids[postdata.gridID].foods
+	});
 	
 }
+exports.requestFoods = requestFoods;
 
 function verifyDirs(dirx, diry) {
 	// console.log("dir1");
@@ -356,6 +363,8 @@ function setPlayerMovement(socket, postdata) {
 	player.dirx = postdata.dirx;
 	player.diry = postdata.diry;
 	player.dampening = postdata.dampening;
+	
+	sockets[postdata.playerID] = socket;//socket might have changed (e.g. close and open app)
 }
 exports.setPlayerMovement = setPlayerMovement;
 

@@ -9,7 +9,7 @@ var grids = {};// gridID to grid
 var gridSize = 5000;
 // actual grid is -gridsize/2 to gridsize/2
 
-var defVeloc = 200
+var defVeloc = 400
 
 var sockets = {} // ---- playerID to socket (keep sockets seperate from
 					// players, since JSON.stringify can't take sockets)

@@ -273,8 +273,8 @@ function updatePlayerPositions(players, fps) {
 				+ player.location.y;
 		// console.log("x,y " + x + "," + y);
 		// console.log("Fps: " + fps);
-		x = Math.min(gridSize / 2, Math.max(x, -gridSize / 2));
-		y = Math.min(gridSize / 2, Math.max(y, -gridSize / 2));
+		x = Math.min(gridSize / 2 - player.radius, Math.max(x, -gridSize / 2 + player.radius));
+		y = Math.min(gridSize / 2 - player.radius, Math.max(y, -gridSize / 2 + player.radius));
 		player.location.x = x;
 		player.location.y = y;
 		// console.log("Player after updating: " + JSON.stringify(player));

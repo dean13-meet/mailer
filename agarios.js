@@ -489,7 +489,7 @@ function collisionDetection(grid)
             var offset = getOffset(player1.location, player2.location);
             var distSquare = offset.x*offset.x + offset.y*offset.y;
             
-            console.log("offset: " + JSON.stringify(offset) + " distSqr: " + distSquare);
+            console.log("offset: " + JSON.stringify(offset) + " distSqr: " + distSquare + " radSqr: " + radSqr);
             if(distSquare<radSqr)
             {
                 var smallest = r1<r2?r1:r2;

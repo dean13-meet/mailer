@@ -122,8 +122,8 @@ function signForGrid(player, playerID) {
 function randomLocation(gridsize) {
 	var gridsize = gridsize ? gridsize : gridSize;// gridSize is the class
 													// variable
-	var x = random(-gridsize / 2 + 20, gridsize / 2 - 20);
-	var y = random(-gridsize / 2 + 20, gridsize / 2 - 20);
+	var x = random((-gridsize / 2) + 20, (gridsize / 2) - 20);
+	var y = random((-gridsize / 2) + 20, (gridsize / 2) - 20);
 	return {
 		"x" : x,
 		"y" : y
@@ -277,6 +277,7 @@ function updatePlayerPositions(players, fps) {
 		var y = (1 / fps) * player.dampening * player.diry * defVeloc * massFactor
 				+ player.location.y;
 		console.log("x,y " + x + "," + y);
+		console.log("damp: " + player.dampening + " dirx " +player.dirx + " diry " + player.diry + " def " + defVeloc + " massFactor " + player.massFactor + " location " + JSON.stringify(player.location)) 
 		console.log("Fps: " + fps);
 		x = Math.min(gridSize / 2 - player.radius, Math.max(x, -gridSize / 2 + player.radius));
 		y = Math.min(gridSize / 2 - player.radius, Math.max(y, -gridSize / 2 + player.radius));

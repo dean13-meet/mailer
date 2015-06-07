@@ -277,12 +277,12 @@ function updatePlayerPositions(players, fps) {
 				+ player.location.x;
 		var y = (1 / fps) * player.dampening * player.diry * defVeloc * massFactor
 				+ player.location.y;
-		console.log("x,y " + x + "," + y);
+		/*console.log("x,y " + x + "," + y);
 		console.log("damp: " + player.dampening + " dirx " +player.dirx + " diry " + player.diry + " def " + defVeloc + " massFactor " + player.massFactor + " location " + JSON.stringify(player.location)) 
-		console.log("Fps: " + fps);
+		console.log("Fps: " + fps);*/
 		x = Math.min(gridSize / 2 - player.radius, Math.max(x, -gridSize / 2 + player.radius));
 		y = Math.min(gridSize / 2 - player.radius, Math.max(y, -gridSize / 2 + player.radius));
-		console.log("setting x,y " + x + "," + y);
+		//console.log("setting x,y " + x + "," + y);
 		player.location.x = x;
 		player.location.y = y;
 		// console.log("Player after updating: " + JSON.stringify(player));
@@ -482,19 +482,23 @@ function collisionDetection(grid)
         {
             var player2 = allPlayers[j];
             
+            console.log("Checking for collision between players: " + JSON.stringify(player1) + " " + JSON.stringify(player2));
+            
             var r2 = player2.getRadius;
             var radSqr = r1+r2;radSqr*=radSqr;
             var offset = getOffset(player1.location, player2.location);
             var distSquare = offset.x*offset.x + offset.y*offset.y;
             
+            console.log("offset: " + JSON.stringify(offset) + " distSqr: " + distSquare);
             if(distSquare<radSqr)
             {
                 var smallest = r1<r2?r1:r2;
+                console.log("smallest: " + smallest);
                 var dist = Math.sqrt(distSquare);
                 if(dist < r1+r2 - smallest/2)
                 {
                     //collision:
-                    
+                    console.log("we got a colission!");
                     performTakeOver(player1, player2, true, grid);
                 }
             }

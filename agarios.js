@@ -471,7 +471,7 @@ function collisionDetection(grid)
                 {
                     //collision:
                     
-                    performTakeOver(player1, player2, true);
+                    performTakeOver(player1, player2, true, grid);
                 }
             }
             
@@ -488,14 +488,14 @@ function collisionDetection(grid)
             if(distSquare < r1Squared)
             {
                 //collision:
-            	performTakeOver(player1, player2, false);
+            	performTakeOver(player1, player2, false, grid);
             }
         }
     }
     
     
 }
-function performTakeOver(player, target, arePlayers)
+function performTakeOver(player, target, arePlayers, grid)
 {
     if(arePlayers)
     {

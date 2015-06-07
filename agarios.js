@@ -256,7 +256,7 @@ function updateGrid(gridID, fps) {
 	// console.log(JSON.stringify(grid));
 
 	updatePlayerPositions(grid.players, fps);
-	updateFoods(grid);
+	updateFoods(grid, fps);
 }
 
 function updatePlayerPositions(players, fps) {
@@ -301,7 +301,7 @@ function massFactorForMass(mass, currentMassFactor, change)
 }
 
 const numFoods = 300;//max foods
-function updateFoods(grid)
+function updateFoods(grid, fps)
 {
 	if (!isUpdating)
 		return;
@@ -312,10 +312,12 @@ function updateFoods(grid)
 	
 	var foods = grid.foods;
 	
-	
+	/*
 	var maxToSpawnThisTime = numFoods-grid.numFoodsInGrid;
 	maxToSpawnThisTime = Math.min(2, maxToSpawnThisTime);
-	var toSpawn = Math.random()*maxToSpawnThisTime;
+	var toSpawn = Math.random()*maxToSpawnThisTime;*/
+	
+	var toSpawn = Math.floor((Math.random*fps/10))==0?1:0;//chance to spawn is 10 in 1 sec
 	
 	for(var i = 0; i < toSpawn; i++)
 		{

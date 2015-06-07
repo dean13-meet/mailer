@@ -188,7 +188,7 @@ var updateSeq = 0;// use this to track update#, client should only accept
 					// updates higher than their current updateSeq, incase 2
 					// updates were sent and the first arrived last
 var lastUpdateToClients = 0;// don't update clients more than every 200ms
-var updateClientsOnlyEvery = 20;// ms
+var updateClientsOnlyEvery = 60;// ms
 
 var isUpdating = false;
 startUpdates();
@@ -519,6 +519,22 @@ function performTakeOver(player, target, arePlayers, grid)
     if(arePlayers)
     {
         var player2 = target;
+        var firstIsSmaller = player.mass < player2.mass;
+        var atLeastTenPercentBigger = firstIsSmaller ? player.mass*1.1<player2.mass : player2.mass*1.1<player.mass;
+        if(atLeastTenPercentBigger)
+        {
+        	var winner  = firstIsSmaller ? player2 : player;
+            var loser = firstIsSmaller ? player : player2;
+            
+            var playerID = grid.trackToID[loser.trackingID];
+            delete grid.players[playerID];
+            delete grid.trackToID[loser.trackingID];
+            
+            var massDif = winner.mass-loser.mass;
+            winner.mass += loser.mass;
+            winner.radius = Math.sqrt(radSqrFromMass(winner.mass));
+    		winner.massFactor = massFactorForMass(winner.mass, winner.massFactor, massDif);
+        }
     }
     else
     {

@@ -272,9 +272,9 @@ function updatePlayerPositions(players, fps) {
 		
 		var massFactor = player.massFactor;
 		
-		var x = (1 / fps) * player.dampening * player.dirx * defVeloc
+		var x = (1 / fps) * player.dampening * player.dirx * defVeloc * massFactor
 				+ player.location.x;
-		var y = (1 / fps) * player.dampening * player.diry * defVeloc
+		var y = (1 / fps) * player.dampening * player.diry * defVeloc * massFactor
 				+ player.location.y;
 		// console.log("x,y " + x + "," + y);
 		// console.log("Fps: " + fps);

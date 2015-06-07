@@ -369,6 +369,54 @@ function setPlayerMovement(socket, postdata) {
 }
 exports.setPlayerMovement = setPlayerMovement;
 
+function collisionDetected(socket, postdata)
+{
+	if (!requires(postdata,
+			[ "gridID", "collisions" ], socket))
+		return;
+	
+	var grid = grids[gridID];
+	var collisions = postdata.collisions;
+	if(!collisions.length)return;//also ensures this is an array, otherwise it won't have length
+	for(var i = 0; i<collisions.length; i++)
+		{
+		var collision = collisions[i];
+		if(!collision.first || !collision.second)continue;
+		if(collision.arePlayers)
+			{
+			
+			}
+		else
+			{
+			player = grid.players[collision.first];
+			food = grid.foods[collision.second];
+			if(!player || !food)continue;
+			var offset = getOffset(player.location, food.location);
+			var distSquare = offset.x*offset.x + offset.y*offset.y;
+			var radSqr = radSqrFromMass(player.mass);
+			
+			if(distSquare<radSqr)
+			{
+				delete grid.foods[collision.second];
+				grid.foodsRemoved.push(food);
+				player.mass++;
+			}
+			}
+		}
+}
+
+var arePerOneMass=150
+function radSqrFromMass(mass)
+{
+	return (mass*areaPerOneMass)/3.1415926;
+}
+
+
+function getOffset(one, two)
+{
+	return {"x":one.x-two.x, "y":one.y-two.y};
+}
+
 function credits(res, postdata, trackers) {
 	res.writeHead(200, {
 		'content-type' : 'text/html'

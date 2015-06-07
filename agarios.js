@@ -375,7 +375,7 @@ function collisionDetected(socket, postdata)
 			[ "gridID", "collisions" ], socket))
 		return;
 	
-	//console.log("got collisions: " + JSON.stringify(postdata.collisions))
+	console.log("got collisions: " + JSON.stringify(postdata.collisions))
 	var grid = grids[postdata.gridID];
 	if(!grid)return;
 	var collisions = postdata.collisions;
@@ -386,20 +386,20 @@ function collisionDetected(socket, postdata)
 		if(!collision.first || !collision.second)continue;
 		if(collision.arePlayers)
 			{
-			//console.log("1");
+			console.log("1");
 			}
 		else
 			{
-			//console.log("2");
+			console.log("2");
 			var player = grid.players[collision.first];
 			var food = grid.foods[collision.second];
-			//console.log("3 " + JSON.stringify(food) + "4 " + JSON.stringify(player));
+			console.log("3 " + JSON.stringify(food) + "4 " + JSON.stringify(player));
 			if(!player || !food)continue;
 			var offset = getOffset(player.location, food.location);
 			var distSquare = offset.x*offset.x + offset.y*offset.y;
 			var radSqr = radSqrFromMass(player.mass);
 			
-			//console.log("5 " + offset + distSquare + radSqr);
+			console.log("5 " + offset + distSquare + radSqr);
 			
 			if(distSquare<radSqr)
 			{

@@ -385,6 +385,8 @@ function setPlayerMovement(socket, postdata) {
 }
 exports.setPlayerMovement = setPlayerMovement;
 
+
+//Out-of-Order now: -- don't use
 function collisionDetected(socket, postdata)
 {
 	if (!requires(postdata,
@@ -432,6 +434,85 @@ function collisionDetected(socket, postdata)
 		}
 }
 exports.collisionDetected = collisionDetected;
+
+
+//a collision is only considered if the distance between the centers is smaller than the sum of the two radi minus half the smaller radius of the two
+function collisionDetection(grid)
+{
+    
+    //compare square of distance since ^2 is faster than sqrt
+    var allPlayers = [];
+    var playersTemp = grid.players;
+    for(var key in playersTemp)
+    	{
+    	allPlayers.push(playersTemp[key]);
+    	}
+    //NSArray* allFoods = self.foods.allValues;
+    for(var i = 0; i < allPlayers.length; i++)
+    {
+        var player1 = allPlayers[i];
+        var r1 = player1.radius;
+        
+        for(var j = i + 1; j < allPlayers.length; j++)
+        {
+            var player2 = allPlayers[j];
+            
+            var r2 = player2.getRadius;
+            var radSqr = r1+r2;radSqr*=radSqr;
+            var offset = getOffset(player1.location, player2.location);
+            var distSquare = offset.x*offset.x + offset.y*offset.y;
+            
+            if(distSquare<radSqr)
+            {
+                var smallest = r1<r2?r1:r2;
+                var dist = Math.sqrt(distSquare);
+                if(dist < r1+r2 - smallest/2)
+                {
+                    //collision:
+                    
+                    performTakeOver(player1, player2, true);
+                }
+            }
+            
+        }
+        
+        //now compare against the foods:
+        var r1Squared = r1*r1;
+        var foods = grid.foods;
+        for(var key in foods)
+        {
+        	var food = foods[key];
+            var offset = getOffset(player1.location, food.location);
+            var distSquare = offset.x*offset.x + offset.y*offset.y;
+            if(distSquare < r1Squared)
+            {
+                //collision:
+            	performTakeOver(player1, player2, false);
+            }
+        }
+    }
+    
+    
+}
+function performTakeOver(player, target, arePlayers)
+{
+    if(arePlayers)
+    {
+        var player2 = target;
+    }
+    else
+    {
+    	delete grid.foods[target.trackingID];
+		grid.foodsRemoved.push(target);
+		grid.numFoodsInGrid--;
+		player.mass++;
+		player.radius = Math.sqrt(radSqrFromMass(player.mass));
+    }
+    
+}
+
+
+
 
 var areaPerOneMass=150
 function radSqrFromMass(mass)

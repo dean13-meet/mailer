@@ -298,6 +298,7 @@ function updateFoods(grid)
 		food.trackingID = createAuth(7);
 		grid.foods[food.trackingID]=food;
 		grid.foodsAdded.push(food);
+		grid.numFoodsInGrid++;
 		}
 }
 

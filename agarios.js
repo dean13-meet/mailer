@@ -375,7 +375,9 @@ function collisionDetected(socket, postdata)
 			[ "gridID", "collisions" ], socket))
 		return;
 	
+	console.log("got collisions: " + JSON.stringify(postdata.collisions))
 	var grid = grids[gridID];
+	if(!grid)return;
 	var collisions = postdata.collisions;
 	if(!collisions.length)return;//also ensures this is an array, otherwise it won't have length
 	for(var i = 0; i<collisions.length; i++)
@@ -384,16 +386,20 @@ function collisionDetected(socket, postdata)
 		if(!collision.first || !collision.second)continue;
 		if(collision.arePlayers)
 			{
-			
+			console.log("1");
 			}
 		else
 			{
-			player = grid.players[collision.first];
-			food = grid.foods[collision.second];
+			console.log("2");
+			var player = grid.players[collision.first];
+			var food = grid.foods[collision.second];
+			console.log("3 " + JSON.stringify(food) + "4 " + JSON.stringify(player));
 			if(!player || !food)continue;
 			var offset = getOffset(player.location, food.location);
 			var distSquare = offset.x*offset.x + offset.y*offset.y;
 			var radSqr = radSqrFromMass(player.mass);
+			
+			console.log("5 " + offset + distSquare + radSqr);
 			
 			if(distSquare<radSqr)
 			{
@@ -404,6 +410,7 @@ function collisionDetected(socket, postdata)
 			}
 		}
 }
+exports.collisionDetected = collisionDetected;
 
 var arePerOneMass=150
 function radSqrFromMass(mass)

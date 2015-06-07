@@ -36,6 +36,7 @@ var sockets = {} // ---- playerID to socket (keep sockets seperate from
  * diry 
  * dampening 0 <= damp <= 1 -- this slows down
  * radius -- can be derived from mass, but useful to store as it is expensive to calculate every frame (uses sqrt)
+ * massFactor --can be derived from mass, but expensive to calculate (requires ^mass)
  * 
  */
 
@@ -81,6 +82,7 @@ function startGameWithName(socket, postdata) {
 	player.trackingID = createAuth(20);
 	player.mass = 10;
 	player.radius = Math.sqrt(radSqrFromMass(player.mass));
+	player.massFactor = massFactorForMass(player.mass);
 	player.name = postdata.name;
 	player.location = randomLocation();
 	player.dirx = .707;
@@ -267,6 +269,9 @@ function updatePlayerPositions(players, fps) {
 			continue;
 		if (!(player.dampening >= 0 && player.dampening <= 1))
 			continue;
+		
+		var massFactor = player.massFactor;
+		
 		var x = (1 / fps) * player.dampening * player.dirx * defVeloc
 				+ player.location.x;
 		var y = (1 / fps) * player.dampening * player.diry * defVeloc
@@ -279,6 +284,19 @@ function updatePlayerPositions(players, fps) {
 		player.location.y = y;
 		// console.log("Player after updating: " + JSON.stringify(player));
 	}
+}
+
+//this is the exp decay formula for when 100 mass is twice as slow as 10
+var base = 0.9923279462629434;
+var mult = 1.08005973889;
+function massFactorForMass(mass, currentMassFactor, change)
+{
+	//when currentMassFactor and change are given, use them to calculate new massFactor, as it will be much more efficient
+	if(currentMass)
+		{
+		return currentMassFactor * Math.pow(base,change);
+		}
+	return mult*Math.pow(base,mass);
 }
 
 const numFoods = 300;//max foods
@@ -430,6 +448,7 @@ function collisionDetected(socket, postdata)
 				grid.numFoodsInGrid--;
 				player.mass++;
 				player.radius = Math.sqrt(radSqrFromMass(player.mass));
+				player.massFactor = massFactorForMass(mass, player.massFactor, 1);
 			}
 			}
 		}
@@ -508,6 +527,7 @@ function performTakeOver(player, target, arePlayers, grid)
 		grid.numFoodsInGrid--;
 		player.mass++;
 		player.radius = Math.sqrt(radSqrFromMass(player.mass));
+		player.massFactor = massFactorForMass(mass, player.massFactor, 1);
     }
     
 }

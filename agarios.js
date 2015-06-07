@@ -124,6 +124,7 @@ function randomLocation(gridsize) {
 													// variable
 	var x = random((-gridsize / 2) + 20, (gridsize / 2) - 20);
 	var y = random((-gridsize / 2) + 20, (gridsize / 2) - 20);
+	console.log("rand loc: " + x + " " + y);
 	return {
 		"x" : x,
 		"y" : y
@@ -188,7 +189,7 @@ var updateSeq = 0;// use this to track update#, client should only accept
 					// updates higher than their current updateSeq, incase 2
 					// updates were sent and the first arrived last
 var lastUpdateToClients = 0;// don't update clients more than every 200ms
-var updateClientsOnlyEvery = 20;// ms
+var updateClientsOnlyEvery = 40;// ms
 
 var isUpdating = false;
 startUpdates();

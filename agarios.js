@@ -221,7 +221,6 @@ function runGridUpdates() {
 	var deltaTime = endTime - lastUpdate;
 	lastUpdate = endTime;
 	var fps = 1000 / deltaTime;
-	console.log("fps: " + fps)
 	totalPlayersUpdated = 0;
 	for ( var key in grids) {
 		updateGrid(key, fps)

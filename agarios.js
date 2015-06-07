@@ -313,7 +313,7 @@ function updateFoods(grid)
 	
 	
 	var maxToSpawnThisTime = numFoods-grid.numFoodsInGrid;
-	maxToSpawnThisTime = Math.min(7, maxToSpawnThisTime);
+	maxToSpawnThisTime = Math.min(2, maxToSpawnThisTime);
 	var toSpawn = Math.random()*maxToSpawnThisTime;
 	
 	for(var i = 0; i < toSpawn; i++)

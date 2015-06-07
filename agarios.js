@@ -343,7 +343,7 @@ function updateClients() {
 		grid.foodsRemoved = [];
 	}
 	lastUpdateToClients = Date.now();
-	console.log("updated clients");
+	//console.log("updated clients");
 }
 
 function setPlayerMovement(socket, postdata) {

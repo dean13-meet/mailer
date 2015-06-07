@@ -448,7 +448,7 @@ function collisionDetected(socket, postdata)
 				grid.numFoodsInGrid--;
 				player.mass++;
 				player.radius = Math.sqrt(radSqrFromMass(player.mass));
-				player.massFactor = massFactorForMass(mass, player.massFactor, 1);
+				player.massFactor = massFactorForMass(player.mass, player.massFactor, 1);
 			}
 			}
 		}
@@ -527,7 +527,7 @@ function performTakeOver(player, target, arePlayers, grid)
 		grid.numFoodsInGrid--;
 		player.mass++;
 		player.radius = Math.sqrt(radSqrFromMass(player.mass));
-		player.massFactor = massFactorForMass(mass, player.massFactor, 1);
+		player.massFactor = massFactorForMass(player.mass, player.massFactor, 1);
     }
     
 }

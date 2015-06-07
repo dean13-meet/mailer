@@ -292,7 +292,7 @@ var mult = 1.08005973889;
 function massFactorForMass(mass, currentMassFactor, change)
 {
 	//when currentMassFactor and change are given, use them to calculate new massFactor, as it will be much more efficient
-	if(currentMass)
+	if(currentMassFactor)
 		{
 		return currentMassFactor * Math.pow(base,change);
 		}

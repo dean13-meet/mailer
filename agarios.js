@@ -287,7 +287,7 @@ function updatePlayerPositions(players, fps) {
 }
 
 //this is the exp decay formula for when 100 mass is twice as slow as 10
-var base = 0.99923279462629434;
+var base = 0.998888888823279462629434;
 var mult = 1.08005973889;
 function massFactorForMass(mass, currentMassFactor, change)
 {

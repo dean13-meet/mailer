@@ -172,7 +172,7 @@ function showGrids(response, postdata) {
 }
 exports.showGrids = showGrids;
 
-var maxFPS = 80;
+var maxFPS = 100;
 var fps = 0;
 var lastUpdate = Date.now();
 // startGameWithName(0, {name:"Deanster"});
@@ -221,6 +221,7 @@ function runGridUpdates() {
 	var deltaTime = endTime - lastUpdate;
 	lastUpdate = endTime;
 	var fps = 1000 / deltaTime;
+	console.log("fps: " + fps)
 	totalPlayersUpdated = 0;
 	for ( var key in grids) {
 		updateGrid(key, fps)

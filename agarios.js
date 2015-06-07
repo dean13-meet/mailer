@@ -488,7 +488,7 @@ function collisionDetection(grid)
             if(distSquare < r1Squared)
             {
                 //collision:
-            	performTakeOver(player1, player2, false, grid);
+            	performTakeOver(player1, food, false, grid);
             }
         }
     }

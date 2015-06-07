@@ -28,9 +28,14 @@ var sockets = {} // ---- playerID to socket (keep sockets seperate from
 // Player
 /*
  * trackingID - used for client to keep track of which player is which, THIS IS
- * NOT THE SAME ID USED BY THE CLIENT TO UPDATE THE PLAYER SPEED! location =
- * {"x":..., "y":...} mass name dirx diry dampening 0 <= damp <= 1 -- this slows
- * down
+ * NOT THE SAME ID USED BY THE CLIENT TO UPDATE THE PLAYER SPEED! 
+ * location = {"x":..., "y":...} 
+ * mass 
+ * name 
+ * dirx 
+ * diry 
+ * dampening 0 <= damp <= 1 -- this slows down
+ * radius -- can be derived from mass, but useful to store as it is expensive to calculate every frame (uses sqrt)
  * 
  */
 
@@ -75,6 +80,7 @@ function startGameWithName(socket, postdata) {
 	var player = {};
 	player.trackingID = createAuth(20);
 	player.mass = 10;
+	player.radius = Math.sqrt(radSqrFromMass(player.mass));
 	player.name = postdata.name;
 	player.location = randomLocation();
 	player.dirx = .707;
@@ -410,7 +416,7 @@ function collisionDetected(socket, postdata)
 			if(!player || !food)continue;
 			var offset = getOffset(player.location, food.location);
 			var distSquare = offset.x*offset.x + offset.y*offset.y;
-			var radSqr = radSqrFromMass(player.mass);
+			var radSqr = player.radius;radSqr*=radSqr;
 			
 			console.log("5 " + offset + distSquare + radSqr);
 			
@@ -420,13 +426,14 @@ function collisionDetected(socket, postdata)
 				grid.foodsRemoved.push(food);
 				grid.numFoodsInGrid--;
 				player.mass++;
+				player.radius = Math.sqrt(radSqrFromMass(player.mass));
 			}
 			}
 		}
 }
 exports.collisionDetected = collisionDetected;
 
-var arePerOneMass=150
+var areaPerOneMass=150
 function radSqrFromMass(mass)
 {
 	return (mass*areaPerOneMass)/3.1415926;

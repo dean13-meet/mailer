@@ -236,6 +236,7 @@ function runGridUpdates() {
 	if ((currentCountdownToSocket <= 1)
 			&& (nowTime >= (lastUpdateToClients + updateClientsOnlyEvery))) {
 		updateClients();
+		performCollisionDetection();//we don't wanna run this too often
 		currentCountdownToSocket = countDownToSendSocketInfo;
 	} else
 		currentCountdownToSocket--;
@@ -511,6 +512,14 @@ function performTakeOver(player, target, arePlayers)
     
 }
 
+function performCollisionDetection()
+{
+
+	for(var key in grids)
+		{
+		collisionDetection(grids[key]);
+		}
+}
 
 
 

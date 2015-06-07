@@ -484,7 +484,7 @@ function collisionDetection(grid)
             
             console.log("Checking for collision between players: " + JSON.stringify(player1) + " " + JSON.stringify(player2));
             
-            var r2 = player2.getRadius;
+            var r2 = player2.radius;
             var radSqr = r1+r2;radSqr*=radSqr;
             var offset = getOffset(player1.location, player2.location);
             var distSquare = offset.x*offset.x + offset.y*offset.y;

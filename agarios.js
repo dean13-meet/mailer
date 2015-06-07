@@ -317,7 +317,7 @@ function updateFoods(grid, fps)
 	maxToSpawnThisTime = Math.min(2, maxToSpawnThisTime);
 	var toSpawn = Math.random()*maxToSpawnThisTime;*/
 	
-	var toSpawn = Math.floor((Math.random*fps/10))==0?1:0;//chance to spawn is 10 in 1 sec
+	var toSpawn = Math.floor((Math.random()*fps/10))==0?1:0;//chance to spawn is 10 in 1 sec
 	
 	for(var i = 0; i < toSpawn; i++)
 		{

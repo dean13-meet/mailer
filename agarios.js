@@ -16,8 +16,10 @@ var sockets = {} // ---- playerID to socket (keep sockets seperate from
 // Grid:
 /*
  * 
- * players = {} ---- playerID to player 
- * foods = []
+ * players = {} ---- playerID to player
+ * trackToID = {}//player trackingID to playerID
+ * foods = {}
+ * numFoodsInGrid = int;//use this to keep track of ## of foods on grid -- counting "foods" dictionary is expensive
  * foodsAdded = [] //used to update sockets
  * foodsDeleted []
  * 
@@ -105,6 +107,7 @@ function signForGrid(player, playerID) {
 		gridID = createGrid();
 	}
 	grids[gridID].players[playerID] = player;
+	grids[gridID].trackToID[player.trackingID] = playerID;
 	return gridID;
 }
 
@@ -131,9 +134,11 @@ function createGrid() {
 
 	var grid = {};
 	grid.players = {};
-	grid.foods = [];
+	grid.foods = {};
 	grid.foodsAdded = [];
 	grid.foodsRemoved = [];
+	grid.numFoodsInGrid = 0;
+	grid.trackToID = {};
 	grids[gridID] = grid;
 	return gridID;
 }
@@ -275,10 +280,14 @@ function updateFoods(grid)
 	if (!isUpdating)
 		return;
 	
-	var foods = grid.foods;
-	if(foods.length>=numFoods)return;
 	
-	var maxToSpawnThisTime = numFoods-foods.length;
+	if(grid.numFoodsInGrid>=numFoods)return;
+	
+	
+	var foods = grid.foods;
+	
+	
+	var maxToSpawnThisTime = numFoods-grid.numFoodsInGrid;
 	maxToSpawnThisTime = Math.min(7, maxToSpawnThisTime);
 	var toSpawn = Math.random()*maxToSpawnThisTime;
 	
@@ -287,7 +296,7 @@ function updateFoods(grid)
 		var food = {};
 		food.location = randomLocation();
 		food.trackingID = createAuth(7);
-		grid.foods.push(food);
+		grid.foods[food.trackingID]=food;
 		grid.foodsAdded.push(food);
 		}
 }
@@ -335,7 +344,7 @@ function updateClients() {
 				"players" : players,
 				"foodsAdded":grid.foodsAdded,
 				"foodsRemoved":grid.foodsRemoved,
-				"actualFoodCount":grid.foods.length,
+				"actualFoodCount":grid.numFoodsInGrid,
 				"updateSeq" : updateSeq
 			});
 		}
@@ -391,7 +400,10 @@ function collisionDetected(socket, postdata)
 		else
 			{
 			console.log("2");
-			var player = grid.players[collision.first];
+			var playerID = grid.trackToID[collision.first];
+			if(!playerID)return;
+			var player = grid.players[playerID];
+			console.log("6 " + playerID);
 			var food = grid.foods[collision.second];
 			console.log("3 " + JSON.stringify(food) + "4 " + JSON.stringify(player));
 			if(!player || !food)continue;
@@ -405,6 +417,7 @@ function collisionDetected(socket, postdata)
 			{
 				delete grid.foods[collision.second];
 				grid.foodsRemoved.push(food);
+				grid.numFoodsInGrid--;
 				player.mass++;
 			}
 			}

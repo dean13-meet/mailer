@@ -542,6 +542,10 @@ function performTakeOver(player, target, arePlayers, grid)
             winner.mass += loser.mass;
             winner.radius = Math.sqrt(radSqrFromMass(winner.mass));
     		winner.massFactor = massFactorForMass(winner.mass, winner.massFactor, loser.mass);
+    		var socket = sockets[playerID];
+    		sendToSocket(socket, {
+    			"eventRecieved" : "youWereEaten"
+			});
         }
     }
     else

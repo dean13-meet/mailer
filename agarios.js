@@ -521,24 +521,27 @@ function collisionDetection(grid)
 }
 function performTakeOver(player, target, arePlayers, grid)
 {
+	
     if(arePlayers)
     {
+    	console.log("Performing take over: " + JSON.stringify(player) + " " + JSON.stringify(target));
         var player2 = target;
         var firstIsSmaller = player.mass < player2.mass;
         var atLeastTenPercentBigger = firstIsSmaller ? player.mass*1.1<player2.mass : player2.mass*1.1<player.mass;
+        console.log("f: " + firstIsSmaller + " a: " + atLeastTenPercentBigger);
         if(atLeastTenPercentBigger)
         {
         	var winner  = firstIsSmaller ? player2 : player;
-            var loser = firstIsSmaller ? player : player2;
+           var loser = firstIsSmaller ? player : player2;
             
             var playerID = grid.trackToID[loser.trackingID];
+            console.log("playerID: " + playerID);
             delete grid.players[playerID];
             delete grid.trackToID[loser.trackingID];
             
-            var massDif = winner.mass-loser.mass;
             winner.mass += loser.mass;
             winner.radius = Math.sqrt(radSqrFromMass(winner.mass));
-    		winner.massFactor = massFactorForMass(winner.mass, winner.massFactor, massDif);
+    		winner.massFactor = massFactorForMass(winner.mass, winner.massFactor, loser.mass);
         }
     }
     else
